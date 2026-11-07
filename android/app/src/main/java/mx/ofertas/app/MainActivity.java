@@ -59,7 +59,8 @@ public class MainActivity extends Activity {
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true); // localStorage: token y borradores de enlaces
-        s.setCacheMode(WebSettings.LOAD_DEFAULT);
+        // siempre la versión más reciente de la app web (GitHub Pages cachea 10 min)
+        s.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         web.addJavascriptInterface(new Bridge(), "Android");
         web.setWebViewClient(new WebViewClient() {
