@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
@@ -16,11 +17,22 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * Cáscara nativa que carga la app web de GitHub Pages a pantalla completa.
  * Extras nativos expuestos a JavaScript como window.Android:
  *  - readClipboard(): lee el portapapeles sin pedir permiso del navegador.
  *  - openExternal(url): abre el enlace fuera (la app de Mercado Libre si está instalada).
+ *  - copyText(text): copia al portapapeles.
+ *  - share(url, mime, text, target): descarga la imagen/video y lo comparte a
+ *    "tiktok", "whatsapp" o al selector de Android (target vacío). El texto se
+ *    copia también al portapapeles porque TikTok ignora el texto adjunto.
  */
 public class MainActivity extends Activity {
 
@@ -97,6 +109,87 @@ public class MainActivity extends Activity {
         }
     }
 
+    private static final String[] TIKTOK = {"com.zhiliaoapp.musically", "com.ss.android.ugc.trill"};
+    private static final String[] WHATSAPP = {"com.whatsapp", "com.whatsapp.w4b"};
+
+    private String installed(String[] pkgs) {
+        PackageManager pm = getPackageManager();
+        for (String p : pkgs) {
+            try {
+                pm.getPackageInfo(p, 0);
+                return p;
+            } catch (PackageManager.NameNotFoundException ignored) {
+            }
+        }
+        return null;
+    }
+
+    private void copy(String text) {
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null && text != null && !text.isEmpty()) {
+            cm.setPrimaryClip(ClipData.newPlainText("Ofertas MX", text));
+        }
+    }
+
+    private void notifyJs(String status) {
+        String js = "window.onShareStatus && window.onShareStatus('" + status.replace("'", "") + "')";
+        runOnUiThread(() -> web.evaluateJavascript(js, null));
+    }
+
+    private File download(String url) throws Exception {
+        String name = Uri.parse(url).getLastPathSegment();
+        if (name == null || name.isEmpty()) name = "archivo";
+        name = name.replaceAll("[^A-Za-z0-9._-]", "_");
+        File out = new File(ShareProvider.shareDir(this), name);
+        HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
+        c.setConnectTimeout(20000);
+        c.setReadTimeout(60000);
+        c.setUseCaches(false);
+        if (c.getResponseCode() != 200) throw new Exception("HTTP " + c.getResponseCode());
+        try (InputStream in = c.getInputStream(); OutputStream os = new FileOutputStream(out)) {
+            byte[] buf = new byte[64 * 1024];
+            int n;
+            while ((n = in.read(buf)) > 0) os.write(buf, 0, n);
+        } finally {
+            c.disconnect();
+        }
+        return out;
+    }
+
+    private void doShare(String url, String mime, String text, String target) {
+        new Thread(() -> {
+            try {
+                notifyJs("Descargando…");
+                File f = download(url);
+                Uri uri = ShareProvider.uriFor(f);
+                runOnUiThread(() -> {
+                    copy(text);
+                    Intent send = new Intent(Intent.ACTION_SEND);
+                    send.setType(mime);
+                    send.putExtra(Intent.EXTRA_STREAM, uri);
+                    if (text != null && !text.isEmpty()) send.putExtra(Intent.EXTRA_TEXT, text);
+                    send.setClipData(ClipData.newRawUri("", uri));
+                    send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    String pkg = "tiktok".equals(target) ? installed(TIKTOK)
+                        : "whatsapp".equals(target) ? installed(WHATSAPP) : null;
+                    try {
+                        if (pkg != null) {
+                            send.setPackage(pkg);
+                            startActivity(send);
+                        } else {
+                            startActivity(Intent.createChooser(send, "Compartir"));
+                        }
+                        notifyJs("Texto copiado: pégalo en la descripción");
+                    } catch (ActivityNotFoundException e) {
+                        startActivity(Intent.createChooser(send, "Compartir"));
+                    }
+                });
+            } catch (Exception e) {
+                notifyJs("No se pudo descargar: " + e.getMessage());
+            }
+        }).start();
+    }
+
     /** Métodos visibles desde JavaScript. */
     private class Bridge {
         @JavascriptInterface
@@ -112,6 +205,16 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void openExternal(final String url) {
             runOnUiThread(() -> MainActivity.this.openExternal(url));
+        }
+
+        @JavascriptInterface
+        public void copyText(final String text) {
+            runOnUiThread(() -> copy(text));
+        }
+
+        @JavascriptInterface
+        public void share(String url, String mime, String text, String target) {
+            doShare(url, mime, text, target);
         }
     }
 }

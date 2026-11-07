@@ -7,7 +7,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from . import copywriter, links, select
-from .channels import facebook, files, web
+from .channels import facebook, files, media, web
 from .config import Config, load_env
 from .meli import MeliClient
 from .store import Store
@@ -67,10 +67,13 @@ def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> Non
                 continue
         link = it["affiliate_link"]
         copy = copywriter.generate(p, link, cfg, **kw)
+        card = media.make_cards(p, cfg, http)
+        store.items[p.id].update(copy=copy, cards=card)
         fb_id = ""
         if "facebook" in cfg.channels:
+            sq = media.media_dir(cfg) / "cards" / card["square"] if card.get("square") else None
             try:
-                fb_id = facebook.post(p, copy["facebook"], link, cfg, **kw)
+                fb_id = facebook.post(p, copy["facebook"], link, cfg, image_path=sq, **kw)
             except Exception as e:
                 print(f"[aviso] Facebook falló para {p.id}: {e}", file=sys.stderr)
         if "whatsapp" in cfg.channels:
@@ -83,8 +86,25 @@ def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> Non
         files.whatsapp(wa_entries, cfg.out_dir, day)
     if "web" in cfg.channels:
         web.build(store.items, cfg)
+    media.build(store, cfg, day, done)
     store.save()
     print(f"Publicadas: {done}")
+
+
+def cmd_media(cfg: Config) -> None:
+    """Regenera tarjetas, video y feed.json de lo publicado recientemente."""
+    store = _store(cfg)
+    day = datetime.now(ZoneInfo("America/Mexico_City")).strftime("%Y-%m-%d")
+    n = 0
+    for it in store.with_status("published"):
+        p = Store.product(it)
+        if not it.get("copy"):
+            it["copy"] = copywriter.generate(p, it["affiliate_link"], cfg)
+        it["cards"] = media.make_cards(p, cfg)
+        n += 1
+    feed = media.build(store, cfg, day, n)
+    store.save()
+    print(f"Tarjetas: {n} | video: {bool(feed['video'])} | en la app: {len(feed['items'])}")
 
 
 def cmd_status(cfg: Config) -> None:
@@ -96,13 +116,15 @@ def cmd_status(cfg: Config) -> None:
 def main(argv: list[str] | None = None) -> None:
     load_env()
     ap = argparse.ArgumentParser(prog="bot")
-    ap.add_argument("cmd", choices=["fetch", "publish", "status", "web"])
+    ap.add_argument("cmd", choices=["fetch", "publish", "status", "web", "media"])
     a = ap.parse_args(argv)
     cfg = Config.from_env()
     if a.cmd == "fetch":
         cmd_fetch(cfg)
     elif a.cmd == "publish":
         cmd_publish(cfg)
+    elif a.cmd == "media":
+        cmd_media(cfg)
     elif a.cmd == "web":
         print(web.build(_store(cfg).items, cfg))
     else:

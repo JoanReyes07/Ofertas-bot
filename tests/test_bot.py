@@ -232,3 +232,30 @@ def test_inbox_from_app(tmp_path):
     http = FakeHttp()
     cmd_publish(c, client, http)
     assert Store(f"{c.data_dir}/state.json").items["A"]["status"] == "published"
+
+
+def test_cards_video_and_feed(tmp_path):
+    from PIL import Image
+
+    from bot import cards
+    from bot.channels import media
+
+    c = cfg(tmp_path)
+    # tarjetas sin red (imagen no disponible) y con imagen
+    out = cards.make_cards(prod("A"), str(tmp_path / "cards"), "Ofertas", http=FakeHttp())
+    assert Image.open(tmp_path / "cards" / out["square"]).size == (1080, 1080)
+    assert Image.open(tmp_path / "cards" / out["vertical"]).size == (1080, 1920)
+    # flujo completo: publish genera tarjetas, video y feed.json
+    client = FakeClient([prod("A"), prod("B", orig=999)], item_price=219)
+    cmd_fetch(c, client)
+    s = Store(f"{c.data_dir}/state.json")
+    for pid in ("A", "B"):
+        s.set_link(pid, f"https://meli.la/{pid}")
+    s.save()
+    http = FakeHttp()
+    cmd_publish(c, client, http)
+    feed = json.loads((tmp_path / "docs" / "media" / "feed.json").read_text(encoding="utf-8"))
+    assert len(feed["items"]) == 2 and feed["items"][0]["whatsapp"]
+    assert feed["video"] and (tmp_path / "docs" / feed["video"]["url"]).stat().st_size > 10000
+    assert "Links en mi perfil" in feed["video"]["caption"]
+    assert all((tmp_path / "docs" / it["square"]).exists() for it in feed["items"])

@@ -1,2 +1,4 @@
 requests>=2.31
 tzdata
+pillow>=10.1
+imageio-ffmpeg>=0.5

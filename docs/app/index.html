@@ -54,6 +54,22 @@
     padding: 10px 14px; border-radius: 10px; font-size: 14px; max-width: 90%; z-index: 20; display: none; }
   .empty { text-align: center; color: var(--muted); padding: 40px 16px; }
   a { color: var(--blue); }
+  .tabs { position: sticky; top: calc(56px + env(safe-area-inset-top)); z-index: 4; display: flex; background: var(--brand); padding: 0 12px 8px; gap: 8px; }
+  .tabs button { flex: 1; border: 0; border-radius: 999px; padding: 9px; font-size: 15px; font-weight: 700; background: rgba(45,50,119,.12); color: var(--brand-ink); }
+  .tabs button.on { background: var(--brand-ink); color: var(--brand); }
+  .share { background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 12px; }
+  .share h2 { font-size: 16px; margin: 0 0 8px; }
+  .share video, .share img.big { width: 100%; border-radius: 10px; background: #000; display: block; }
+  .share img.big { background: #fff; }
+  .share .row { margin-top: 10px; }
+  .btn.tt { background: #111; color: #fff; }
+  .btn.wa { background: #25D366; color: #fff; }
+  .btn.more { background: var(--line); color: var(--ink); flex: .6; }
+  .cap { font-size: 13px; color: var(--muted); white-space: pre-wrap; margin-top: 8px; max-height: 4.2em; overflow: hidden; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid2 .share { padding: 8px; margin: 0; }
+  .grid2 .row { flex-direction: column; gap: 6px; }
+  .grid2 .btn { padding: 10px 6px; font-size: 14px; }
   .manual { grid-column: 1 / -1; display: none; }
   .manual.show { display: block; }
 </style>
@@ -64,6 +80,7 @@
   <button class="iconbtn" id="reload" aria-label="Recargar">⟳</button>
   <button class="iconbtn" id="menu" aria-label="Ajustes">⚙</button>
 </header>
+<nav class="tabs"><button id="tab-links" class="on">Enlaces</button><button id="tab-share">Compartir</button></nav>
 <main id="main"></main>
 <div class="footer" id="footer" hidden><button class="btn" id="send" disabled>Enviar y publicar</button></div>
 <div class="toast" id="toast"></div>
@@ -245,7 +262,7 @@ function setDraft(id, link) {
 }
 
 $("#main").addEventListener("click", async (e) => {
-  const btn = e.target.closest("[data-act]"); if (!btn) return;
+  const btn = e.target.closest("[data-act]"); if (!btn || tab !== "links") return;
   const card = btn.closest(".card"); if (!card) return;
   const id = card.dataset.id, row = rows.find((r) => r.id === id);
   const act = btn.dataset.act;
@@ -323,6 +340,91 @@ async function dispatch(accion, okMsg) {
 }
 $("#send").onclick = send;
 
+// --- Compartir (lee docs/media/feed.json: mismo sitio, no necesita token) ---
+let tab = "links", feed = null;
+const abs = (rel) => new URL("../" + rel, location.href).href;
+function setTab(t) {
+  tab = t;
+  $("#tab-links").classList.toggle("on", t === "links");
+  $("#tab-share").classList.toggle("on", t === "share");
+  t === "share" ? loadShare() : load();
+}
+$("#tab-links").onclick = () => setTab("links");
+$("#tab-share").onclick = () => setTab("share");
+
+window.onShareStatus = (msg) => toast(msg, 3500);
+function copyText(text) {
+  if (window.Android && Android.copyText) Android.copyText(text);
+  else if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+  toast("Texto copiado");
+}
+async function shareMedia(rel, mime, text, target) {
+  const url = abs(rel);
+  if (window.Android && Android.share) return Android.share(url, mime, text || "", target || "");
+  try { // navegador: Web Share API con archivo
+    const blob = await (await fetch(url)).blob();
+    const file = new File([blob], rel.split("/").pop(), { type: mime });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      if (text) copyText(text);
+      return await navigator.share({ files: [file], text });
+    }
+  } catch (e) { if (e.name === "AbortError") return; }
+  window.open(url, "_blank");
+}
+
+async function loadShare() {
+  $("#footer").hidden = true;
+  $("#main").innerHTML = `<div class="empty">Cargando material…</div>`;
+  try {
+    feed = await (await fetch(abs("media/feed.json") + "?t=" + Date.now(), { cache: "no-store" })).json();
+  } catch {
+    feed = null;
+  }
+  renderShare();
+}
+
+function renderShare() {
+  if (!feed || (!feed.video && !feed.items.length)) {
+    $("#main").innerHTML = `<div class="empty"><p>Aún no hay material.</p><p>Se genera cuando el bot publica ofertas.</p></div>`;
+    return;
+  }
+  let h = "";
+  if (feed.video) {
+    h += `<div class="share"><h2>🎬 Video del día · ${esc(feed.video.label)} · ${feed.video.count} ofertas</h2>
+      <video src="${esc(abs(feed.video.url))}" controls playsinline preload="metadata"></video>
+      <div class="cap">${esc(feed.video.caption)}</div>
+      <div class="row">
+        <button class="btn tt" data-share="video" data-target="tiktok">TikTok</button>
+        <button class="btn wa" data-share="video" data-target="whatsapp">WhatsApp</button>
+        <button class="btn more" data-share="video" data-target="">Más</button>
+      </div>
+      <div class="row"><button class="btn open" data-copy="video">Copiar texto</button></div>
+      <p class="cap">En TikTok: elige un sonido de moda y pega el texto (ya está copiado). Pon tu web en la bio.</p></div>`;
+  }
+  if (feed.items.length) {
+    h += `<div class="summary">Ofertas para tu canal de WhatsApp (imagen + texto con link)</div><div class="grid2">`
+      + feed.items.map((it, i) => `<div class="share">
+        <img class="big" src="${esc(abs(it.square))}" alt="" loading="lazy">
+        <div class="row">
+          <button class="btn wa" data-share="sq" data-i="${i}" data-target="whatsapp">WhatsApp</button>
+          <button class="btn tt" data-share="v" data-i="${i}" data-target="tiktok">TikTok</button>
+          <button class="btn open" data-copy="item" data-i="${i}">Copiar texto</button>
+        </div></div>`).join("") + `</div>`;
+  }
+  $("#main").innerHTML = h;
+}
+
+$("#main").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-share],[data-copy]");
+  if (!b || tab !== "share") return;
+  const it = feed.items[+b.dataset.i];
+  if (b.dataset.copy) return copyText(b.dataset.copy === "video" ? feed.video.caption : it.whatsapp);
+  const kind = b.dataset.share, target = b.dataset.target;
+  if (kind === "video") return shareMedia(feed.video.url, "video/mp4", feed.video.caption, target);
+  const text = target === "tiktok" ? it.tiktok_caption : it.whatsapp;
+  shareMedia(kind === "sq" ? it.square : it.vertical, "image/jpeg", text, target);
+});
+
 // --- Carga ---
 async function loadInbox() {
   const out = {};
@@ -350,7 +452,7 @@ async function load() {
     renderSetup(err.message);
   }
 }
-$("#reload").onclick = load;
+$("#reload").onclick = () => (tab === "share" ? loadShare() : load());
 $("#menu").onclick = () => renderSetup();
 // al volver de Mercado Libre, revisar si hay que refrescar el botón
 document.addEventListener("visibilitychange", () => { if (!document.hidden) updateSend(); });
