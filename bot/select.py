@@ -1,8 +1,6 @@
 """Filtro y ranking de ofertas."""
 from __future__ import annotations
 
-import math
-
 from .config import Config
 from .meli import Product
 
@@ -10,7 +8,7 @@ from .meli import Product
 def is_good(p: Product, cfg: Config) -> bool:
     if p.discount_pct < cfg.min_discount:
         return False
-    if p.sold < cfg.min_sold:
+    if p.rank and p.rank > cfg.max_rank:
         return False
     if not (cfg.min_price <= p.price <= cfg.max_price):
         return False
@@ -23,7 +21,9 @@ def is_good(p: Product, cfg: Config) -> bool:
 
 
 def score(p: Product) -> float:
-    return p.discount_pct * math.log1p(p.sold)
+    # Descuento ponderado por popularidad: el #1 en ventas pesa 2x, el #20 ~1x.
+    weight = 2 - (p.rank - 1) / 20 if p.rank else 1
+    return p.discount_pct * weight
 
 
 def pick(products: list[Product], cfg: Config, known_ids: set[str], limit: int) -> list[Product]:

@@ -32,9 +32,9 @@ class Config:
     meli_client_id: str = ""
     meli_client_secret: str = ""
     meli_site: str = "MLM"
-    queries: list[str] = field(default_factory=list)
+    categories: list[str] = field(default_factory=list)
     min_discount: float = 30.0
-    min_sold: int = 50
+    max_rank: int = 20
     min_price: float = 80.0
     max_price: float = 5000.0
     require_green: bool = True
@@ -60,12 +60,10 @@ class Config:
             meli_client_id=e("MELI_CLIENT_ID", ""),
             meli_client_secret=e("MELI_CLIENT_SECRET", ""),
             meli_site=e("MELI_SITE", "MLM"),
-            queries=_list(
-                "QUERIES",
-                "audífonos bluetooth,freidora de aire,smartwatch,cama para perro,organizador hogar,lámpara led",
-            ),
+            # Hogar, Electrónica, Electrodomésticos, Belleza, Mascotas, Deportes, Juguetes
+            categories=_list("CATEGORIES", "MLM1574,MLM1000,MLM1575,MLM1246,MLM1071,MLM1276,MLM1132"),
             min_discount=float(e("MIN_DISCOUNT", "30")),
-            min_sold=int(e("MIN_SOLD", "50")),
+            max_rank=int(e("MAX_RANK", "20")),
             min_price=float(e("MIN_PRICE", "80")),
             max_price=float(e("MAX_PRICE", "5000")),
             require_green=_bool("REQUIRE_GREEN", True),

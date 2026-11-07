@@ -5,20 +5,21 @@ from bot import copywriter, links, select
 from bot.channels import web
 from bot.cli import cmd_fetch, cmd_publish
 from bot.config import Config
-from bot.meli import Product, parse_result
+from bot.meli import BLOCKED_CATEGORIES, MeliClient, Product, best_offer, parse_offer
 from bot.store import Store
 
 
-def raw(i="MLM1", price=219, orig=499, sold=5000, level="5_green", title="Cama para perro"):
-    return {
-        "id": i, "title": title, "price": price, "original_price": orig,
-        "thumbnail": "http://http2.mlstatic.com/D_x-I.jpg", "permalink": f"https://x/{i}",
-        "sold_quantity": sold, "seller": {"seller_reputation": {"level_id": level}},
-    }
+def prod(i="MLM1", price=219, orig=499, rank=3, level="5_green", title="Cama para perro"):
+    """Producto ya armado, como lo devuelve MeliClient.top_sellers."""
+    return Product(
+        id=i, title=title, price=price, original_price=orig,
+        image="https://http2.mlstatic.com/D_x-F.jpg", permalink=f"https://www.mercadolibre.com.mx/p/{i}",
+        rank=rank, seller_level=level, item_id=f"{i}000",
+    )
 
 
 def cfg(tmp_path, **kw):
-    c = Config(queries=["cama"], data_dir=str(tmp_path / "data"), out_dir=str(tmp_path / "out"),
+    c = Config(categories=["MLM1574"], data_dir=str(tmp_path / "data"), out_dir=str(tmp_path / "out"),
                docs_dir=str(tmp_path / "docs"), links_csv=str(tmp_path / "links.csv"),
                fb_page_id="1", fb_token="t", web_url="https://ej.com")
     for k, v in kw.items():
@@ -30,16 +31,17 @@ class FakeClient:
     def __init__(self, results, item_price=None):
         self.results, self.item_price = results, item_price
 
-    def search(self, q, limit=50):
-        return [parse_result(r) for r in self.results]
+    def top_sellers(self, cat, min_discount=0):
+        return list(self.results)
 
-    def get_item(self, i):
-        return {"status": "active", "price": self.item_price}
+    def current_offer(self, pid):
+        return {"price": self.item_price} if self.item_price is not None else None
 
 
 class FakeResp:
-    def __init__(self, data=None):
+    def __init__(self, data=None, status=200):
         self.data = data or {}
+        self.status_code = status
 
     def raise_for_status(self):
         pass
@@ -57,40 +59,94 @@ class FakeHttp:
         return FakeResp({"post_id": "p1"})
 
 
+class FakeApi:
+    """Simula la API de ML con las rutas que usa MeliClient.top_sellers."""
+
+    def __init__(self):
+        self.gets = []
+
+    def get(self, url, params=None, **kw):
+        path = url.replace("https://api.mercadolibre.com", "")
+        self.gets.append(path)
+        routes = {
+            "/highlights/MLM/category/MLM1574": {"content": [
+                {"id": "MLMP1", "type": "PRODUCT"}, {"id": "MLM55", "type": "ITEM"},
+                {"id": "MLMP2", "type": "PRODUCT"}, {"id": "MLMP3", "type": "PRODUCT"}]},
+            "/products/MLMP1/items": {"results": [
+                {"item_id": "I1", "price": 258, "original_price": 399, "seller_id": 7}]},
+            "/products/MLMP2/items": {"results": [
+                {"item_id": "I2", "price": 100, "original_price": None, "seller_id": 7}]},
+            "/products/MLMP1": {"id": "MLMP1", "name": "Ganchos", "pictures": [{"url": "https://img/1.jpg"}]},
+            "/users/7": {"seller_reputation": {"level_id": "5_green"}},
+        }
+        if path in routes:
+            return FakeResp(routes[path])
+        return FakeResp({}, status=404)  # MLMP3: sin publicaciones activas
+
+
+def write_link(path, link_for_first):
+    rows = list(csv.DictReader(open(path, encoding="utf-8")))
+    rows[0]["affiliate_link"] = link_for_first
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=links.COLUMNS)
+        w.writeheader()
+        w.writerows(rows)
+    return rows
+
+
 def test_parse_and_discount():
-    p = parse_result(raw())
-    assert p.discount_pct == 56.1 and p.image.startswith("https://") and p.image.endswith("-O.jpg")
-    assert parse_result({"id": "x"}) is None
+    product = {"id": "MLM9", "name": "Set 50 ganchos", "permalink": "",
+               "pictures": [{"url": "http://http2.mlstatic.com/D_a-F.jpg"}]}
+    offer = best_offer({"results": [{"item_id": "MLM4", "price": 258, "original_price": 399, "seller_id": 7}]})
+    p = parse_offer(product, offer, "5_green", rank=2, category="MLM1574")
+    assert p.discount_pct == 35.3 and p.image.startswith("https://") and p.item_id == "MLM4"
+    assert p.permalink == "https://www.mercadolibre.com.mx/p/MLM9" and p.rank == 2
+    assert parse_offer({"id": "x"}, {}) is None
+    assert best_offer({"results": []}) is None and best_offer(None) is None
+
+
+def test_client_top_sellers():
+    api = FakeApi()
+    c = MeliClient(http=api)
+    got = c.top_sellers("MLM1574", min_discount=30)
+    assert [(p.id, p.rank, p.seller_level) for p in got] == [("MLMP1", 1, "5_green")]
+    assert "/products/MLMP2" not in api.gets  # sin descuento: no pide detalles
+    assert not any("MLM55" in g for g in api.gets)  # ITEM ajeno: se salta
+    assert c.current_offer("MLMP1")["price"] == 258 and c.current_offer("MLMP3") is None
+    assert all(c.top_sellers(b) == [] for b in BLOCKED_CATEGORIES)
 
 
 def test_filters(tmp_path):
-    c = cfg(tmp_path)
-    ps = [parse_result(raw("A")), parse_result(raw("B", orig=None)), parse_result(raw("C", sold=3)),
-          parse_result(raw("D", level="3_yellow")), parse_result(raw("E", price=99999, orig=999999)),
-          parse_result(raw("A"))]
+    c = cfg(tmp_path, max_rank=10)
+    ps = [prod("A"), prod("B", orig=None), prod("C", rank=15), prod("D", level="3_yellow"),
+          prod("E", price=99999, orig=999999), prod("A")]
     got = select.pick(ps, c, set(), 10)
     assert [p.id for p in got] == ["A"]
     assert select.pick(ps, c, {"A"}, 10) == []
+    # a igual descuento, gana el más vendido
+    ranked = select.pick([prod("X", rank=9), prod("Y", rank=1)], c, set(), 10)
+    assert [p.id for p in ranked] == ["Y", "X"]
 
 
 def test_links_roundtrip(tmp_path):
     c = cfg(tmp_path)
     s = Store(f"{c.data_dir}/state.json")
-    s.add_candidates([parse_result(raw("A")), parse_result(raw("B"))])
+    s.add_candidates([prod("A"), prod("B")])
     assert links.write_pending(s, c.links_csv) == 2
     rows = list(csv.DictReader(open(c.links_csv, encoding="utf-8")))
     rows[0]["affiliate_link"] = "https://meli.la/abc"
     rows[1]["affiliate_link"] = rows[1]["permalink"]  # enlace normal: se rechaza
     with open(c.links_csv, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=links.COLUMNS)
-        w.writeheader(); w.writerows(rows)
+        w.writeheader()
+        w.writerows(rows)
     assert links.import_links(s, c.links_csv) == 1
     assert len(s.with_status("ready")) == 1
 
 
 def test_copy_fallback_and_validation(tmp_path):
     c = cfg(tmp_path)
-    p = parse_result(raw())
+    p = prod()
     out = copywriter.generate(p, "https://meli.la/abc", c)  # sin clave: plantilla
     assert "https://meli.la/abc" in out["facebook"] and "$219" in out["whatsapp"]
     assert copywriter.DISCLOSURE in out["facebook"]
@@ -107,15 +163,11 @@ def test_copy_fallback_and_validation(tmp_path):
 
 def test_full_flow(tmp_path):
     c = cfg(tmp_path)
-    client = FakeClient([raw("A"), raw("B", level="1_red")], item_price=219)
+    client = FakeClient([prod("A"), prod("B", level="1_red")], item_price=219)
     cmd_fetch(c, client)
     s = Store(f"{c.data_dir}/state.json")
     assert list(s.items) == ["A"]
-    rows = list(csv.DictReader(open(c.links_csv, encoding="utf-8")))
-    rows[0]["affiliate_link"] = "https://meli.la/abc"
-    with open(c.links_csv, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=links.COLUMNS)
-        w.writeheader(); w.writerows(rows)
+    write_link(c.links_csv, "https://meli.la/abc")
     http = FakeHttp()
     cmd_publish(c, client, http)
     s = Store(f"{c.data_dir}/state.json")
@@ -131,18 +183,30 @@ def test_full_flow(tmp_path):
 
 def test_price_changed_is_skipped(tmp_path):
     c = cfg(tmp_path)
-    client = FakeClient([raw("A")], item_price=300)
+    client = FakeClient([prod("A")], item_price=300)
     cmd_fetch(c, client)
     s = Store(f"{c.data_dir}/state.json")
-    s.set_link("A", "https://meli.la/abc"); s.save()
+    s.set_link("A", "https://meli.la/abc")
+    s.save()
     http = FakeHttp()
     cmd_publish(c, client, http)
     assert Store(f"{c.data_dir}/state.json").items["A"]["status"] == "stale" and not http.calls
 
 
+def test_no_active_offer_is_skipped(tmp_path):
+    c = cfg(tmp_path)
+    client = FakeClient([prod("A")], item_price=None)  # producto sin publicaciones activas
+    cmd_fetch(c, client)
+    s = Store(f"{c.data_dir}/state.json")
+    s.set_link("A", "https://meli.la/abc")
+    s.save()
+    cmd_publish(c, client, FakeHttp())
+    assert Store(f"{c.data_dir}/state.json").items["A"]["status"] == "stale"
+
+
 def test_web_escapes(tmp_path):
     c = cfg(tmp_path)
-    p = parse_result(raw(title="<script>x</script>"))
+    p = prod(title="<script>x</script>")
     it = {**p.to_dict(), "affiliate_link": "https://a/b?x=1&y=2"}
     html = web.render([it], c)
     assert "<script>x" not in html and "&lt;script&gt;" in html

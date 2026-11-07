@@ -26,11 +26,11 @@ def cmd_fetch(cfg: Config, client: MeliClient | None = None) -> None:
     got = links.import_links(store, cfg.links_csv)  # no pisar enlaces que ya pegaste
     client = client or _client(cfg)
     found = []
-    for q in cfg.queries:
+    for cat in cfg.categories:
         try:
-            found += client.search(q)
-        except Exception as e:  # una búsqueda fallida no detiene las demás
-            print(f"[aviso] búsqueda '{q}' falló: {e}", file=sys.stderr)
+            found += client.top_sellers(cat, cfg.min_discount)
+        except Exception as e:  # una categoría fallida no detiene las demás
+            print(f"[aviso] categoría '{cat}' falló: {e}", file=sys.stderr)
     picks = select.pick(found, cfg, store.ids(), cfg.fetch_limit)
     added = store.add_candidates(picks)
     store.save()
@@ -39,11 +39,10 @@ def cmd_fetch(cfg: Config, client: MeliClient | None = None) -> None:
 
 
 def _still_valid(client: MeliClient, it: dict) -> bool:
-    j = client.get_item(it["id"])
-    if j.get("status") not in (None, "active"):
+    offer = client.current_offer(it["id"])
+    if not offer:  # sin publicaciones activas
         return False
-    price = j.get("price")
-    return price is None or abs(float(price) - it["price"]) <= it["price"] * 0.02
+    return abs(float(offer["price"]) - it["price"]) <= it["price"] * 0.02
 
 
 def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> None:

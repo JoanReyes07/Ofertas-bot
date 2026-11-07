@@ -38,7 +38,7 @@ def _prompt(p: Product, link: str) -> str:
         "precio_actual": money(p.price),
         "precio_anterior": money(p.original_price) if p.original_price else None,
         "descuento_pct": p.discount_pct,
-        "vendidos": p.sold,
+        "posicion_en_mas_vendidos_de_su_categoria": p.rank or None,
         "enlace": link,
     }
     return (

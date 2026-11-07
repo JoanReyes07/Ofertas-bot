@@ -25,7 +25,7 @@ jobs:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       WEB_URL: ${{ vars.WEB_URL }}
       SITE_NAME: ${{ vars.SITE_NAME }}
-      QUERIES: ${{ vars.QUERIES }}
+      CATEGORIES: ${{ vars.CATEGORIES }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
