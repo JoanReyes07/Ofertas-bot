@@ -39,7 +39,7 @@ class Config:
     max_price: float = 5000.0
     require_green: bool = True
     fetch_limit: int = 20
-    publish_limit: int = 5
+    publish_limit: int = 20  # todas juntas en la web; volver a 5 por tanda al conectar Facebook/TikTok
     verify_price: bool = True
     channels: list[str] = field(default_factory=lambda: ["web", "facebook", "whatsapp", "tiktok"])
     anthropic_key: str = ""
@@ -73,7 +73,7 @@ class Config:
             max_price=float(e("MAX_PRICE", "5000")),
             require_green=_bool("REQUIRE_GREEN", True),
             fetch_limit=int(e("FETCH_LIMIT", "20")),
-            publish_limit=int(e("PUBLISH_LIMIT", "5")),
+            publish_limit=int(e("PUBLISH_LIMIT", "20")),
             verify_price=_bool("VERIFY_PRICE", True),
             channels=_list("CHANNELS", "web,facebook,whatsapp,tiktok"),
             anthropic_key=e("ANTHROPIC_API_KEY", ""),
