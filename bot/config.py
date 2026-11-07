@@ -38,7 +38,7 @@ class Config:
     min_price: float = 80.0
     max_price: float = 5000.0
     require_green: bool = True
-    fetch_limit: int = 10
+    fetch_limit: int = 20
     publish_limit: int = 5
     verify_price: bool = True
     channels: list[str] = field(default_factory=lambda: ["web", "facebook", "whatsapp", "tiktok"])
@@ -52,6 +52,10 @@ class Config:
     out_dir: str = "out"
     docs_dir: str = "docs"
     links_csv: str = "links_pendientes.csv"
+    # Links de afiliado automáticos (apagado hasta confirmar que Mercado Libre cuenta los clics)
+    auto_links: bool = False
+    matt_word: str = ""
+    matt_tool: str = ""
     inbox_dir: str = "data/inbox"
 
     @classmethod
@@ -68,7 +72,7 @@ class Config:
             min_price=float(e("MIN_PRICE", "80")),
             max_price=float(e("MAX_PRICE", "5000")),
             require_green=_bool("REQUIRE_GREEN", True),
-            fetch_limit=int(e("FETCH_LIMIT", "10")),
+            fetch_limit=int(e("FETCH_LIMIT", "20")),
             publish_limit=int(e("PUBLISH_LIMIT", "5")),
             verify_price=_bool("VERIFY_PRICE", True),
             channels=_list("CHANNELS", "web,facebook,whatsapp,tiktok"),
@@ -78,4 +82,7 @@ class Config:
             fb_token=e("FB_PAGE_TOKEN", ""),
             site_name=e("SITE_NAME") or "Cazaofertas MX",
             web_url=e("WEB_URL", ""),
+            auto_links=_bool("AUTO_LINKS", False),
+            matt_word=e("MELI_MATT_WORD", "").strip(),
+            matt_tool=e("MELI_MATT_TOOL", "").strip(),
         )

@@ -261,3 +261,17 @@ def test_media_per_product(tmp_path):
         txt = (docs / it["files"][3]["url"]).read_text(encoding="utf-8")
         assert it["link"] in txt and it["code"] and f"CÓDIGO {it['code']}" in txt  # link directo + código
     assert (docs / "media" / "video" / "A.mp4").stat().st_size > 5000
+
+
+def test_auto_links(tmp_path):
+    assert links.affiliate_url("https://www.mercadolibre.com.mx/p/MLM9", "yo123", "777") == (
+        "https://www.mercadolibre.com.mx/p/MLM9?matt_word=yo123&matt_tool=777&forceInApp=true")
+    client = FakeClient([prod("A"), prod("B")], item_price=219)
+    off = cfg(tmp_path / "off", matt_word="yo123", matt_tool="777")  # apagado: no toca nada
+    cmd_fetch(off, client)
+    assert not Store(f"{off.data_dir}/state.json").with_status("ready")
+    on = cfg(tmp_path / "on", auto_links=True, matt_word="yo123", matt_tool="777")
+    cmd_fetch(on, client)
+    s = Store(f"{on.data_dir}/state.json")
+    assert {i["id"] for i in s.with_status("ready")} == {"A", "B"}
+    assert s.items["A"]["affiliate_link"].endswith("matt_word=yo123&matt_tool=777&forceInApp=true")

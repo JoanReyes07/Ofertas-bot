@@ -3,8 +3,10 @@ name: ofertas-diarias
 on:
   schedule:
     - cron: "0 14 * * *"   # 8:00 CDMX: busca candidatos nuevos
-    - cron: "0 18 * * *"   # 12:00 CDMX: publica los que ya tengan enlace
-    - cron: "0 2 * * *"    # 20:00 CDMX: publica otra tanda
+    - cron: "0 16 * * *"   # 10:00 CDMX: publica una tanda (5)
+    - cron: "0 20 * * *"   # 14:00 CDMX
+    - cron: "0 0 * * *"    # 18:00 CDMX
+    - cron: "0 3 * * *"    # 21:00 CDMX
   workflow_dispatch:
     inputs:
       accion:
@@ -31,6 +33,9 @@ jobs:
       WEB_URL: ${{ vars.WEB_URL }}
       SITE_NAME: ${{ vars.SITE_NAME }}
       CATEGORIES: ${{ vars.CATEGORIES }}
+      AUTO_LINKS: ${{ vars.AUTO_LINKS }}
+      MELI_MATT_WORD: ${{ vars.MELI_MATT_WORD }}
+      MELI_MATT_TOOL: ${{ vars.MELI_MATT_TOOL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

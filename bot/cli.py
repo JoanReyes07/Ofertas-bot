@@ -34,6 +34,8 @@ def cmd_fetch(cfg: Config, client: MeliClient | None = None) -> None:
             print(f"[aviso] categoría '{cat}' falló: {e}", file=sys.stderr)
     picks = select.pick(found, cfg, store.ids(), cfg.fetch_limit)
     added = store.add_candidates(picks)
+    if cfg.auto_links and cfg.matt_word and cfg.matt_tool:
+        got += links.auto_fill(store, cfg.matt_word, cfg.matt_tool)
     store.save()
     pending = links.write_pending(store, cfg.links_csv)
     print(f"Enlaces importados: {got} | candidatos nuevos: {added} | pendientes en {cfg.links_csv}: {pending}")

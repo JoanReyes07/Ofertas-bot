@@ -61,3 +61,22 @@ def import_inbox(store: Store, inbox_dir: str) -> int:
                 n += 1
         f.unlink()
     return n
+
+
+def affiliate_url(permalink: str, matt_word: str, matt_tool: str) -> str:
+    """Link de afiliado armado: página del producto + tus parámetros de afiliado."""
+    from urllib.parse import urlencode, urlsplit, urlunsplit
+
+    u = urlsplit(permalink)
+    q = urlencode({"matt_word": matt_word, "matt_tool": matt_tool, "forceInApp": "true"})
+    return urlunsplit((u.scheme, u.netloc, u.path, q, ""))
+
+
+def auto_fill(store: Store, matt_word: str, matt_tool: str) -> int:
+    """Pone link de afiliado automático a los candidatos que no tengan uno."""
+    n = 0
+    for it in store.with_status("candidate"):
+        if store.set_link(it["id"], affiliate_url(it["permalink"], matt_word, matt_tool)):
+            it["link_auto"] = True
+            n += 1
+    return n
