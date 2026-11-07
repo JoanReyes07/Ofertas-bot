@@ -66,7 +66,8 @@ def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> Non
                 print(f"[aviso] no pude verificar {p.id}: {e}", file=sys.stderr)
                 continue
         link = it["affiliate_link"]
-        copy = copywriter.generate(p, link, cfg, **kw)
+        code = store.assign_code(p.id)
+        copy = copywriter.generate(p, link, cfg, code=code, **kw)
         store.items[p.id]["copy"] = copy
         card = media.make_media(store.items[p.id], cfg, http)  # tarjetas, video y textos
         store.items[p.id]["cards"] = card

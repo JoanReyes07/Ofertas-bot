@@ -20,7 +20,7 @@
     </queries>
 
     <application
-        android:label="Ofertas MX"
+        android:label="Cazaofertas"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme"

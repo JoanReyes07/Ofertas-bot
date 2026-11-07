@@ -16,13 +16,16 @@ class Store:
     def __init__(self, path: str):
         self.path = Path(path)
         self.items: dict[str, dict] = {}
+        self.meta: dict = {}
         if self.path.exists():
-            self.items = json.loads(self.path.read_text(encoding="utf-8")).get("items", {})
+            data = json.loads(self.path.read_text(encoding="utf-8"))
+            self.items = data.get("items", {})
+            self.meta = data.get("meta", {})
 
     def save(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(
-            json.dumps({"items": self.items}, ensure_ascii=False, indent=1), encoding="utf-8"
+            json.dumps({"meta": self.meta, "items": self.items}, ensure_ascii=False, indent=1), encoding="utf-8"
         )
 
     def ids(self) -> set[str]:
@@ -54,7 +57,17 @@ class Store:
         it["status"] = "ready"
         return True
 
+    def assign_code(self, pid: str) -> int:
+        """Código corto y fijo del producto (#12) para buscarlo en la web desde TikTok."""
+        it = self.items[pid]
+        if not it.get("code"):
+            code = int(self.meta.get("next_code", 1))
+            it["code"] = code
+            self.meta["next_code"] = code + 1
+        return it["code"]
+
     def mark_published(self, pid: str, fb_post_id: str = "") -> None:
+        self.assign_code(pid)
         self.items[pid].update(status="published", published_at=_now(), fb_post_id=fb_post_id or "")
 
     def mark_stale(self, pid: str) -> None:

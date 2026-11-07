@@ -46,7 +46,7 @@ class Config:
     anthropic_model: str = "claude-haiku-5-5"
     fb_page_id: str = ""
     fb_token: str = ""
-    site_name: str = "Ofertas del Día México"
+    site_name: str = "Cazaofertas MX"
     web_url: str = ""
     data_dir: str = "data"
     out_dir: str = "out"
@@ -76,6 +76,6 @@ class Config:
             anthropic_model=e("ANTHROPIC_MODEL", "claude-haiku-5-5"),
             fb_page_id=e("FB_PAGE_ID", ""),
             fb_token=e("FB_PAGE_TOKEN", ""),
-            site_name=e("SITE_NAME") or "Ofertas del Día México",
+            site_name=e("SITE_NAME") or "Cazaofertas MX",
             web_url=e("WEB_URL", ""),
         )

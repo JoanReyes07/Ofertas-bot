@@ -137,7 +137,7 @@ public class MainActivity extends Activity {
     private void copy(String text) {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null && text != null && !text.isEmpty()) {
-            cm.setPrimaryClip(ClipData.newPlainText("Ofertas MX", text));
+            cm.setPrimaryClip(ClipData.newPlainText("Cazaofertas", text));
         }
     }
 

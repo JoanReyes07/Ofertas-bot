@@ -259,5 +259,5 @@ def test_media_per_product(tmp_path):
         assert all((docs / f["url"]).exists() for f in it["files"])
         assert it["folder"].endswith(it["id"])
         txt = (docs / it["files"][3]["url"]).read_text(encoding="utf-8")
-        assert it["link"] in txt and "perfil" not in txt  # link directo, sin mandar a la web
+        assert it["link"] in txt and it["code"] and f"CÓDIGO {it['code']}" in txt  # link directo + código
     assert (docs / "media" / "video" / "A.mp4").stat().st_size > 5000

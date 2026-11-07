@@ -10,8 +10,8 @@ android {
         applicationId "mx.ofertas.app"
         minSdk 29 // MediaStore.Downloads para guardar en Descargas sin permisos
         targetSdk 35
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.3"
     }
 
     buildTypes {

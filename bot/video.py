@@ -6,21 +6,28 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-from .cards import NAVY, RED, WHITE, YELLOW, font
+from .cards import FOREST, MINT, MINT_DEEP, ORANGE, WHITE, brand, font
 
 W, H = 1080, 1920          # lienzo de diseño (igual que la tarjeta vertical)
 OUT_W, OUT_H = 720, 1280   # tamaño del MP4: suficiente para TikTok y pesa poco
 
 
-def _intro(discount: float) -> Image.Image:
-    c = Image.new("RGB", (W, H), YELLOW)
+def _intro(discount: float, code: int = 0) -> Image.Image:
+    c = Image.new("RGB", (W, H), FOREST)
     d = ImageDraw.Draw(c)
-    d.text((W // 2, 640), "OFERTA", font=font("ExtraBold", 170), fill=NAVY, anchor="mm")
+    brand(d, (W // 2, 260), 66, light=True)
+    d.text((W // 2, 600), "OFERTA", font=font("ExtraBold", 170), fill=WHITE, anchor="mm")
     if discount:
-        d.ellipse([W // 2 - 290, 760, W // 2 + 290, 1340], fill=RED)
-        d.text((W // 2, 1010), f"-{discount:.0f}%", font=font("ExtraBold", 190), fill=WHITE, anchor="mm")
-        d.text((W // 2, 1180), "OFF", font=font("Bold", 80), fill=WHITE, anchor="mm")
-    d.text((W // 2, 1480), "en Mercado Libre", font=font("SemiBold", 64), fill=NAVY, anchor="mm")
+        d.ellipse([W // 2 - 290, 720, W // 2 + 290, 1300], fill=ORANGE)
+        d.text((W // 2, 970), f"-{discount:.0f}%", font=font("ExtraBold", 190), fill=WHITE, anchor="mm")
+        d.text((W // 2, 1140), "OFF", font=font("Bold", 80), fill=WHITE, anchor="mm")
+    d.text((W // 2, 1420), "en Mercado Libre", font=font("SemiBold", 64), fill=MINT_DEEP, anchor="mm")
+    if code:
+        label = f"Código {code}"
+        f = font("ExtraBold", 72)
+        w = d.textlength(label, font=f)
+        d.rounded_rectangle([W // 2 - w / 2 - 50, 1530, W // 2 + w / 2 + 50, 1650], radius=60, fill=MINT)
+        d.text((W // 2, 1590), label, font=f, fill=FOREST, anchor="mm")
     return c
 
 
@@ -33,12 +40,12 @@ def _zoom(img: Image.Image, t: float, amount: float) -> Image.Image:
     return big.crop((x, y, x + W, y + H))
 
 
-def build_product(card_path: str, out_path: str, discount: float = 0.0, fps: int = 24) -> str:
+def build_product(card_path: str, out_path: str, discount: float = 0.0, fps: int = 24, code: int = 0) -> str:
     """MP4 de ~6 s: intro con el descuento y la tarjeta con zoom."""
     import imageio_ffmpeg
 
     card = Image.open(card_path).convert("RGB").resize((W, H))
-    scenes = [(_intro(discount), 1.2, 0.04), (card, 5.0, 0.07)]
+    scenes = [(_intro(discount, code), 1.5, 0.04), (card, 5.0, 0.07)]
 
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     writer = imageio_ffmpeg.write_frames(
