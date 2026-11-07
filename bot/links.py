@@ -41,7 +41,7 @@ def import_inbox(store: Store, inbox_dir: str) -> int:
 
     Cada envío es un archivo nuevo, así que nunca choca con los cambios del bot
     aunque la app envíe mientras el bot está corriendo.
-    Formato: {"links": {"MLM123": "https://meli.la/abc", ...}}
+    Formato: {"links": {"MLM123": "https://meli.la/abc", ...}, "discard": ["MLM456", ...]}
     """
     d = Path(inbox_dir)
     if not d.is_dir():
@@ -54,6 +54,8 @@ def import_inbox(store: Store, inbox_dir: str) -> int:
             print(f"[aviso] envío ilegible, se descarta: {f.name}")
             f.unlink(missing_ok=True)
             continue
+        for pid in data.get("discard") or []:
+            store.discard(str(pid))
         for pid, link in (data.get("links") or {}).items():
             link = str(link or "").strip()
             it = store.items.get(pid)

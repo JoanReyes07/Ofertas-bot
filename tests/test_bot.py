@@ -275,3 +275,17 @@ def test_auto_links(tmp_path):
     s = Store(f"{on.data_dir}/state.json")
     assert {i["id"] for i in s.with_status("ready")} == {"A", "B"}
     assert s.items["A"]["affiliate_link"].endswith("matt_word=yo123&matt_tool=777&forceInApp=true")
+
+
+def test_discard_from_app(tmp_path):
+    c = cfg(tmp_path)
+    client = FakeClient([prod("A"), prod("B")], item_price=219)
+    cmd_fetch(c, client)
+    inbox = tmp_path / "inbox"
+    inbox.mkdir()
+    (inbox / "1.json").write_text(json.dumps({"discard": ["B"], "links": {"A": "https://meli.la/a"}}), encoding="utf-8")
+    cmd_fetch(c, client)  # B ya no vuelve aunque siga en los más vendidos
+    s = Store(f"{c.data_dir}/state.json")
+    assert s.items["B"]["status"] == "discarded" and s.items["A"]["status"] == "ready"
+    ids = [r["id"] for r in csv.DictReader(open(tmp_path / "links.csv", encoding="utf-8"))]
+    assert "B" not in ids and "A" in ids

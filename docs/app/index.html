@@ -80,6 +80,7 @@
   .fast .row { display: flex; gap: 8px; }
   .fast .btn.step { background: var(--blue); color: #fff; }
   .fast .btn.step2 { background: #A6E36B; color: #102015; }
+  .btn.quit { flex: .5; background: transparent; color: var(--bad); border: 1.5px solid var(--line); }
   .manual { grid-column: 1 / -1; display: none; }
   .manual.show { display: block; }
 </style>
@@ -113,7 +114,8 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
   del(k) { try { localStorage.removeItem(k); } catch {} },
 };
-let rows = [], state = {}, inboxLinks = {}, drafts = store.get("drafts", {});
+let rows = [], state = {}, inboxLinks = {}, inboxDiscards = new Set(), drafts = store.get("drafts", {});
+let discards = store.get("discards", []);
 
 function toast(msg, ms = 2600) {
   const t = $("#toast"); t.textContent = msg; t.style.display = "block";
@@ -232,7 +234,8 @@ function renderSetup(msg) {
 }
 
 function renderList() {
-  const pend = rows.filter((r) => { const st = state[r.id]?.status; return !st || st === "candidate" || st === "ready"; });
+  const pend = rows.filter((r) => { const st = state[r.id]?.status;
+    return (!st || st === "candidate" || st === "ready") && !discards.includes(r.id) && !inboxDiscards.has(r.id); });
   $("#footer").hidden = false;
   if (!pend.length) {
     $("#main").innerHTML = `<div class="empty"><p>No hay ofertas pendientes.</p>
@@ -262,6 +265,7 @@ function renderList() {
         <div><div class="t">${esc(r.title)}</div>
           <div class="price">$${esc(r.price)}<span class="off">${Math.round(+r.descuento_pct || 0)}% OFF</span></div></div>
         <div class="row">
+          <button class="btn quit" data-act="quit">Quitar</button>
           <button class="btn open" data-act="open">Abrir</button>
           <button class="btn paste" data-act="paste">${draft ? "Cambiar" : "📋 Pegar"}</button>
         </div>
@@ -277,7 +281,7 @@ function renderList() {
 document.addEventListener("click", async (e) => {
   if (tab !== "links") return;
   if (e.target.id === "copyurls") {
-    const todo = rows.filter((r) => { const st = state[r.id]?.status; return (!st || st === "candidate") && !r.affiliate_link && !inboxLinks[r.id] && !drafts[r.id]; }).slice(0, 20);
+    const todo = rows.filter((r) => { const st = state[r.id]?.status; return (!st || st === "candidate") && !r.affiliate_link && !inboxLinks[r.id] && !drafts[r.id] && !discards.includes(r.id) && !inboxDiscards.has(r.id); }).slice(0, 20);
     store.set("batch", todo.map((r) => r.id));
     copyText(todo.map((r) => r.permalink).join(String.fromCharCode(10)));
     toast(`✓ ${todo.length} URLs copiadas. Pégalas en el Generador de links.`, 4000);
@@ -304,8 +308,9 @@ document.addEventListener("click", async (e) => {
 function updateSend() {
   const n = Object.entries(drafts).filter(([id, l]) => { const r = rows.find((x) => x.id === id); return r && judge(l, r)?.cls !== "bad"; }).length;
   const b = $("#send");
-  b.disabled = n === 0;
-  b.textContent = n ? `Enviar ${n} y publicar` : "Pega al menos un link";
+  const d = discards.length;
+  b.disabled = n === 0 && d === 0;
+  b.textContent = n ? `Enviar ${n} y publicar${d ? ` · quitar ${d}` : ""}` : d ? `Guardar (quitar ${d})` : "Pega al menos un link";
 }
 
 function setDraft(id, link) {
@@ -318,6 +323,12 @@ $("#main").addEventListener("click", async (e) => {
   const card = btn.closest(".card"); if (!card) return;
   const id = card.dataset.id, row = rows.find((r) => r.id === id);
   const act = btn.dataset.act;
+  if (act === "quit") {
+    discards.push(id); store.set("discards", discards);
+    delete drafts[id]; store.set("drafts", drafts);
+    if (store.get("batch", []).includes(id)) { store.del("batch"); toast("Quitaste una de las URLs copiadas: vuelve a tocar 1. Copiar URLs.", 4000); }
+    renderList(); return;
+  }
   if (act === "open") openProduct(row.permalink);
   else if (act === "clear") setDraft(id, "");
   else if (act === "paste") {
@@ -354,14 +365,14 @@ async function send() {
       const r = rows.find((x) => x.id === id);
       if (r && judge(link, r).cls !== "bad") links[id] = link;
     }
-    const n = Object.keys(links).length;
-    if (!n) throw new Error("Esos productos ya no están en la lista. Toca ⟳.");
+    const n = Object.keys(links).length, quit = discards.slice();
+    if (!n && !quit.length) throw new Error("Esos productos ya no están en la lista. Toca ⟳.");
     const name = INBOX + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 7) + ".json";
     await gh("/contents/" + name, {
       method: "PUT",
       body: JSON.stringify({
-        message: `links: ${n} enlace(s) de afiliado desde la app`,
-        content: b64encode(JSON.stringify({ links, sent_at: new Date().toISOString() }, null, 1)),
+        message: `app: ${n} enlace(s)${quit.length ? `, ${quit.length} quitada(s)` : ""}`,
+        content: b64encode(JSON.stringify({ links, discard: quit, sent_at: new Date().toISOString() }, null, 1)),
         branch: BRANCH,
       }),
     });
@@ -369,7 +380,11 @@ async function send() {
     for (const id of Object.keys(links)) delete drafts[id];
     store.set("drafts", drafts);
     renderList();
-    await dispatch("publish", `✓ ${n} enlace(s) guardados. Publicando…`);
+    quit.forEach((id) => inboxDiscards.add(id));
+    discards = []; store.set("discards", discards);
+    renderList();
+    if (n) await dispatch("publish", `✓ ${n} enlace(s) guardados. Publicando…`);
+    else toast(`✓ ${quit.length} oferta(s) quitada(s)`);
   } catch (err) {
     toast("No se pudo enviar: " + err.message, 5000);
   } finally {
@@ -480,7 +495,8 @@ async function loadInbox() {
   try {
     const files = await gh("/contents/" + INBOX + "?ref=" + BRANCH + "&t=" + Date.now());
     for (const f of files.filter((f) => f.name.endsWith(".json"))) {
-      try { Object.assign(out, JSON.parse((await getFile(f.path)).text).links || {}); } catch {}
+      try { const j = JSON.parse((await getFile(f.path)).text); Object.assign(out, j.links || {});
+        (j.discard || []).forEach((id) => inboxDiscards.add(id)); } catch {}
     }
   } catch {} // sin carpeta inbox = nada pendiente
   return out;

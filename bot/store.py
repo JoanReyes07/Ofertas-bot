@@ -70,6 +70,14 @@ class Store:
         self.assign_code(pid)
         self.items[pid].update(status="published", published_at=_now(), fb_post_id=fb_post_id or "")
 
+    def discard(self, pid: str) -> bool:
+        """Descartado a mano desde la app: no se publica ni se vuelve a sugerir."""
+        it = self.items.get(pid)
+        if not it or it["status"] not in ("candidate", "ready"):
+            return False
+        it["status"] = "discarded"
+        return True
+
     def mark_stale(self, pid: str) -> None:
         self.items[pid]["status"] = "stale"
 
