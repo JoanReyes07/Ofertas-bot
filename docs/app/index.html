@@ -74,6 +74,12 @@
   .btn.dl.ok { background: var(--ok); }
   .t2 { font-size: 13px; line-height: 1.3; margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .all { width: 100%; margin-bottom: 12px; background: #A6E36B; color: #102015; }
+  .fast { background: var(--card); border-radius: 22px; box-shadow: var(--shadow); padding: 14px; margin-bottom: 12px; }
+  .fast h2 { font-size: 16px; margin: 0 0 4px; }
+  .fast p { font-size: 13px; color: var(--muted); margin: 0 0 10px; line-height: 1.4; }
+  .fast .row { display: flex; gap: 8px; }
+  .fast .btn.step { background: var(--blue); color: #fff; }
+  .fast .btn.step2 { background: #A6E36B; color: #102015; }
   .manual { grid-column: 1 / -1; display: none; }
   .manual.show { display: block; }
 </style>
@@ -170,6 +176,9 @@ async function getFile(path) {
 }
 
 // --- Enlaces ---
+function extractAll(text) {
+  return (String(text || "").match(/https?:\/\/[^\s"'<>]+/g) || []).map((u) => u.replace(/[).,;]+$/, ""));
+}
 function extractUrl(text) {
   const m = String(text || "").match(/https?:\/\/[^\s"'<>]+/);
   return m ? m[0].replace(/[).,;]+$/, "") : "";
@@ -231,7 +240,15 @@ function renderList() {
     updateSend(); return;
   }
   const ready = pend.filter((r) => r.affiliate_link || inboxLinks[r.id]).length;
-  $("#main").innerHTML = `<div class="summary">${pend.length} ofertas · ${ready} ya enviadas · toca <b>Abrir</b>, en Mercado Libre usa Compartir → Copiar link, regresa y toca <b>Pegar</b>.</div>`
+  const todo = pend.filter((r) => !r.affiliate_link && !inboxLinks[r.id] && !drafts[r.id]).slice(0, 20);
+  const batch = store.get("batch", []);
+  $("#main").innerHTML = `<div class="fast"><h2>⚡ Modo rápido (todas de un jalón)</h2>
+      <p>1) Copia las URLs · 2) En tu panel de Afiliados abre <b>Generador de links</b>, pégalas y toca Generar · 3) Copia todos los links y pégalos aquí.</p>
+      <div class="row">
+        <button class="btn step" id="copyurls" ${todo.length ? "" : "disabled"}>1. Copiar URLs (${todo.length})</button>
+        <button class="btn step2" id="pasteall" ${batch.length ? "" : "disabled"}>3. Pegar links (${batch.length})</button>
+      </div></div>`
+    + `<div class="summary">${pend.length} ofertas · ${ready} ya enviadas · o una por una: <b>Abrir</b> → Compartir → Copiar link → <b>Pegar</b>.</div>`
     + pend.map((r) => {
       const st = state[r.id] || {};
       const draft = drafts[r.id] || "";
@@ -252,6 +269,29 @@ function renderList() {
     }).join("");
   updateSend();
 }
+
+// Modo rápido: el orden de las URLs copiadas se guarda para asignar los links en el mismo orden
+document.addEventListener("click", async (e) => {
+  if (tab !== "links") return;
+  if (e.target.id === "copyurls") {
+    const todo = rows.filter((r) => { const st = state[r.id]?.status; return (!st || st === "candidate") && !r.affiliate_link && !inboxLinks[r.id] && !drafts[r.id]; }).slice(0, 20);
+    store.set("batch", todo.map((r) => r.id));
+    copyText(todo.map((r) => r.permalink).join(String.fromCharCode(10)));
+    toast(`✓ ${todo.length} URLs copiadas. Pégalas en el Generador de links.`, 4000);
+    renderList();
+  }
+  if (e.target.id === "pasteall") {
+    const batch = store.get("batch", []);
+    let links = [];
+    try { links = extractAll(await readClipboard()).filter((u) => /meli\.la|mercadolibre\.com/i.test(u)); } catch {}
+    if (!links.length) return toast("No encontré links en el portapapeles. Copia los links del Generador.", 4000);
+    if (links.length !== batch.length) return toast(`Copiaste ${links.length} links pero eran ${batch.length} URLs. Genera todas juntas y vuelve a intentar.`, 5000);
+    batch.forEach((id, i) => { drafts[id] = links[i]; });
+    store.set("drafts", drafts); store.del("batch");
+    toast(`✓ ${links.length} links listos. Toca Enviar y publicar.`, 4000);
+    renderList();
+  }
+});
 
 function updateSend() {
   const n = Object.entries(drafts).filter(([id, l]) => { const r = rows.find((x) => x.id === id); return r && judge(l, r)?.cls !== "bad"; }).length;
