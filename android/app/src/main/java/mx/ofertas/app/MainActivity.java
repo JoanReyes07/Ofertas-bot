@@ -200,6 +200,20 @@ public class MainActivity extends Activity {
         }).start();
     }
 
+    /** Abre en Chrome (no en la app de Mercado Libre, que no tiene el panel de afiliados). */
+    private void openInBrowser(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        String[] browsers = {"com.android.chrome", "com.chrome.beta", "org.mozilla.firefox", "com.sec.android.app.sbrowser"};
+        String pkg = installed(browsers);
+        if (pkg != null) i.setPackage(pkg);
+        try {
+            startActivity(i);
+        } catch (ActivityNotFoundException e) {
+            openExternal(url);
+        }
+    }
+
     /** Descarga url y la escribe en Descargas/OfertasMX/folder/name (reemplaza si existe). */
     private void saveToDownloads(String url, String folder, String name, String mime) throws Exception {
         ContentResolver cr = getContentResolver();
@@ -280,6 +294,11 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void openExternal(final String url) {
             runOnUiThread(() -> MainActivity.this.openExternal(url));
+        }
+
+        @JavascriptInterface
+        public void openInBrowser(final String url) {
+            runOnUiThread(() -> MainActivity.this.openInBrowser(url));
         }
 
         @JavascriptInterface

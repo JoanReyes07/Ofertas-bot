@@ -243,9 +243,12 @@ function renderList() {
   const todo = pend.filter((r) => !r.affiliate_link && !inboxLinks[r.id] && !drafts[r.id]).slice(0, 20);
   const batch = store.get("batch", []);
   $("#main").innerHTML = `<div class="fast"><h2>⚡ Modo rápido (todas de un jalón)</h2>
-      <p>1) Copia las URLs · 2) En tu panel de Afiliados abre <b>Generador de links</b>, pégalas y toca Generar · 3) Copia todos los links y pégalos aquí.</p>
+      <p>1) Copia las URLs · 2) Abre el generador (se abre en Chrome), pégalas y toca <b>Generar</b> · 3) Copia todos los links y pégalos aquí.</p>
       <div class="row">
         <button class="btn step" id="copyurls" ${todo.length ? "" : "disabled"}>1. Copiar URLs (${todo.length})</button>
+        <button class="btn open" id="opengen">2. Abrir generador</button>
+      </div>
+      <div class="row" style="margin-top:8px">
         <button class="btn step2" id="pasteall" ${batch.length ? "" : "disabled"}>3. Pegar links (${batch.length})</button>
       </div></div>`
     + `<div class="summary">${pend.length} ofertas · ${ready} ya enviadas · o una por una: <b>Abrir</b> → Compartir → Copiar link → <b>Pegar</b>.</div>`
@@ -279,6 +282,11 @@ document.addEventListener("click", async (e) => {
     copyText(todo.map((r) => r.permalink).join(String.fromCharCode(10)));
     toast(`✓ ${todo.length} URLs copiadas. Pégalas en el Generador de links.`, 4000);
     renderList();
+  }
+  if (e.target.id === "opengen") {
+    const url = "https://www.mercadolibre.com.mx/afiliados/linkbuilder#hub";
+    if (window.Android && Android.openInBrowser) Android.openInBrowser(url); else window.open(url, "_blank");
+    return;
   }
   if (e.target.id === "pasteall") {
     const batch = store.get("batch", []);
