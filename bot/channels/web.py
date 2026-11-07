@@ -141,9 +141,7 @@ def render(items: list[dict], cfg: Config) -> str:
         + "</main>"
         "<footer><h2>¿Cómo funciona?</h2><ol><li>Escribe el código que viste en el video.</li>"
         "<li>Toca <b>Ver oferta</b>.</li><li>Se abre Mercado Libre: ahí compras, con su envío y garantía.</li></ol>"
-        "<h2>Transparencia</h2><p>Los enlaces son de afiliado: si compras, puedo ganar una pequeña comisión sin costo extra "
-        "para ti. Los precios pueden cambiar; confírmalos siempre en Mercado Libre. Sitio independiente, no oficial de "
-        f"Mercado Libre.</p></footer><script>{JS}</script></body></html>"
+        f"</footer><script>{JS}</script></body></html>"
     )
 
 
