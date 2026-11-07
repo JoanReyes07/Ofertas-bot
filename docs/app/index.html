@@ -513,6 +513,11 @@ async function load() {
     // descartar borradores de productos que ya no están
     for (const id of Object.keys(drafts)) if (!rows.some((r) => r.id === id)) delete drafts[id];
     store.set("drafts", drafts);
+    // limpiar restos de productos que ya no existen (p. ej. tras borrar todo)
+    const exists = (id) => rows.some((r) => r.id === id);
+    const batch = store.get("batch", []);
+    if (batch.length && !batch.every(exists)) store.del("batch");
+    discards = discards.filter(exists); store.set("discards", discards);
     renderList();
   } catch (err) {
     renderSetup(err.message);
