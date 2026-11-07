@@ -42,6 +42,10 @@ font-weight:700;font-size:14px;padding:6px 6px 6px 14px;border-radius:999px;text
 .btn i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--lime);display:grid;place-items:center}
 .btn:active{transform:scale(.97)}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 10px}
+.card.expired{opacity:.72}.card.expired .media img{filter:grayscale(1);opacity:.55}
+.card.expired .off,.card.expired .new{display:none}
+.ended{margin-top:8px;text-align:center;font-size:12px;font-weight:600;color:var(--muted);background:#F1F4ED;border-radius:999px;padding:10px 6px}
+.sep{grid-column:1/-1;font-size:13px;font-weight:700;color:var(--muted);margin:10px 4px 0}
 footer{background:var(--forest);color:#D5E6D6;margin-top:18px;padding:22px 18px 40px;font-size:13px;border-radius:28px 28px 0 0}
 footer h2{font-size:15px;color:#fff;margin:14px 0 6px}
 footer ol{padding-left:20px;margin:0}
@@ -50,8 +54,14 @@ const q=document.getElementById('q'),cards=[...document.querySelectorAll('.card'
 const none=document.getElementById('none');let cat='';
 function ago(iso){const h=(Date.now()-new Date(iso))/36e5;if(h<1)return'hace minutos';if(h<24)return'hace '+Math.floor(h)+' h';
 const d=Math.floor(h/24);return d===1?'ayer':'hace '+d+' días'}
-cards.forEach(c=>{const iso=c.dataset.pub;if(!iso)return;const m=c.querySelector('.meta');if(m)m.textContent=(m.textContent?m.textContent+' · ':'')+ago(iso);
+const LIMIT=864e5,mainEl=document.querySelector('main'),expired=[];
+cards.forEach(c=>{const iso=c.dataset.pub;if(!iso)return;
+if(Date.now()-new Date(iso)>LIMIT){c.classList.add('expired');expired.push(c);
+const b=c.querySelector('.btn');if(b)b.outerHTML='<div class="ended">Posiblemente la oferta terminó</div>';}const m=c.querySelector('.meta');if(m)m.textContent=(m.textContent?m.textContent+' · ':'')+ago(iso);
 if(Date.now()-new Date(iso)<864e5)c.querySelector('.media').insertAdjacentHTML('beforeend','<span class="new">Nuevo hoy</span>')});
+if(expired.length){const sep=document.createElement('p');sep.className='sep';sep.textContent='Ofertas anteriores (pueden haber terminado)';
+mainEl.insertBefore(sep,none);expired.forEach(c=>mainEl.insertBefore(c,none));}
+const nEl=document.querySelector('.big .n');if(nEl)nEl.textContent=cards.length-expired.length;
 function apply(){const v=q.value.trim().toLowerCase().replace(/^#|^c[oó]digo\s*/,'');let n=0,hit=null;
 cards.forEach(c=>{const byCode=/^\d+$/.test(v);const ok=(!cat||c.dataset.cat===cat)&&(!v||(byCode?c.dataset.code===v:c.dataset.s.includes(v)));
 c.hidden=!ok;c.classList.toggle('hit',ok&&byCode);if(ok){n++;if(byCode)hit=c}});none.hidden=n>0;return hit}
