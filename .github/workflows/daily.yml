@@ -1,0 +1,51 @@
+name: ofertas-diarias
+
+on:
+  schedule:
+    - cron: "0 14 * * *"   # 8:00 CDMX: busca candidatos nuevos
+    - cron: "0 18 * * *"   # 12:00 CDMX: publica los que ya tengan enlace
+    - cron: "0 2 * * *"    # 20:00 CDMX: publica otra tanda
+  workflow_dispatch:
+    inputs:
+      accion:
+        description: "fetch o publish"
+        default: "publish"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      MELI_CLIENT_ID: ${{ secrets.MELI_CLIENT_ID }}
+      MELI_CLIENT_SECRET: ${{ secrets.MELI_CLIENT_SECRET }}
+      FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+      FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      WEB_URL: ${{ vars.WEB_URL }}
+      SITE_NAME: ${{ vars.SITE_NAME }}
+      QUERIES: ${{ vars.QUERIES }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Elegir acción
+        id: a
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "cmd=${{ github.event.inputs.accion }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.schedule }}" = "0 14 * * *" ]; then
+            echo "cmd=fetch" >> $GITHUB_OUTPUT
+          else
+            echo "cmd=publish" >> $GITHUB_OUTPUT
+          fi
+      - run: python -m bot ${{ steps.a.outputs.cmd }}
+      - name: Guardar cambios
+        run: |
+          git config user.name "ofertas-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A .
+          git diff --cached --quiet || (git commit -m "ofertas: ${{ steps.a.outputs.cmd }}" && git push)
