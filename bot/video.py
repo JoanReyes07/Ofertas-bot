@@ -6,7 +6,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-from .cards import FOREST, MINT, MINT_DEEP, ORANGE, WHITE, brand, font
+from .cards import FOREST, MINT, MINT_DEEP, ACCENT, WHITE, brand, font
 
 W, H = 1080, 1920          # lienzo de diseño (igual que la tarjeta vertical)
 OUT_W, OUT_H = 720, 1280   # tamaño del MP4: suficiente para TikTok y pesa poco
@@ -18,9 +18,9 @@ def _intro(discount: float, code: int = 0) -> Image.Image:
     brand(d, (W // 2, 260), 66, light=True)
     d.text((W // 2, 600), "OFERTA", font=font("ExtraBold", 170), fill=WHITE, anchor="mm")
     if discount:
-        d.ellipse([W // 2 - 290, 720, W // 2 + 290, 1300], fill=ORANGE)
-        d.text((W // 2, 970), f"-{discount:.0f}%", font=font("ExtraBold", 190), fill=WHITE, anchor="mm")
-        d.text((W // 2, 1140), "OFF", font=font("Bold", 80), fill=WHITE, anchor="mm")
+        d.ellipse([W // 2 - 290, 720, W // 2 + 290, 1300], fill=ACCENT)
+        d.text((W // 2, 970), f"-{discount:.0f}%", font=font("ExtraBold", 190), fill=FOREST, anchor="mm")
+        d.text((W // 2, 1140), "OFF", font=font("Bold", 80), fill=FOREST, anchor="mm")
     d.text((W // 2, 1420), "en Mercado Libre", font=font("SemiBold", 64), fill=MINT_DEEP, anchor="mm")
     if code:
         label = f"Código {code}"

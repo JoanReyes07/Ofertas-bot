@@ -15,15 +15,17 @@ from .meli import Product
 
 FONTS = Path(__file__).parent / "assets" / "fonts"
 
-# Paleta de marca: verdes templados + naranja cálido (amigable y distinta a Mercado Libre)
-FOREST = (31, 77, 44)        # #1F4D2C  verde bosque suave: paneles y texto fuerte
-INK = (28, 52, 35)           # #1C3423  texto principal
-MINT = (234, 246, 230)       # #EAF6E6  fondo
-MINT_DEEP = (191, 229, 184)  # #BFE5B8  etiquetas
-ORANGE = (240, 122, 43)      # #F07A2B  botones y descuento
+# Paleta de marca: salvia/lima claro + botones oscuros (referencia del usuario)
+FOREST = (30, 43, 32)        # #1E2B20  botones y fondos oscuros
+INK = (16, 32, 21)           # #102015  texto principal
+MINT = (238, 245, 228)       # #EEF5E4  fondo claro
+MINT_DEEP = (205, 232, 170)  # #CDE8AA  etiquetas
+ACCENT = (166, 227, 107)     # #A6E36B  verde lima: descuento y detalles
+ACCENT_TEXT = (63, 138, 34)  # #3F8A22  lima oscuro para texto sobre fondo claro
+PANEL = (255, 255, 255)      # panel de datos (blanco)
 WHITE = (255, 255, 255)
-MUTED = (120, 140, 125)
-SOFT = (196, 222, 200)       # texto secundario sobre verde
+MUTED = (125, 138, 128)
+SOFT = MUTED
 
 CATEGORY_NAMES = {
     "MLM1574": "Hogar", "MLM1000": "Electrónica", "MLM1575": "Electrodomésticos",
@@ -87,8 +89,8 @@ def wrap(draw: ImageDraw.ImageDraw, text: str, f: ImageFont.FreeTypeFont, width:
 
 def brand(d: ImageDraw.ImageDraw, center: tuple[int, int], size: int, light: bool = False) -> None:
     """Logotipo de texto: Caza + ofertas (naranja) + MX."""
-    base = WHITE if light else FOREST
-    parts = [("Caza", base), ("ofertas", ORANGE), (" MX", base)]
+    base = WHITE if light else INK
+    parts = [("Caza", base), ("ofertas", ACCENT if light else ACCENT_TEXT), (" MX", base)]
     f = font("ExtraBold", size)
     total = sum(d.textlength(t, font=f) for t, _ in parts)
     x = center[0] - total / 2
@@ -108,7 +110,7 @@ def _gradient(W: int, H: int, top: tuple, bottom: tuple) -> Image.Image:
 def _paste_product(canvas: Image.Image, img: Image.Image | None, box: tuple[int, int, int, int], radius: int) -> None:
     x0, y0, x1, y1 = box
     d = ImageDraw.Draw(canvas)
-    d.rounded_rectangle(box, radius=radius, fill=WHITE)
+    d.rounded_rectangle(box, radius=radius, fill=WHITE, outline=(226, 234, 216), width=3)
     if img is None:
         return
     pad = int((x1 - x0) * 0.06)
@@ -118,9 +120,9 @@ def _paste_product(canvas: Image.Image, img: Image.Image | None, box: tuple[int,
 
 def _badge(d: ImageDraw.ImageDraw, pct: float, center: tuple[int, int], r: int) -> None:
     cx, cy = center
-    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=ORANGE)
-    d.text((cx, cy - r * 0.12), f"-{pct:.0f}%", font=font("ExtraBold", int(r * 0.6)), fill=WHITE, anchor="mm")
-    d.text((cx, cy + r * 0.42), "OFF", font=font("Bold", int(r * 0.28)), fill=WHITE, anchor="mm")
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=ACCENT)
+    d.text((cx, cy - r * 0.12), f"-{pct:.0f}%", font=font("ExtraBold", int(r * 0.6)), fill=INK, anchor="mm")
+    d.text((cx, cy + r * 0.42), "OFF", font=font("Bold", int(r * 0.28)), fill=INK, anchor="mm")
 
 
 def _pill(d: ImageDraw.ImageDraw, text: str, x: int, y: int, size: int, bg, fg, weight: str = "Bold") -> int:
@@ -137,14 +139,14 @@ def _arrow_button(d: ImageDraw.ImageDraw, text: str, box: tuple[int, int, int, i
     """Botón píldora naranja con círculo blanco y flecha (estilo de la referencia)."""
     x0, y0, x1, y1 = box
     h = y1 - y0
-    d.rounded_rectangle(box, radius=h // 2, fill=ORANGE)
+    d.rounded_rectangle(box, radius=h // 2, fill=FOREST)
     r = int(h * 0.38)
     cx, cy = x1 - h // 2, y0 + h // 2
-    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=WHITE)
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=ACCENT)
     a = r * 0.45  # flecha dibujada (la fuente no trae el símbolo)
     wd = max(3, h // 18)
-    d.line([(cx - a, cy), (cx + a, cy)], fill=ORANGE, width=wd)
-    d.line([(cx + a * 0.15, cy - a * 0.7), (cx + a, cy), (cx + a * 0.15, cy + a * 0.7)], fill=ORANGE, width=wd, joint="curve")
+    d.line([(cx - a, cy), (cx + a, cy)], fill=INK, width=wd)
+    d.line([(cx + a * 0.15, cy - a * 0.7), (cx + a, cy), (cx + a * 0.15, cy + a * 0.7)], fill=INK, width=wd, joint="curve")
     f = font("Bold", int(h * 0.34))
     d.text(((x0 + (cx - r)) / 2, cy), text, font=f, fill=WHITE, anchor="mm")
 
@@ -154,19 +156,19 @@ def _price(d: ImageDraw.ImageDraw, p: Product, x: int, y: int, big: int) -> int:
     if p.original_price and p.original_price > p.price:
         f_old = font("Medium", int(big * 0.36))
         old = money(p.original_price)
-        d.text((x, y), old, font=f_old, fill=SOFT, anchor="lt")
+        d.text((x, y), old, font=f_old, fill=MUTED, anchor="lt")
         w = d.textlength(old, font=f_old)
         mid = y + int(big * 0.36 * 0.58)
         d.line([(x - 3, mid), (x + w + 3, mid)], fill=SOFT, width=max(2, big // 32))
         y += int(big * 0.5)
-    d.text((x, y), money(p.price), font=font("ExtraBold", big), fill=WHITE, anchor="lt")
+    d.text((x, y), money(p.price), font=font("ExtraBold", big), fill=INK, anchor="lt")
     return y + int(big * 1.08)
 
 
 def render(p: Product, img: Image.Image | None, site_name: str, cta: str, vertical: bool = False,
            code: int = 0) -> Image.Image:
     W, H = (1080, 1920) if vertical else (1080, 1080)
-    c = _gradient(W, H, (240, 249, 236), (214, 238, 208))
+    c = _gradient(W, H, (236, 243, 226), (214, 230, 194))
     d = ImageDraw.Draw(c)
     m = 54 if vertical else 44
 
@@ -182,8 +184,8 @@ def render(p: Product, img: Image.Image | None, site_name: str, cta: str, vertic
         img_box, panel_top, radius = (m, head + 20, W - m, head + 20 + 980), head + 760, 64
     else:
         img_box, panel_top, radius = (m + 120, head + 6, W - m - 120, head + 6 + 470), head + 330, 48
-    d.rounded_rectangle((0, panel_top, W, H), radius=90 if vertical else 64, fill=FOREST)
-    d.rectangle((0, H - 100, W, H), fill=FOREST)
+    d.rounded_rectangle((0, panel_top, W, H), radius=90 if vertical else 64, fill=PANEL)
+    d.rectangle((0, H - 100, W, H), fill=PANEL)
     _paste_product(c, img, img_box, radius)
     if p.discount_pct:
         r = 118 if vertical else 80
@@ -196,7 +198,7 @@ def render(p: Product, img: Image.Image | None, site_name: str, cta: str, vertic
     y = img_box[3] + (54 if vertical else 24)
     f_title = font("SemiBold", ts)
     for line in wrap(d, p.title, f_title, W - 2 * m, 2):
-        d.text((m, y), line, font=f_title, fill=WHITE)
+        d.text((m, y), line, font=f_title, fill=INK)
         y += int(ts * 1.3)
     y = _price(d, p, m, y + 14, 150 if vertical else 92)
     if p.rank:
@@ -234,14 +236,14 @@ def make_icon(size: int, maskable: bool = False) -> Image.Image:
         d.rounded_rectangle([0, 0, size - 1, size - 1], radius=size // 4, fill=FOREST)
     s = size * (0.5 if maskable else 0.62)
     o = (size - s) / 2
-    d.ellipse([o, o, o + s, o + s], fill=ORANGE)
-    d.text((size / 2, size / 2 + s * 0.02), "%", font=font("ExtraBold", int(s * 0.62)), fill=WHITE, anchor="mm")
+    d.ellipse([o, o, o + s, o + s], fill=ACCENT)
+    d.text((size / 2, size / 2 + s * 0.02), "%", font=font("ExtraBold", int(s * 0.62)), fill=INK, anchor="mm")
     return img
 
 
 def make_og() -> Image.Image:
     """Imagen 1200x630 para la vista previa al compartir la web (WhatsApp, Facebook)."""
-    c = _gradient(1200, 630, (240, 249, 236), (214, 238, 208))
+    c = _gradient(1200, 630, (236, 243, 226), (214, 230, 194))
     d = ImageDraw.Draw(c)
     icon = make_icon(220)
     c.paste(icon, (110, 205), icon)

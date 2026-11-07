@@ -15,23 +15,23 @@ from ..copywriter import money
 from ..meli import Product
 
 CSS = """
-:root{--bg:#EEF7EA;--bg2:#DDF0D7;--card:#fff;--ink:#1C3423;--muted:#6F8574;--line:#DCEBD6;--forest:#1F4D2C;
---mint:#BFE5B8;--orange:#F07A2B;--chip:#fff;--shadow:0 2px 10px rgba(31,77,44,.08)}
-@media (prefers-color-scheme:dark){:root{--bg:#0F1D14;--bg2:#13261A;--card:#182C1F;--ink:#E8F3E6;--muted:#9DB5A2;
---line:#24402D;--chip:#1E3526;--mint:#2E5C3B;--shadow:none}}
+:root{--bg:#EBF2E1;--bg2:#DDEACB;--card:#fff;--ink:#102015;--muted:#7D8A80;--line:#E2EAD8;--forest:#1E2B20;
+--mint:#CDE8AA;--orange:#1E2B20;--lime:#A6E36B;--lime-text:#3F8A22;--chip:#fff;--shadow:0 2px 12px rgba(16,32,21,.07)}
+@media (prefers-color-scheme:dark){:root{--bg:#111A13;--bg2:#162119;--card:#1C281F;--ink:#ECF3E6;--muted:#9AAA9D;
+--line:#26352A;--chip:#223026;--mint:#33502B;--orange:#A6E36B;--lime-text:#A6E36B;--shadow:none}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);
 font-size:15px;line-height:1.4}
 .hero{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);padding:18px 16px 6px}
 .top{display:flex;align-items:center;justify-content:space-between}
-.logo{font-weight:800;font-size:21px;margin:0;color:var(--forest)}.logo b{color:var(--orange);font-weight:800}
+.logo{font-weight:800;font-size:21px;margin:0;color:var(--ink)}.logo b{color:var(--lime-text);font-weight:800}
 @media (prefers-color-scheme:dark){.logo{color:#E8F3E6}}
 .pill-note{font-size:12px;font-weight:600;background:var(--card);color:var(--forest);padding:6px 10px;border-radius:999px;box-shadow:var(--shadow)}
 @media (prefers-color-scheme:dark){.pill-note{color:var(--ink)}}
 .big{display:flex;align-items:center;gap:12px;margin:18px 0 4px}
-.big .n{font-size:54px;font-weight:800;line-height:1;color:var(--forest);letter-spacing:-2px}
-@media (prefers-color-scheme:dark){.big .n{color:var(--mint)}}
+.big .n{font-size:54px;font-weight:800;line-height:1;color:var(--ink);letter-spacing:-2px}
+@media (prefers-color-scheme:dark){.big .n{color:var(--lime)}}
 .big .l{font-size:19px;font-weight:700;line-height:1.15}
 .sub{margin:6px 0 0;color:var(--muted);font-size:14px}
 .tools{position:sticky;top:0;z-index:5;background:var(--bg2);padding:10px 16px 10px}
@@ -47,11 +47,11 @@ main{max-width:1100px;margin:auto;padding:12px 12px 8px;display:grid;grid-templa
 @media (min-width:1000px){main{grid-template-columns:repeat(4,1fr)}}
 .card{background:var(--card);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
 scroll-margin-top:130px;transition:box-shadow .3s}
-.card.hit{box-shadow:0 0 0 3px var(--orange)}
+.card.hit{box-shadow:0 0 0 3px var(--lime)}
 .media{position:relative;background:#fff;aspect-ratio:1/1}
 .media img{width:100%;height:100%;object-fit:contain;padding:14px}
-.code{position:absolute;left:8px;top:8px;background:var(--forest);color:#fff;font-weight:700;font-size:12px;padding:4px 9px;border-radius:999px}
-.off{position:absolute;right:8px;top:8px;background:var(--orange);color:#fff;font-weight:800;font-size:13px;padding:4px 9px;border-radius:999px}
+.code{position:absolute;left:8px;top:8px;background:#EEF2EA;color:#102015;font-weight:700;font-size:12px;padding:4px 9px;border-radius:999px}
+.off{position:absolute;right:8px;top:8px;background:var(--lime);color:#102015;font-weight:800;font-size:13px;padding:4px 9px;border-radius:999px}
 .new{position:absolute;left:8px;bottom:8px;background:var(--mint);color:var(--forest);font-weight:700;font-size:11px;padding:3px 8px;border-radius:999px}
 .b{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px;flex:1}
 .t{font-size:13px;font-weight:500;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
@@ -60,7 +60,7 @@ scroll-margin-top:130px;transition:box-shadow .3s}
 .meta{font-size:11px;color:var(--muted);min-height:1.4em}
 .btn{margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:6px;background:var(--orange);color:#fff;
 font-weight:700;font-size:14px;padding:6px 6px 6px 14px;border-radius:999px;text-decoration:none}
-.btn i{flex:none;width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.btn i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--lime);display:grid;place-items:center}
 .btn:active{transform:scale(.97)}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 10px}
 footer{background:var(--forest);color:#D5E6D6;margin-top:18px;padding:22px 18px 40px;font-size:13px;border-radius:28px 28px 0 0}
@@ -105,7 +105,7 @@ def _card(it: dict) -> str:
         f'<div class="p">{money(p.price)}</div>'
         f'<div class="meta">{escape(top)}</div>'
         f'<a class="btn" rel="sponsored nofollow noopener" target="_blank" '
-        f'href="{escape(it.get("affiliate_link", ""), True)}">Ver oferta<i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F07A2B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a></div></article>'
+        f'href="{escape(it.get("affiliate_link", ""), True)}">Ver oferta<i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#102015" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a></div></article>'
     )
 
 
@@ -131,7 +131,7 @@ def render(items: list[dict], cfg: Config) -> str:
         '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         f"<title>{name}: ofertas de hoy en Mercado Libre</title>"
         '<meta name="description" content="Descuentos reales en Mercado Libre México, revisados cada día. Busca el código del video.">'
-        '<meta name="theme-color" content="#EEF7EA"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">'
+        '<meta name="theme-color" content="#EBF2E1"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">'
         f"{og}<style>{CSS}</style></head><body>"
         f'<header class="hero"><div class="top"><p class="logo">{logo}</p>'
         '<span class="pill-note">Te llevamos a Mercado Libre</span></div>'
