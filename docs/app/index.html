@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFE600">
+<title>Ofertas MX</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root {
+    --bg: #f2f3f7; --card: #fff; --ink: #1d1d1f; --muted: #6b6f7b; --line: #e3e5ec;
+    --brand: #FFE600; --brand-ink: #2D3277; --blue: #3483fa; --ok: #00a650; --warn: #b26a00; --bad: #d93025;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111216; --card: #1c1d22; --ink: #f2f2f4; --muted: #9a9dab; --line: #2c2e36; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; font-family: system-ui, -apple-system, Roboto, sans-serif; background: var(--bg); color: var(--ink); }
+  header { position: sticky; top: 0; z-index: 5; background: var(--brand); color: var(--brand-ink);
+    padding: calc(12px + env(safe-area-inset-top)) 16px 12px; display: flex; align-items: center; gap: 10px; }
+  header h1 { font-size: 18px; margin: 0; flex: 1; }
+  .iconbtn { background: transparent; border: 0; font-size: 20px; padding: 6px; color: var(--brand-ink); }
+  main { padding: 12px 12px 120px; max-width: 640px; margin: auto; }
+  .summary { color: var(--muted); font-size: 13px; margin: 4px 4px 12px; }
+  .card { background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 10px; display: grid;
+    grid-template-columns: 72px 1fr; gap: 12px; border: 2px solid transparent; }
+  .card.done { border-color: var(--ok); }
+  .card.sent { opacity: .65; }
+  .card img { width: 72px; height: 72px; object-fit: contain; background: #fff; border-radius: 10px; }
+  .t { font-size: 14px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .price { font-weight: 700; font-size: 17px; margin-top: 4px; }
+  .off { color: var(--ok); font-size: 13px; font-weight: 700; margin-left: 6px; }
+  .row { grid-column: 1 / -1; display: flex; gap: 8px; }
+  .btn { flex: 1; border: 0; border-radius: 10px; padding: 12px 10px; font-size: 15px; font-weight: 600; }
+  .btn.open { background: var(--line); color: var(--ink); }
+  .btn.paste { background: var(--blue); color: #fff; }
+  .link { grid-column: 1 / -1; font-size: 12px; word-break: break-all; display: flex; gap: 6px; align-items: center; }
+  .link.ok { color: var(--ok); } .link.warn { color: var(--warn); } .link.bad { color: var(--bad); }
+  .link button { margin-left: auto; background: none; border: 0; color: var(--muted); font-size: 13px; text-decoration: underline; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--card); border-top: 1px solid var(--line);
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom)); }
+  .footer .btn { width: 100%; max-width: 640px; display: block; margin: auto; background: var(--brand); color: var(--brand-ink); font-size: 16px; padding: 14px; }
+  .footer .btn:disabled { opacity: .5; }
+  .panel { background: var(--card); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .panel h2 { font-size: 16px; margin: 0 0 8px; }
+  .panel p, .panel li { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  input[type=password], input[type=text] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--ink); font-size: 15px; margin: 8px 0; }
+  .panel .btn { width: 100%; background: var(--blue); color: #fff; margin-top: 6px; }
+  .panel .btn.sec { background: var(--line); color: var(--ink); }
+  .toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); background: #222; color: #fff;
+    padding: 10px 14px; border-radius: 10px; font-size: 14px; max-width: 90%; z-index: 20; display: none; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 16px; }
+  a { color: var(--blue); }
+  .manual { grid-column: 1 / -1; display: none; }
+  .manual.show { display: block; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Ofertas MX</h1>
+  <button class="iconbtn" id="reload" aria-label="Recargar">⟳</button>
+  <button class="iconbtn" id="menu" aria-label="Ajustes">⚙</button>
+</header>
+<main id="main"></main>
+<div class="footer" id="footer" hidden><button class="btn" id="send" disabled>Enviar y publicar</button></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+// --- Configuración fija del repo (no hay secretos aquí: el token vive solo en el teléfono) ---
+const REPO = "JoanReyes07/Ofertas-bot";
+const BRANCH = "main";
+const CSV_PATH = "links_pendientes.csv";
+const STATE_PATH = "data/state.json";
+const WORKFLOW = "daily.yml";
+const COLUMNS = ["id", "title", "price", "descuento_pct", "permalink", "affiliate_link"];
+const API = "https://api.github.com/repos/" + REPO;
+
+const $ = (s) => document.querySelector(s);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+let rows = [], state = {}, drafts = store.get("drafts", {});
+
+function toast(msg, ms = 2600) {
+  const t = $("#toast"); t.textContent = msg; t.style.display = "block";
+  clearTimeout(toast._t); toast._t = setTimeout(() => (t.style.display = "none"), ms);
+}
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// --- CSV compatible con el módulo csv de Python ---
+function parseCSV(text) {
+  text = text.replace(/^﻿/, "");
+  const out = []; let row = [], f = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; }
+      else f += c;
+    } else if (c === '"') q = true;
+    else if (c === ",") { row.push(f); f = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(f); f = ""; if (row.length > 1 || row[0] !== "") out.push(row); row = [];
+    } else f += c;
+  }
+  if (f !== "" || row.length) { row.push(f); out.push(row); }
+  const head = out.shift() || [];
+  return out.map((r) => Object.fromEntries(head.map((h, i) => [h, r[i] ?? ""])));
+}
+function toCSV(list) {
+  const cell = (v) => { v = String(v ?? ""); return /[",\r\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  return [COLUMNS.join(","), ...list.map((r) => COLUMNS.map((c) => cell(r[c])).join(","))].join("\n") + "\n";
+}
+
+// --- Base64 UTF-8 ---
+const b64decode = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, "")), (c) => c.charCodeAt(0)));
+function b64encode(str) { let bin = ""; new TextEncoder().encode(str).forEach((b) => (bin += String.fromCharCode(b))); return btoa(bin); }
+
+// --- GitHub API ---
+async function gh(path, opts = {}) {
+  const token = store.get("token", "");
+  const r = await fetch(API + path, {
+    ...opts,
+    cache: "no-store",
+    headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + token,
+      "X-GitHub-Api-Version": "2022-11-28", ...(opts.headers || {}) },
+  });
+  if (!r.ok) {
+    let msg = r.status + "";
+    try { msg += " " + (await r.json()).message; } catch {}
+    if (r.status === 401) msg = "Token inválido o vencido. Revisa Ajustes.";
+    if (r.status === 403 || r.status === 404) msg += " (¿el token tiene permiso sobre " + REPO + "?)";
+    throw new Error(msg);
+  }
+  return r.status === 204 ? null : r.json();
+}
+async function getFile(path) {
+  const j = await gh("/contents/" + path + "?ref=" + BRANCH + "&t=" + Date.now());
+  const text = j.content ? b64decode(j.content)
+    : await (await fetch(j.download_url + "?t=" + Date.now(), { cache: "no-store" })).text(); // archivos > 1 MB
+  return { sha: j.sha, text };
+}
+
+// --- Enlaces ---
+function extractUrl(text) {
+  const m = String(text || "").match(/https?:\/\/[^\s"'<>]+/);
+  return m ? m[0].replace(/[).,;]+$/, "") : "";
+}
+function judge(link, row) {
+  if (!link) return null;
+  if (link === row.permalink) return { cls: "bad", msg: "Ese es el link normal del producto, no el de afiliado" };
+  if (/^https:\/\/(meli\.la|(www\.)?mercadolibre\.com(\.mx)?)\//i.test(link)) return { cls: "ok", msg: "✓ " + link };
+  return { cls: "warn", msg: "⚠ No parece link de Mercado Libre: " + link };
+}
+async function readClipboard() {
+  if (window.Android && Android.readClipboard) return Android.readClipboard(); // dentro del APK
+  if (navigator.clipboard && navigator.clipboard.readText) return navigator.clipboard.readText();
+  throw new Error("sin portapapeles");
+}
+function openProduct(url) {
+  if (window.Android && Android.openExternal) Android.openExternal(url);
+  else window.open(url, "_blank", "noopener");
+}
+
+// --- Pantallas ---
+function renderSetup(msg) {
+  $("#footer").hidden = true;
+  $("#main").innerHTML = `
+    <div class="panel">
+      <h2>Conectar con GitHub</h2>
+      ${msg ? `<p style="color:var(--bad)">${esc(msg)}</p>` : ""}
+      <p>Pega un <b>token de acceso</b> de GitHub limitado al repo <b>${REPO}</b>, con permisos
+      <b>Contents: Read and write</b> y <b>Actions: Read and write</b>. Se guarda solo en este teléfono.</p>
+      <input type="password" id="tok" placeholder="github_pat_..." autocomplete="off" value="${esc(store.get("token", ""))}">
+      <button class="btn" id="save">Guardar y cargar ofertas</button>
+      <p><a href="#" id="howto">¿Cómo creo el token?</a></p>
+    </div>
+    <div class="panel">
+      <h2>Acciones</h2>
+      <button class="btn sec" id="fetchnow">Buscar ofertas nuevas ahora</button>
+      <p>Lanza el bot para buscar ofertas sin esperar a las 8:00. Tarda 1–2 minutos; luego toca ⟳.</p>
+      <button class="btn sec" id="actions">Ver ejecuciones del bot</button>
+    </div>`;
+  $("#save").onclick = () => {
+    const t = $("#tok").value.trim();
+    if (!t) return toast("Pega el token");
+    store.set("token", t); load();
+  };
+  $("#howto").onclick = (e) => { e.preventDefault(); openProduct("https://github.com/settings/personal-access-tokens/new"); };
+  $("#fetchnow").onclick = () => dispatch("fetch", "Buscando ofertas nuevas…");
+  $("#actions").onclick = () => openProduct("https://github.com/" + REPO + "/actions");
+}
+
+function renderList() {
+  const pend = rows.filter((r) => { const st = state[r.id]?.status; return !st || st === "candidate" || st === "ready"; });
+  $("#footer").hidden = false;
+  if (!pend.length) {
+    $("#main").innerHTML = `<div class="empty"><p>No hay ofertas pendientes.</p>
+      <p>El bot busca nuevas a las 8:00, o puedes lanzarlo desde ⚙.</p></div>`;
+    updateSend(); return;
+  }
+  const ready = pend.filter((r) => r.affiliate_link).length;
+  $("#main").innerHTML = `<div class="summary">${pend.length} ofertas · ${ready} ya enviadas · toca <b>Abrir</b>, en Mercado Libre usa Compartir → Copiar link, regresa y toca <b>Pegar</b>.</div>`
+    + pend.map((r) => {
+      const st = state[r.id] || {};
+      const draft = drafts[r.id] || "";
+      const v = judge(draft, r);
+      const sent = !draft && r.affiliate_link;
+      return `<div class="card ${draft && v && v.cls !== "bad" ? "done" : ""} ${sent ? "sent" : ""}" data-id="${esc(r.id)}">
+        <img src="${esc(st.image || "icon-192.png")}" alt="" loading="lazy">
+        <div><div class="t">${esc(r.title)}</div>
+          <div class="price">$${esc(r.price)}<span class="off">${Math.round(+r.descuento_pct || 0)}% OFF</span></div></div>
+        <div class="row">
+          <button class="btn open" data-act="open">Abrir</button>
+          <button class="btn paste" data-act="paste">${draft ? "Cambiar" : "📋 Pegar"}</button>
+        </div>
+        <div class="manual"><input type="text" placeholder="Mantén presionado aquí y pega" data-act="manual"></div>
+        ${v ? `<div class="link ${v.cls}"><span>${esc(v.msg)}</span><button data-act="clear">quitar</button></div>`
+            : sent ? `<div class="link ok"><span>✓ Ya enviado</span></div>` : ""}
+      </div>`;
+    }).join("");
+  updateSend();
+}
+
+function updateSend() {
+  const n = Object.entries(drafts).filter(([id, l]) => { const r = rows.find((x) => x.id === id); return r && judge(l, r)?.cls !== "bad"; }).length;
+  const b = $("#send");
+  b.disabled = n === 0;
+  b.textContent = n ? `Enviar ${n} y publicar` : "Pega al menos un link";
+}
+
+function setDraft(id, link) {
+  if (link) drafts[id] = link; else delete drafts[id];
+  store.set("drafts", drafts); renderList();
+}
+
+$("#main").addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-act]"); if (!btn) return;
+  const card = btn.closest(".card"); if (!card) return;
+  const id = card.dataset.id, row = rows.find((r) => r.id === id);
+  const act = btn.dataset.act;
+  if (act === "open") openProduct(row.permalink);
+  else if (act === "clear") setDraft(id, "");
+  else if (act === "paste") {
+    try {
+      const url = extractUrl(await readClipboard());
+      if (!url) return toast("El portapapeles no tiene un link. Copia el link en Mercado Libre.");
+      setDraft(id, url);
+      if (judge(url, row).cls === "bad") toast("Ese es el link normal. En ML usa Compartir → Copiar link.", 4000);
+    } catch {
+      card.querySelector(".manual").classList.add("show");
+      card.querySelector(".manual input").focus();
+      toast("Mantén presionado el campo y elige Pegar");
+    }
+  }
+});
+$("#main").addEventListener("input", (e) => {
+  if (e.target.dataset.act !== "manual") return;
+  const id = e.target.closest(".card").dataset.id;
+  const url = extractUrl(e.target.value);
+  if (url) setDraft(id, url);
+});
+
+// --- Enviar ---
+async function send() {
+  const b = $("#send"); b.disabled = true; b.textContent = "Enviando…";
+  try {
+    const { sha, text } = await getFile(CSV_PATH); // versión más reciente, por si el bot la cambió
+    const fresh = parseCSV(text);
+    let n = 0;
+    for (const r of fresh) {
+      const link = drafts[r.id];
+      if (link && judge(link, r).cls !== "bad") { r.affiliate_link = link; n++; }
+    }
+    if (!n) throw new Error("Esos productos ya no están en la lista. Toca ⟳.");
+    await gh("/contents/" + CSV_PATH, {
+      method: "PUT",
+      body: JSON.stringify({ message: `links: ${n} enlace(s) de afiliado desde la app`, content: b64encode(toCSV(fresh)), sha, branch: BRANCH }),
+    });
+    for (const r of fresh) if (drafts[r.id] && r.affiliate_link === drafts[r.id]) delete drafts[r.id];
+    store.set("drafts", drafts);
+    rows = fresh;
+    renderList();
+    await dispatch("publish", `✓ ${n} enlace(s) guardados. Publicando…`);
+  } catch (err) {
+    toast("No se pudo enviar: " + err.message, 5000);
+    updateSend();
+  }
+}
+async function dispatch(accion, okMsg) {
+  try {
+    await gh("/actions/workflows/" + WORKFLOW + "/dispatches", {
+      method: "POST", body: JSON.stringify({ ref: BRANCH, inputs: { accion } }),
+    });
+    toast(okMsg + " Revisa la web en 2–3 min.", 4500);
+  } catch (err) {
+    toast("No pude lanzar el bot: " + err.message, 5000);
+  }
+}
+$("#send").onclick = send;
+
+// --- Carga ---
+async function load() {
+  if (!store.get("token", "")) return renderSetup();
+  $("#main").innerHTML = `<div class="empty">Cargando ofertas…</div>`;
+  try {
+    const [csv, st] = await Promise.all([getFile(CSV_PATH), getFile(STATE_PATH).catch(() => ({ text: "{}" }))]);
+    rows = parseCSV(csv.text);
+    state = (JSON.parse(st.text || "{}").items) || {};
+    // descartar borradores de productos que ya no están
+    for (const id of Object.keys(drafts)) if (!rows.some((r) => r.id === id)) delete drafts[id];
+    store.set("drafts", drafts);
+    renderList();
+  } catch (err) {
+    renderSetup(err.message);
+  }
+}
+$("#reload").onclick = load;
+$("#menu").onclick = () => renderSetup();
+// al volver de Mercado Libre, revisar si hay que refrescar el botón
+document.addEventListener("visibilitychange", () => { if (!document.hidden) updateSend(); });
+
+if ("serviceWorker" in navigator && !window.Android) navigator.serviceWorker.register("sw.js").catch(() => {});
+load();
+</script>
+</body>
+</html>

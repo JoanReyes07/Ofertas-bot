@@ -14,6 +14,11 @@ on:
 permissions:
   contents: write
 
+# Nunca dos ejecuciones a la vez (p. ej. la app lanza publish mientras corre el de las 12:00)
+concurrency:
+  group: ofertas
+  cancel-in-progress: false
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -48,4 +53,8 @@ jobs:
           git config user.name "ofertas-bot"
           git config user.email "bot@users.noreply.github.com"
           git add -A .
-          git diff --cached --quiet || (git commit -m "ofertas: ${{ steps.a.outputs.cmd }}" && git push)
+          git diff --cached --quiet && exit 0
+          git commit -m "ofertas: ${{ steps.a.outputs.cmd }}"
+          # si mientras corría se subieron enlaces desde la app, integrarlos antes de subir
+          git pull --rebase -X theirs origin main || { git rebase --abort; git pull --no-rebase -X ours origin main; }
+          git push
