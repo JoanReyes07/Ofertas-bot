@@ -20,7 +20,7 @@ def prod(i="MLM1", price=219, orig=499, rank=3, level="5_green", title="Cama par
 
 def cfg(tmp_path, **kw):
     c = Config(categories=["MLM1574"], data_dir=str(tmp_path / "data"), out_dir=str(tmp_path / "out"),
-               docs_dir=str(tmp_path / "docs"), links_csv=str(tmp_path / "links.csv"),
+               docs_dir=str(tmp_path / "docs"), links_csv=str(tmp_path / "links.csv"), inbox_dir=str(tmp_path / "inbox"),
                fb_page_id="1", fb_token="t", web_url="https://ej.com")
     for k, v in kw.items():
         setattr(c, k, v)
@@ -210,3 +210,25 @@ def test_web_escapes(tmp_path):
     it = {**p.to_dict(), "affiliate_link": "https://a/b?x=1&y=2"}
     html = web.render([it], c)
     assert "<script>x" not in html and "&lt;script&gt;" in html
+
+
+def test_inbox_from_app(tmp_path):
+    c = cfg(tmp_path)
+    client = FakeClient([prod("A"), prod("B")], item_price=219)
+    cmd_fetch(c, client)
+    inbox = tmp_path / "inbox"
+    inbox.mkdir()
+    (inbox / "1.json").write_text(json.dumps({"links": {
+        "A": "https://meli.la/abc",
+        "B": "https://www.mercadolibre.com.mx/p/B",  # enlace normal: se ignora
+        "Z": "https://meli.la/zzz",  # producto desconocido: se ignora
+    }}), encoding="utf-8")
+    (inbox / "2.json").write_text("{roto", encoding="utf-8")
+    cmd_fetch(c, client)  # un fetch posterior no pierde el enlace
+    s = Store(f"{c.data_dir}/state.json")
+    assert s.items["A"]["status"] == "ready" and s.items["B"]["status"] == "candidate"
+    assert not list(inbox.glob("*.json"))  # envíos consumidos
+    assert "https://meli.la/abc" in (tmp_path / "links.csv").read_text(encoding="utf-8")
+    http = FakeHttp()
+    cmd_publish(c, client, http)
+    assert Store(f"{c.data_dir}/state.json").items["A"]["status"] == "published"

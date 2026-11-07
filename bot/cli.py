@@ -24,6 +24,7 @@ def _client(cfg: Config) -> MeliClient:
 def cmd_fetch(cfg: Config, client: MeliClient | None = None) -> None:
     store = _store(cfg)
     got = links.import_links(store, cfg.links_csv)  # no pisar enlaces que ya pegaste
+    got += links.import_inbox(store, cfg.inbox_dir)
     client = client or _client(cfg)
     found = []
     for cat in cfg.categories:
@@ -48,6 +49,7 @@ def _still_valid(client: MeliClient, it: dict) -> bool:
 def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> None:
     store = _store(cfg)
     links.import_links(store, cfg.links_csv)
+    links.import_inbox(store, cfg.inbox_dir)
     day = datetime.now(ZoneInfo("America/Mexico_City")).strftime("%Y-%m-%d")
     client = client or _client(cfg)
     kw = {"http": http} if http else {}

@@ -75,6 +75,7 @@ const REPO = "JoanReyes07/Ofertas-bot";
 const BRANCH = "main";
 const CSV_PATH = "links_pendientes.csv";
 const STATE_PATH = "data/state.json";
+const INBOX = "data/inbox";
 const WORKFLOW = "daily.yml";
 const COLUMNS = ["id", "title", "price", "descuento_pct", "permalink", "affiliate_link"];
 const API = "https://api.github.com/repos/" + REPO;
@@ -85,7 +86,7 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
   del(k) { try { localStorage.removeItem(k); } catch {} },
 };
-let rows = [], state = {}, drafts = store.get("drafts", {});
+let rows = [], state = {}, inboxLinks = {}, drafts = store.get("drafts", {});
 
 function toast(msg, ms = 2600) {
   const t = $("#toast"); t.textContent = msg; t.style.display = "block";
@@ -183,6 +184,8 @@ function renderSetup(msg) {
     </div>
     <div class="panel">
       <h2>Acciones</h2>
+      <button class="btn sec" id="publishnow">Publicar ahora</button>
+      <p>Publica los enlaces que ya enviaste sin esperar a las 12:00 o 20:00.</p>
       <button class="btn sec" id="fetchnow">Buscar ofertas nuevas ahora</button>
       <p>Lanza el bot para buscar ofertas sin esperar a las 8:00. Tarda 1–2 minutos; luego toca ⟳.</p>
       <button class="btn sec" id="actions">Ver ejecuciones del bot</button>
@@ -193,7 +196,8 @@ function renderSetup(msg) {
     store.set("token", t); load();
   };
   $("#howto").onclick = (e) => { e.preventDefault(); openProduct("https://github.com/settings/personal-access-tokens/new"); };
-  $("#fetchnow").onclick = () => dispatch("fetch", "Buscando ofertas nuevas…");
+  $("#publishnow").onclick = (e) => { e.target.disabled = true; dispatch("publish", "Publicando…"); };
+  $("#fetchnow").onclick = (e) => { e.target.disabled = true; dispatch("fetch", "Buscando ofertas nuevas…"); };
   $("#actions").onclick = () => openProduct("https://github.com/" + REPO + "/actions");
 }
 
@@ -205,13 +209,13 @@ function renderList() {
       <p>El bot busca nuevas a las 8:00, o puedes lanzarlo desde ⚙.</p></div>`;
     updateSend(); return;
   }
-  const ready = pend.filter((r) => r.affiliate_link).length;
+  const ready = pend.filter((r) => r.affiliate_link || inboxLinks[r.id]).length;
   $("#main").innerHTML = `<div class="summary">${pend.length} ofertas · ${ready} ya enviadas · toca <b>Abrir</b>, en Mercado Libre usa Compartir → Copiar link, regresa y toca <b>Pegar</b>.</div>`
     + pend.map((r) => {
       const st = state[r.id] || {};
       const draft = drafts[r.id] || "";
       const v = judge(draft, r);
-      const sent = !draft && r.affiliate_link;
+      const sent = !draft && (r.affiliate_link || inboxLinks[r.id]);
       return `<div class="card ${draft && v && v.cls !== "bad" ? "done" : ""} ${sent ? "sent" : ""}" data-id="${esc(r.id)}">
         <img src="${esc(st.image || "icon-192.png")}" alt="" loading="lazy">
         <div><div class="t">${esc(r.title)}</div>
@@ -222,7 +226,7 @@ function renderList() {
         </div>
         <div class="manual"><input type="text" placeholder="Mantén presionado aquí y pega" data-act="manual"></div>
         ${v ? `<div class="link ${v.cls}"><span>${esc(v.msg)}</span><button data-act="clear">quitar</button></div>`
-            : sent ? `<div class="link ok"><span>✓ Ya enviado</span></div>` : ""}
+            : sent ? `<div class="link ok"><span>✓ Enviado${r.affiliate_link ? "" : " · se publica en la próxima corrida"}</span></div>` : ""}
       </div>`;
     }).join("");
   updateSend();
@@ -268,32 +272,46 @@ $("#main").addEventListener("input", (e) => {
 });
 
 // --- Enviar ---
+// Cada envío es un archivo NUEVO en data/inbox/: nunca choca con lo que escribe el bot,
+// aunque esté corriendo. El bot lo lee y lo borra en su siguiente fetch/publish.
+let busy = false;
 async function send() {
+  if (busy) return;
+  busy = true;
   const b = $("#send"); b.disabled = true; b.textContent = "Enviando…";
   try {
-    const { sha, text } = await getFile(CSV_PATH); // versión más reciente, por si el bot la cambió
-    const fresh = parseCSV(text);
-    let n = 0;
-    for (const r of fresh) {
-      const link = drafts[r.id];
-      if (link && judge(link, r).cls !== "bad") { r.affiliate_link = link; n++; }
+    const links = {};
+    for (const [id, link] of Object.entries(drafts)) {
+      const r = rows.find((x) => x.id === id);
+      if (r && judge(link, r).cls !== "bad") links[id] = link;
     }
+    const n = Object.keys(links).length;
     if (!n) throw new Error("Esos productos ya no están en la lista. Toca ⟳.");
-    await gh("/contents/" + CSV_PATH, {
+    const name = INBOX + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 7) + ".json";
+    await gh("/contents/" + name, {
       method: "PUT",
-      body: JSON.stringify({ message: `links: ${n} enlace(s) de afiliado desde la app`, content: b64encode(toCSV(fresh)), sha, branch: BRANCH }),
+      body: JSON.stringify({
+        message: `links: ${n} enlace(s) de afiliado desde la app`,
+        content: b64encode(JSON.stringify({ links, sent_at: new Date().toISOString() }, null, 1)),
+        branch: BRANCH,
+      }),
     });
-    for (const r of fresh) if (drafts[r.id] && r.affiliate_link === drafts[r.id]) delete drafts[r.id];
+    Object.assign(inboxLinks, links);
+    for (const id of Object.keys(links)) delete drafts[id];
     store.set("drafts", drafts);
-    rows = fresh;
     renderList();
     await dispatch("publish", `✓ ${n} enlace(s) guardados. Publicando…`);
   } catch (err) {
     toast("No se pudo enviar: " + err.message, 5000);
+  } finally {
+    busy = false;
     updateSend();
   }
 }
+let lastDispatch = 0;
 async function dispatch(accion, okMsg) {
+  if (Date.now() - lastDispatch < 20000) return toast("Ya lancé el bot hace un momento; espera 1–2 min.");
+  lastDispatch = Date.now();
   try {
     await gh("/actions/workflows/" + WORKFLOW + "/dispatches", {
       method: "POST", body: JSON.stringify({ ref: BRANCH, inputs: { accion } }),
@@ -306,6 +324,16 @@ async function dispatch(accion, okMsg) {
 $("#send").onclick = send;
 
 // --- Carga ---
+async function loadInbox() {
+  const out = {};
+  try {
+    const files = await gh("/contents/" + INBOX + "?ref=" + BRANCH + "&t=" + Date.now());
+    for (const f of files.filter((f) => f.name.endsWith(".json"))) {
+      try { Object.assign(out, JSON.parse((await getFile(f.path)).text).links || {}); } catch {}
+    }
+  } catch {} // sin carpeta inbox = nada pendiente
+  return out;
+}
 async function load() {
   if (!store.get("token", "")) return renderSetup();
   $("#main").innerHTML = `<div class="empty">Cargando ofertas…</div>`;
@@ -313,6 +341,7 @@ async function load() {
     const [csv, st] = await Promise.all([getFile(CSV_PATH), getFile(STATE_PATH).catch(() => ({ text: "{}" }))]);
     rows = parseCSV(csv.text);
     state = (JSON.parse(st.text || "{}").items) || {};
+    inboxLinks = await loadInbox();
     // descartar borradores de productos que ya no están
     for (const id of Object.keys(drafts)) if (!rows.some((r) => r.id === id)) delete drafts[id];
     store.set("drafts", drafts);

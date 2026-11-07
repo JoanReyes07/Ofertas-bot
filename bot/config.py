@@ -52,6 +52,7 @@ class Config:
     out_dir: str = "out"
     docs_dir: str = "docs"
     links_csv: str = "links_pendientes.csv"
+    inbox_dir: str = "data/inbox"
 
     @classmethod
     def from_env(cls) -> "Config":
