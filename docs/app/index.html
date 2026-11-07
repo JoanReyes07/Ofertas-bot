@@ -242,8 +242,9 @@ function renderList() {
       <p>El bot busca nuevas a las 8:00, o puedes lanzarlo desde ⚙.</p></div>`;
     updateSend(); return;
   }
-  const ready = pend.filter((r) => r.affiliate_link || inboxLinks[r.id]).length;
-  const todo = pend.filter((r) => !r.affiliate_link && !inboxLinks[r.id] && !drafts[r.id]).slice(0, 20);
+  const hasLink = (r) => r.affiliate_link || inboxLinks[r.id] || state[r.id]?.status === "ready";
+  const ready = pend.filter(hasLink).length;
+  const todo = pend.filter((r) => !hasLink(r) && !drafts[r.id]).slice(0, 20);
   const batch = store.get("batch", []);
   $("#main").innerHTML = `<div class="fast"><h2>⚡ Modo rápido (todas de un jalón)</h2>
       <p>1) Copia las URLs · 2) Abre el generador (se abre en Chrome), pégalas y toca <b>Generar</b> · 3) Copia todos los links y pégalos aquí.</p>
@@ -259,7 +260,7 @@ function renderList() {
       const st = state[r.id] || {};
       const draft = drafts[r.id] || "";
       const v = judge(draft, r);
-      const sent = !draft && (r.affiliate_link || inboxLinks[r.id]);
+      const sent = !draft && hasLink(r);
       return `<div class="card ${draft && v && v.cls !== "bad" ? "done" : ""} ${sent ? "sent" : ""}" data-id="${esc(r.id)}">
         <img src="${esc(st.image || "icon-192.png")}" alt="" loading="lazy">
         <div><div class="t">${esc(r.title)}</div>
