@@ -67,8 +67,9 @@ def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> Non
                 continue
         link = it["affiliate_link"]
         copy = copywriter.generate(p, link, cfg, **kw)
-        card = media.make_cards(p, cfg, http)
-        store.items[p.id].update(copy=copy, cards=card)
+        store.items[p.id]["copy"] = copy
+        card = media.make_media(store.items[p.id], cfg, http)  # tarjetas, video y textos
+        store.items[p.id]["cards"] = card
         fb_id = ""
         if "facebook" in cfg.channels:
             sq = media.media_dir(cfg) / "cards" / card["square"] if card.get("square") else None
@@ -86,25 +87,20 @@ def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> Non
         files.whatsapp(wa_entries, cfg.out_dir, day)
     if "web" in cfg.channels:
         web.build(store.items, cfg)
-    media.build(store, cfg, day, done)
+    media.build(store, cfg, http)
     store.save()
     print(f"Publicadas: {done}")
 
 
 def cmd_media(cfg: Config) -> None:
-    """Regenera tarjetas, video y feed.json de lo publicado recientemente."""
+    """Regenera todo el material (tarjetas, videos, textos) de los productos de la página."""
     store = _store(cfg)
-    day = datetime.now(ZoneInfo("America/Mexico_City")).strftime("%Y-%m-%d")
-    n = 0
-    for it in store.with_status("published"):
-        p = Store.product(it)
-        if not it.get("copy"):
-            it["copy"] = copywriter.generate(p, it["affiliate_link"], cfg)
-        it["cards"] = media.make_cards(p, cfg)
-        n += 1
-    feed = media.build(store, cfg, day, n)
+    for it in media.on_page(store):
+        it["cards"], it["copy"] = {}, {}  # forzar regeneración (textos incluidos)
+    media.MAX_BACKFILL = 10**6
+    feed = media.build(store, cfg)
     store.save()
-    print(f"Tarjetas: {n} | video: {bool(feed['video'])} | en la app: {len(feed['items'])}")
+    print(f"Productos con material: {len(feed['items'])}")
 
 
 def cmd_status(cfg: Config) -> None:

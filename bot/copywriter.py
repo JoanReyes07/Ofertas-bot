@@ -25,9 +25,9 @@ def fallback(p: Product, link: str) -> dict:
         "tiktok_script": (
             f"GANCHO (0-3s): ¿Sabías que este producto está al {p.discount_pct:.0f}% menos?\n"
             f"CUERPO (3-15s): {p.title}. Hoy cuesta {money(p.price)}{old}.\n"
-            "CIERRE (15-20s): El enlace está en mi perfil. Los precios cambian, corre."
+            "CIERRE (15-20s): El link está en la descripción. Los precios cambian, corre."
         ),
-        "tiktok_caption": f"{p.title[:90]} a {money(p.price)} 🔥 Enlace en mi perfil #ofertas #mercadolibre #mexico",
+        "tiktok_caption": f"{p.title[:80]} a {money(p.price)} 🔥 {link} #ofertas #mercadolibre #mexico",
         "web_blurb": f"{p.title}. Precio actual {money(p.price)}{old}.",
     }
 
@@ -48,8 +48,8 @@ def _prompt(p: Product, link: str) -> str:
         f"DATOS: {json.dumps(facts, ensure_ascii=False)}\n"
         "Responde SOLO un JSON con claves: facebook (post corto con emojis, incluye el enlace exacto y el precio), "
         "whatsapp (mensaje breve, *negritas* con asteriscos, incluye el enlace exacto y el precio), "
-        "tiktok_script (guion de 20s: GANCHO, CUERPO, CIERRE; el cierre dice que el enlace está en el perfil, "
-        "sin URL), tiktok_caption (máx 150 caracteres con 3 hashtags), web_blurb (1-2 frases)."
+        "tiktok_script (guion de 20s: GANCHO, CUERPO, CIERRE; el cierre dice que el link está en la descripción, "
+        "sin URL), tiktok_caption (texto corto que incluye el enlace exacto y 3 hashtags), web_blurb (1-2 frases)."
     )
 
 
@@ -59,6 +59,8 @@ def _valid(c: dict, p: Product, link: str) -> bool:
     for k in ("facebook", "whatsapp"):
         if link not in c[k] or money(p.price) not in c[k]:
             return False
+    if link not in c["tiktok_caption"]:
+        return False
     return "http" not in c["tiktok_script"]
 
 

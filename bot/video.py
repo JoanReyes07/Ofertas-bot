@@ -1,48 +1,30 @@
-"""Video vertical diario "Top ofertas de hoy" para TikTok (sin audio: el sonido
-de moda se elige dentro de TikTok, que además le da más alcance)."""
+"""Video vertical corto por producto para TikTok (sin audio: el sonido de moda
+se elige dentro de TikTok, que además le da más alcance)."""
 from __future__ import annotations
 
 from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-from .cards import NAVY, WHITE, YELLOW, font
+from .cards import NAVY, RED, WHITE, YELLOW, font
 
-W, H = 1080, 1920
+W, H = 1080, 1920          # lienzo de diseño (igual que la tarjeta vertical)
+OUT_W, OUT_H = 720, 1280   # tamaño del MP4: suficiente para TikTok y pesa poco
 
 
-def _intro(n: int, day_label: str) -> Image.Image:
+def _intro(discount: float) -> Image.Image:
     c = Image.new("RGB", (W, H), YELLOW)
     d = ImageDraw.Draw(c)
-    d.text((W // 2, 700), f"TOP {n}", font=font("ExtraBold", 230), fill=NAVY, anchor="mm")
-    d.text((W // 2, 900), "OFERTAS DE HOY", font=font("ExtraBold", 96), fill=NAVY, anchor="mm")
-    d.text((W // 2, 1030), "en Mercado Libre", font=font("SemiBold", 60), fill=NAVY, anchor="mm")
-    d.rounded_rectangle([W // 2 - 260, 1140, W // 2 + 260, 1240], radius=50, fill=NAVY)
-    d.text((W // 2, 1190), day_label, font=font("Bold", 50), fill=YELLOW, anchor="mm")
+    d.text((W // 2, 640), "OFERTA", font=font("ExtraBold", 170), fill=NAVY, anchor="mm")
+    if discount:
+        d.ellipse([W // 2 - 290, 760, W // 2 + 290, 1340], fill=RED)
+        d.text((W // 2, 1010), f"-{discount:.0f}%", font=font("ExtraBold", 190), fill=WHITE, anchor="mm")
+        d.text((W // 2, 1180), "OFF", font=font("Bold", 80), fill=WHITE, anchor="mm")
+    d.text((W // 2, 1480), "en Mercado Libre", font=font("SemiBold", 64), fill=NAVY, anchor="mm")
     return c
 
 
-def _outro(web_url: str) -> Image.Image:
-    c = Image.new("RGB", (W, H), NAVY)
-    d = ImageDraw.Draw(c)
-    d.text((W // 2, 760), "¿Te gustó alguna?", font=font("ExtraBold", 90), fill=WHITE, anchor="mm")
-    d.text((W // 2, 900), "Los links están", font=font("Bold", 80), fill=YELLOW, anchor="mm")
-    d.text((W // 2, 1000), "en mi perfil", font=font("Bold", 80), fill=YELLOW, anchor="mm")
-    d.text((W // 2, 1160), "Los precios pueden cambiar", font=font("Medium", 46), fill=WHITE, anchor="mm")
-    if web_url:
-        d.text((W // 2, 1260), web_url.replace("https://", ""), font=font("Medium", 36), fill=WHITE, anchor="mm")
-    return c
-
-
-def _with_number(card: Image.Image, i: int, n: int) -> Image.Image:
-    c = card.copy()
-    d = ImageDraw.Draw(c)
-    d.rounded_rectangle([40, 190, 220, 290], radius=50, fill=NAVY)
-    d.text((130, 240), f"{i}/{n}", font=font("ExtraBold", 54), fill=YELLOW, anchor="mm")
-    return c
-
-
-def _zoom(img: Image.Image, t: float, amount: float = 0.05) -> Image.Image:
+def _zoom(img: Image.Image, t: float, amount: float) -> Image.Image:
     """Acercamiento suave (efecto Ken Burns), t de 0 a 1."""
     s = 1 + amount * t
     w, h = int(W * s), int(H * s)
@@ -51,27 +33,23 @@ def _zoom(img: Image.Image, t: float, amount: float = 0.05) -> Image.Image:
     return big.crop((x, y, x + W, y + H))
 
 
-def build(card_paths: list[str], out_path: str, day_label: str, web_url: str = "",
-          fps: int = 24, per_card: float = 3.0) -> str:
-    """Arma el MP4 a partir de las tarjetas verticales (1080x1920)."""
+def build_product(card_path: str, out_path: str, discount: float = 0.0, fps: int = 24) -> str:
+    """MP4 de ~6 s: intro con el descuento y la tarjeta con zoom."""
     import imageio_ffmpeg
 
-    cards = [Image.open(p).convert("RGB").resize((W, H)) for p in card_paths]
-    n = len(cards)
-    scenes = [(_intro(n, day_label), 1.8, 0.03)]
-    scenes += [(_with_number(c, i + 1, n), per_card, 0.06) for i, c in enumerate(cards)]
-    scenes += [(_outro(web_url), 2.5, 0.0)]
+    card = Image.open(card_path).convert("RGB").resize((W, H))
+    scenes = [(_intro(discount), 1.2, 0.04), (card, 5.0, 0.07)]
 
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     writer = imageio_ffmpeg.write_frames(
-        out_path, (W, H), fps=fps, codec="libx264", pix_fmt_out="yuv420p", macro_block_size=8,
-        output_params=["-movflags", "+faststart", "-crf", "24", "-preset", "veryfast"],
+        out_path, (OUT_W, OUT_H), fps=fps, codec="libx264", pix_fmt_out="yuv420p", macro_block_size=8,
+        output_params=["-movflags", "+faststart", "-crf", "27", "-preset", "veryfast"],
     )
     writer.send(None)
     for img, secs, zoom in scenes:
         frames = max(1, int(secs * fps))
         for k in range(frames):
             frame = _zoom(img, k / frames, zoom) if zoom else img
-            writer.send(frame.tobytes())
+            writer.send(frame.resize((OUT_W, OUT_H), Image.BILINEAR).tobytes())
     writer.close()
     return out_path

@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -24,12 +28,17 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 /**
  * Cáscara nativa que carga la app web de GitHub Pages a pantalla completa.
  * Extras nativos expuestos a JavaScript como window.Android:
  *  - readClipboard(): lee el portapapeles sin pedir permiso del navegador.
  *  - openExternal(url): abre el enlace fuera (la app de Mercado Libre si está instalada).
  *  - copyText(text): copia al portapapeles.
+ *  - saveFiles(json): guarda los archivos de un producto en Descargas/OfertasMX/<carpeta>/.
+ *    json = {"id": "...", "folder": "...", "files": [{"url","name","mime"}]}
  *  - share(url, mime, text, target): descarga la imagen/video y lo comparte a
  *    "tiktok", "whatsapp" o al selector de Android (target vacío). El texto se
  *    copia también al portapapeles porque TikTok ignora el texto adjunto.
@@ -190,6 +199,71 @@ public class MainActivity extends Activity {
         }).start();
     }
 
+    /** Descarga url y la escribe en Descargas/OfertasMX/folder/name (reemplaza si existe). */
+    private void saveToDownloads(String url, String folder, String name, String mime) throws Exception {
+        ContentResolver cr = getContentResolver();
+        String rel = Environment.DIRECTORY_DOWNLOADS + "/OfertasMX/" + folder + "/";
+        // borrar versión anterior del mismo archivo (si la creó esta app)
+        try {
+            cr.delete(MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                MediaStore.MediaColumns.RELATIVE_PATH + "=? AND " + MediaStore.MediaColumns.DISPLAY_NAME + "=?",
+                new String[]{rel, name});
+        } catch (Exception ignored) {
+        }
+        ContentValues v = new ContentValues();
+        v.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+        v.put(MediaStore.MediaColumns.MIME_TYPE, mime);
+        v.put(MediaStore.MediaColumns.RELATIVE_PATH, rel);
+        v.put(MediaStore.MediaColumns.IS_PENDING, 1);
+        Uri item = cr.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, v);
+        if (item == null) throw new Exception("no pude crear " + name);
+        HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
+        c.setConnectTimeout(20000);
+        c.setReadTimeout(60000);
+        c.setUseCaches(false);
+        try {
+            if (c.getResponseCode() != 200) throw new Exception("HTTP " + c.getResponseCode() + " en " + name);
+            try (InputStream in = c.getInputStream(); OutputStream os = cr.openOutputStream(item)) {
+                byte[] buf = new byte[64 * 1024];
+                int n;
+                while ((n = in.read(buf)) > 0) os.write(buf, 0, n);
+            }
+        } catch (Exception e) {
+            cr.delete(item, null, null);
+            throw e;
+        } finally {
+            c.disconnect();
+        }
+        ContentValues done = new ContentValues();
+        done.put(MediaStore.MediaColumns.IS_PENDING, 0);
+        cr.update(item, done, null, null);
+    }
+
+    private void doSave(String json) {
+        new Thread(() -> {
+            String id = "";
+            try {
+                JSONObject o = new JSONObject(json);
+                id = o.optString("id");
+                String folder = o.getString("folder").replaceAll("[\\/:*?\"<>|]", "_");
+                JSONArray files = o.getJSONArray("files");
+                for (int i = 0; i < files.length(); i++) {
+                    JSONObject f = files.getJSONObject(i);
+                    notifyJs("Guardando " + (i + 1) + "/" + files.length() + "…");
+                    saveToDownloads(f.getString("url"), folder, f.getString("name"), f.getString("mime"));
+                }
+                final String done = id;
+                runOnUiThread(() -> web.evaluateJavascript(
+                    "window.onSaved && window.onSaved('" + done.replace("'", "") + "', true)", null));
+            } catch (Exception e) {
+                final String failed = id;
+                notifyJs("Error al guardar: " + e.getMessage());
+                runOnUiThread(() -> web.evaluateJavascript(
+                    "window.onSaved && window.onSaved('" + failed.replace("'", "") + "', false)", null));
+            }
+        }).start();
+    }
+
     /** Métodos visibles desde JavaScript. */
     private class Bridge {
         @JavascriptInterface
@@ -210,6 +284,11 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void copyText(final String text) {
             runOnUiThread(() -> copy(text));
+        }
+
+        @JavascriptInterface
+        public void saveFiles(String json) {
+            doSave(json);
         }
 
         @JavascriptInterface

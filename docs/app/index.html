@@ -70,6 +70,10 @@
   .grid2 .share { padding: 8px; margin: 0; }
   .grid2 .row { flex-direction: column; gap: 6px; }
   .grid2 .btn { padding: 10px 6px; font-size: 14px; }
+  .btn.dl { background: var(--blue); color: #fff; }
+  .btn.dl.ok { background: var(--ok); }
+  .t2 { font-size: 13px; line-height: 1.3; margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .all { width: 100%; margin-bottom: 12px; background: var(--brand-ink); color: var(--brand); }
   .manual { grid-column: 1 / -1; display: none; }
   .manual.show { display: block; }
 </style>
@@ -80,7 +84,7 @@
   <button class="iconbtn" id="reload" aria-label="Recargar">⟳</button>
   <button class="iconbtn" id="menu" aria-label="Ajustes">⚙</button>
 </header>
-<nav class="tabs"><button id="tab-links" class="on">Enlaces</button><button id="tab-share">Compartir</button></nav>
+<nav class="tabs"><button id="tab-links" class="on">Enlaces</button><button id="tab-share">Descargar</button></nav>
 <main id="main"></main>
 <div class="footer" id="footer" hidden><button class="btn" id="send" disabled>Enviar y publicar</button></div>
 <div class="toast" id="toast"></div>
@@ -358,20 +362,6 @@ function copyText(text) {
   else if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
   toast("Texto copiado");
 }
-async function shareMedia(rel, mime, text, target) {
-  const url = abs(rel);
-  if (window.Android && Android.share) return Android.share(url, mime, text || "", target || "");
-  try { // navegador: Web Share API con archivo
-    const blob = await (await fetch(url)).blob();
-    const file = new File([blob], rel.split("/").pop(), { type: mime });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      if (text) copyText(text);
-      return await navigator.share({ files: [file], text });
-    }
-  } catch (e) { if (e.name === "AbortError") return; }
-  window.open(url, "_blank");
-}
-
 async function loadShare() {
   $("#footer").hidden = true;
   $("#main").innerHTML = `<div class="empty">Cargando material…</div>`;
@@ -383,46 +373,57 @@ async function loadShare() {
   renderShare();
 }
 
+let saved = store.get("saved", {}), queue = [], saving = null;
+window.onSaved = (id, ok) => {
+  if (ok) { saved[id] = Date.now(); store.set("saved", saved); toast("✓ Guardado en Descargas/OfertasMX", 2500); }
+  saving = null;
+  if (tab === "share") renderShare();
+  if (ok && queue.length) saveNext(); else queue = [];
+};
+function saveItem(it) {
+  if (window.Android && Android.saveFiles) {
+    saving = it.id;
+    Android.saveFiles(JSON.stringify({ id: it.id, folder: it.folder, files: it.files.map((f) => ({ ...f, url: abs(f.url) })) }));
+  } else { // navegador: descarga uno por uno
+    for (const f of it.files) {
+      const a = document.createElement("a");
+      a.href = abs(f.url); a.download = it.id + "-" + f.name; document.body.appendChild(a); a.click(); a.remove();
+    }
+    saved[it.id] = Date.now(); store.set("saved", saved);
+  }
+  renderShare();
+}
+function saveNext() { const it = queue.shift(); if (it) saveItem(it); }
+
 function renderShare() {
-  if (!feed || (!feed.video && !feed.items.length)) {
+  if (!feed || !feed.items.length) {
     $("#main").innerHTML = `<div class="empty"><p>Aún no hay material.</p><p>Se genera cuando el bot publica ofertas.</p></div>`;
     return;
   }
-  let h = "";
-  if (feed.video) {
-    h += `<div class="share"><h2>🎬 Video del día · ${esc(feed.video.label)} · ${feed.video.count} ofertas</h2>
-      <video src="${esc(abs(feed.video.url))}" controls playsinline preload="metadata"></video>
-      <div class="cap">${esc(feed.video.caption)}</div>
+  const pending = feed.items.filter((it) => !saved[it.id]).length;
+  let h = `<div class="summary">Cada oferta se guarda en <b>Descargas/OfertasMX/</b> con facebook.jpg, tiktok.jpg, tiktok.mp4 y textos.txt.</div>`;
+  if (pending) h += `<button class="btn all" id="saveall" ${saving ? "disabled" : ""}>⬇ Descargar ${pending} nueva(s)</button>`;
+  h += `<div class="grid2">` + feed.items.map((it, i) => {
+    const st = saving === it.id ? "Guardando…" : saved[it.id] ? "✓ Descargado" : "⬇ Descargar";
+    return `<div class="share">
+      <img class="big" src="${esc(abs(it.square))}" alt="" loading="lazy">
+      <div class="t2">${esc(it.title)}</div>
       <div class="row">
-        <button class="btn tt" data-share="video" data-target="tiktok">TikTok</button>
-        <button class="btn wa" data-share="video" data-target="whatsapp">WhatsApp</button>
-        <button class="btn more" data-share="video" data-target="">Más</button>
-      </div>
-      <div class="row"><button class="btn open" data-copy="video">Copiar texto</button></div>
-      <p class="cap">En TikTok: elige un sonido de moda y pega el texto (ya está copiado). Pon tu web en la bio.</p></div>`;
-  }
-  if (feed.items.length) {
-    h += `<div class="summary">Ofertas para tu canal de WhatsApp (imagen + texto con link)</div><div class="grid2">`
-      + feed.items.map((it, i) => `<div class="share">
-        <img class="big" src="${esc(abs(it.square))}" alt="" loading="lazy">
-        <div class="row">
-          <button class="btn wa" data-share="sq" data-i="${i}" data-target="whatsapp">WhatsApp</button>
-          <button class="btn tt" data-share="v" data-i="${i}" data-target="tiktok">TikTok</button>
-          <button class="btn open" data-copy="item" data-i="${i}">Copiar texto</button>
-        </div></div>`).join("") + `</div>`;
-  }
+        <button class="btn dl ${saved[it.id] ? "ok" : ""}" data-save="${i}" ${saving ? "disabled" : ""}>${st}</button>
+        <button class="btn open" data-copy="item" data-i="${i}">Copiar link</button>
+      </div></div>`;
+  }).join("") + `</div>`;
   $("#main").innerHTML = h;
+  const all = $("#saveall");
+  if (all) all.onclick = () => { queue = feed.items.filter((it) => !saved[it.id]); saveNext(); };
 }
 
 $("#main").addEventListener("click", (e) => {
-  const b = e.target.closest("[data-share],[data-copy]");
-  if (!b || tab !== "share") return;
-  const it = feed.items[+b.dataset.i];
-  if (b.dataset.copy) return copyText(b.dataset.copy === "video" ? feed.video.caption : it.whatsapp);
-  const kind = b.dataset.share, target = b.dataset.target;
-  if (kind === "video") return shareMedia(feed.video.url, "video/mp4", feed.video.caption, target);
-  const text = target === "tiktok" ? it.tiktok_caption : it.whatsapp;
-  shareMedia(kind === "sq" ? it.square : it.vertical, "image/jpeg", text, target);
+  if (tab !== "share") return;
+  const b = e.target.closest("[data-save],[data-copy]");
+  if (!b) return;
+  if (b.dataset.copy) return copyText(feed.items[+b.dataset.i].link);
+  if (!saving) saveItem(feed.items[+b.dataset.save]);
 });
 
 // --- Carga ---

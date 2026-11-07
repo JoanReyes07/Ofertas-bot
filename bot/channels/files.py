@@ -22,7 +22,7 @@ def tiktok(p: Product, c: dict, out_dir: str, web_url: str = "") -> str:
     d = Path(out_dir) / "tiktok"
     d.mkdir(parents=True, exist_ok=True)
     f = d / f"{p.id}.md"
-    bio = f"Pon en tu bio: {web_url}" if web_url else "Pon en tu bio el enlace a tu web de ofertas."
+    bio = "Pega el link de afiliado en la descripción (va directo a Mercado Libre)."
     f.write_text(
         f"# {p.title}\n\nPrecio: ${p.price:,.0f} | Descuento: {p.discount_pct:.0f}%\n\n"
         f"## Guion (20 s)\n{c['tiktok_script']}\n\n## Texto del video\n{c['tiktok_caption']}\n\n"

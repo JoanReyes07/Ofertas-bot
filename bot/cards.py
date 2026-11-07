@@ -170,7 +170,7 @@ def make_cards(p: Product, out_dir: str, site_name: str, http=requests) -> dict:
     d.mkdir(parents=True, exist_ok=True)
     img = load_image(p.image, http)
     sq = render(p, img, site_name, "Toca el link de la descripción")
-    vt = render(p, img, site_name, "Link en mi perfil", vertical=True)
+    vt = render(p, img, site_name, "Link en la descripción", vertical=True)
     sq_path, vt_path = d / f"{p.id}-sq.jpg", d / f"{p.id}-v.jpg"
     sq.save(sq_path, "JPEG", quality=88, optimize=True)
     vt.save(vt_path, "JPEG", quality=88, optimize=True)
