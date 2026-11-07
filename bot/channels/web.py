@@ -17,8 +17,6 @@ from ..meli import Product
 CSS = """
 :root{--bg:#EBF2E1;--bg2:#DDEACB;--card:#fff;--ink:#102015;--muted:#7D8A80;--line:#E2EAD8;--forest:#1E2B20;
 --mint:#CDE8AA;--orange:#1E2B20;--lime:#A6E36B;--lime-text:#3F8A22;--chip:#fff;--shadow:0 2px 12px rgba(16,32,21,.07)}
-@media (prefers-color-scheme:dark){:root{--bg:#111A13;--bg2:#162119;--card:#1C281F;--ink:#ECF3E6;--muted:#9AAA9D;
---line:#26352A;--chip:#223026;--mint:#33502B;--orange:#A6E36B;--lime-text:#A6E36B;--shadow:none}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);
@@ -26,12 +24,9 @@ font-size:15px;line-height:1.4}
 .hero{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);padding:18px 16px 6px}
 .top{display:flex;align-items:center;justify-content:space-between}
 .logo{font-weight:800;font-size:21px;margin:0;color:var(--ink)}.logo b{color:var(--lime-text);font-weight:800}
-@media (prefers-color-scheme:dark){.logo{color:#E8F3E6}}
 .pill-note{font-size:12px;font-weight:600;background:var(--card);color:var(--forest);padding:6px 10px;border-radius:999px;box-shadow:var(--shadow)}
-@media (prefers-color-scheme:dark){.pill-note{color:var(--ink)}}
 .big{display:flex;align-items:center;gap:12px;margin:18px 0 4px}
 .big .n{font-size:54px;font-weight:800;line-height:1;color:var(--ink);letter-spacing:-2px}
-@media (prefers-color-scheme:dark){.big .n{color:var(--lime)}}
 .big .l{font-size:19px;font-weight:700;line-height:1.15}
 .sub{margin:6px 0 0;color:var(--muted);font-size:14px}
 .tools{position:sticky;top:0;z-index:5;background:var(--bg2);padding:10px 16px 10px}
@@ -131,7 +126,7 @@ def render(items: list[dict], cfg: Config) -> str:
         '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         f"<title>{name}: ofertas de hoy en Mercado Libre</title>"
         '<meta name="description" content="Descuentos reales en Mercado Libre México, revisados cada día. Busca el código del video.">'
-        '<meta name="theme-color" content="#EBF2E1"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">'
+        '<meta name="theme-color" content="#EBF2E1"><meta name="color-scheme" content="light"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">'
         f"{og}<style>{CSS}</style></head><body>"
         f'<header class="hero"><div class="top"><p class="logo">{logo}</p>'
         '<span class="pill-note">Te llevamos a Mercado Libre</span></div>'
