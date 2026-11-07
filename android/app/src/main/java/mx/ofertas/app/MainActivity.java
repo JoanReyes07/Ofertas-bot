@@ -45,8 +45,8 @@ import org.json.JSONObject;
  */
 public class MainActivity extends Activity {
 
-    private static final String APP_URL = "https://joanreyes07.github.io/Ofertas-bot/app/";
-    private static final String APP_HOST = "joanreyes07.github.io";
+    private static final String APP_URL = "https://cazaofertasmx.github.io/app/";
+    private static final String APP_HOST = "cazaofertasmx.github.io";
 
     private WebView web;
 
