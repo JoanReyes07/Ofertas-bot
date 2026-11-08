@@ -326,3 +326,17 @@ def test_facebook_queue_expires_old(tmp_path):
     http = FakeHttp()
     cmd_publish(c, client, http)
     assert not http.calls and Store(f"{c.data_dir}/state.json").items["A"]["fb_status"] == "expired"
+
+
+def test_link_cache_reuses_after_reset(tmp_path):
+    """Un producto que ya enlazaste entra listo, aunque se hayan borrado las ofertas."""
+    c = cfg(tmp_path)
+    s = Store(f"{c.data_dir}/state.json")
+    s.add_candidates([prod("A")])
+    s.set_link("A", "https://meli.la/abc")
+    s.items = {}  # reinicio de ofertas: la memoria de links se queda
+    s.save()
+    cmd_fetch(c, FakeClient([prod("A"), prod("B")]))
+    s = Store(f"{c.data_dir}/state.json")
+    assert s.items["A"]["status"] == "ready" and s.items["A"]["affiliate_link"] == "https://meli.la/abc"
+    assert s.items["B"]["status"] == "candidate"

@@ -31,14 +31,21 @@ class Store:
     def ids(self) -> set[str]:
         return set(self.items)
 
+    @property
+    def link_cache(self) -> dict[str, str]:
+        """Links de afiliado ya pegados alguna vez, por producto (sobreviven a los reinicios de ofertas)."""
+        return self.meta.setdefault("link_cache", {})
+
     def add_candidates(self, products: list[Product]) -> int:
         n = 0
         for p in products:
             if p.id not in self.items:
+                cached = self.link_cache.get(p.id, "")
                 self.items[p.id] = {
                     **p.to_dict(),
-                    "status": "candidate",
-                    "affiliate_link": "",
+                    # si ya lo habías enlazado antes, entra listo con el mismo link
+                    "status": "ready" if cached else "candidate",
+                    "affiliate_link": cached,
                     "added_at": _now(),
                     "published_at": "",
                     "fb_post_id": "",
@@ -55,6 +62,7 @@ class Store:
             return False
         it["affiliate_link"] = link
         it["status"] = "ready"
+        self.link_cache[pid] = link
         return True
 
     def assign_code(self, pid: str) -> int:
