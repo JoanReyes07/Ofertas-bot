@@ -289,3 +289,40 @@ def test_discard_from_app(tmp_path):
     assert s.items["B"]["status"] == "discarded" and s.items["A"]["status"] == "ready"
     ids = [r["id"] for r in csv.DictReader(open(tmp_path / "links.csv", encoding="utf-8"))]
     assert "B" not in ids and "A" in ids
+
+
+def test_facebook_queue_batches(tmp_path):
+    """La web publica todo junto; Facebook va de 5 en 5 y respeta la pausa entre tandas."""
+    c = cfg(tmp_path, fb_per_run=5)
+    ids = [f"M{i}" for i in range(8)]
+    client = FakeClient([prod(i) for i in ids], item_price=219)
+    s = Store(f"{c.data_dir}/state.json")
+    s.add_candidates([prod(i) for i in ids])
+    for i in ids:
+        s.set_link(i, f"https://meli.la/{i}")
+    s.items["OLD"] = {**s.items["M0"], "id": "OLD", "status": "published", "published_at": "2020-01-01T00:00:00+00:00"}
+    s.save()
+    http = FakeHttp()
+    cmd_publish(c, client, http)
+    s = Store(f"{c.data_dir}/state.json")
+    assert len(s.with_status("published")) == 9 and len(http.calls) == 5  # web: todas; FB: 5
+    assert "fb_status" not in s.items["OLD"]  # lo ya publicado antes no entra a la cola
+    cmd_publish(c, client, http)  # inmediata: todavía en pausa
+    assert len(http.calls) == 5
+    s.meta["fb_last_batch"] = "2020-01-01T00:00:00+00:00"
+    s.save()
+    cmd_publish(c, client, http)  # ya pasó la pausa: manda las 3 restantes
+    s = Store(f"{c.data_dir}/state.json")
+    assert len(http.calls) == 8 and all(s.items[i]["fb_status"] == "posted" for i in ids)
+
+
+def test_facebook_queue_expires_old(tmp_path):
+    c = cfg(tmp_path)
+    client = FakeClient([prod("A")], item_price=219)
+    s = Store(f"{c.data_dir}/state.json")
+    s.add_candidates([prod("A")])
+    s.items["A"].update(status="published", fb_status="queued", published_at="2020-01-01T00:00:00+00:00")
+    s.save()
+    http = FakeHttp()
+    cmd_publish(c, client, http)
+    assert not http.calls and Store(f"{c.data_dir}/state.json").items["A"]["fb_status"] == "expired"

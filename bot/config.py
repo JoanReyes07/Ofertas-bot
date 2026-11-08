@@ -39,7 +39,11 @@ class Config:
     max_price: float = 5000.0
     require_green: bool = True
     fetch_limit: int = 20
-    publish_limit: int = 20  # todas juntas en la web; volver a 5 por tanda al conectar Facebook/TikTok
+    publish_limit: int = 20  # todas juntas en la web
+    # Facebook va por cola: pocas por tanda para no saturar la Página
+    fb_per_run: int = 5
+    fb_min_gap_h: float = 2.5  # horas mínimas entre tandas (la app también lanza publish)
+    fb_max_age_h: float = 24.0  # más viejas que esto ya no se mandan (la oferta pudo terminar)
     verify_price: bool = True
     channels: list[str] = field(default_factory=lambda: ["web", "facebook", "whatsapp", "tiktok"])
     anthropic_key: str = ""
@@ -74,6 +78,9 @@ class Config:
             require_green=_bool("REQUIRE_GREEN", True),
             fetch_limit=int(e("FETCH_LIMIT", "20")),
             publish_limit=int(e("PUBLISH_LIMIT", "20")),
+            fb_per_run=int(e("FB_PER_RUN", "5")),
+            fb_min_gap_h=float(e("FB_MIN_GAP_H", "2.5")),
+            fb_max_age_h=float(e("FB_MAX_AGE_H", "24")),
             verify_price=_bool("VERIFY_PRICE", True),
             channels=_list("CHANNELS", "web,facebook,whatsapp,tiktok"),
             anthropic_key=e("ANTHROPIC_API_KEY", ""),
