@@ -149,7 +149,7 @@ def test_copy_fallback_and_validation(tmp_path):
     p = prod()
     out = copywriter.generate(p, "https://meli.la/abc", c)  # sin clave: plantilla
     assert "https://meli.la/abc" in out["facebook"] and "$219" in out["whatsapp"]
-    assert copywriter.DISCLOSURE in out["facebook"]
+    assert "afiliado" not in out["facebook"].lower() and "comisi" not in out["whatsapp"].lower()
 
     class Bad:  # modelo que olvida el enlace
         def post(self, *a, **k):

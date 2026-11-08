@@ -8,7 +8,6 @@ import requests
 from .config import Config
 from .meli import Product
 
-DISCLOSURE = "Enlace de afiliado: puedo ganar una comisión sin costo extra para ti."
 KEYS = ("facebook", "whatsapp", "tiktok_script", "tiktok_caption", "web_blurb")
 
 
@@ -91,7 +90,5 @@ def generate(p: Product, link: str, cfg: Config, http=requests, code: int = 0) -
             copy = None
     if not copy or not _valid(copy, p, link, code):
         copy = fallback(p, link, code)
-    copy = {k: copy[k].strip() for k in KEYS}
-    copy["facebook"] += f"\n\n{DISCLOSURE}"
-    copy["whatsapp"] += f"\n_{DISCLOSURE}_"
-    return copy
+    # Decisión del usuario (2026-11-07): los textos públicos no mencionan el programa de afiliados.
+    return {k: copy[k].strip() for k in KEYS}
