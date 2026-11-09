@@ -1,7 +1,7 @@
 {
  "meta": {
-  "next_code": 37,
-  "fb_last_batch": "2026-11-09T10:38:02+00:00",
+  "next_code": 38,
+  "fb_last_batch": "2026-11-09T23:58:40+00:00",
   "link_cache": {
    "MLM54014512": "https://meli.la/2NEV3oo",
    "MLM53457233": "https://meli.la/2YDt3NV",
@@ -1344,11 +1344,26 @@
    "seller_level": "5_green",
    "item_id": "MLM1848525284",
    "category": "MLM1246",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://meli.la/2e93HNf",
    "added_at": "2026-11-09T23:21:37+00:00",
-   "published_at": "",
-   "fb_post_id": ""
+   "published_at": "2026-11-09T23:58:36+00:00",
+   "fb_post_id": "1445389978654839_122104447845538348",
+   "code": 37,
+   "copy": {
+    "facebook": "🔥 Limpiador Cerave Control Imperfecciones Para Piel con Tendencia Acnéica de Todas las Edades de Dia y Noche 236ml Skin Care\nHoy en $247 (antes $449). 45% de descuento.\nVer oferta 👉 https://meli.la/2e93HNf",
+    "whatsapp": "🔥 *Limpiador Cerave Control Imperfecciones Para Piel con Tendencia Acnéica de Todas las Edades de Dia y Noche 236ml Skin Care*\n$247 (antes $449)\n45% de descuento.\n👉 https://meli.la/2e93HNf",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 45% menos?\nCUERPO (3-15s): Limpiador Cerave Control Imperfecciones Para Piel con Tendencia Acnéica de Todas las Edades de Dia y Noche 236ml Skin Care. Hoy cuesta $247 (antes $449).\nCIERRE (15-20s): Busca el código 37 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Limpiador Cerave Control Imperfecciones Para Piel con Tendencia Acnéic a $247 🔥 Código 37 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Limpiador Cerave Control Imperfecciones Para Piel con Tendencia Acnéica de Todas las Edades de Dia y Noche 236ml Skin Care. Precio actual $247 (antes $449)."
+   },
+   "cards": {
+    "square": "MLM21096841-sq.jpg",
+    "vertical": "MLM21096841-v.jpg",
+    "video": "MLM21096841.mp4",
+    "text": "MLM21096841.txt"
+   },
+   "fb_status": "posted"
   },
   "MLM26094795": {
    "id": "MLM26094795",
