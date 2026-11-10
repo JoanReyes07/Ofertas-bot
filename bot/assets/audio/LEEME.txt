@@ -1,0 +1,1 @@
+﻿Pon aquí pistas libres de derechos (.mp3, .m4a, .aac o .wav). El bot las mete de fondo en los Reels y, si hay varias, las va rotando. Sin archivos, los Reels salen sin audio.

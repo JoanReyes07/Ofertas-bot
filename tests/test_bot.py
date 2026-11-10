@@ -1,12 +1,26 @@
 import csv
 import json
 
+import pytest
+
 from bot import copywriter, links, select
 from bot.channels import web
 from bot.cli import cmd_fetch, cmd_publish
 from bot.config import Config
 from bot.meli import BLOCKED_CATEGORIES, MeliClient, Product, best_offer, parse_offer
 from bot.store import Store
+
+
+@pytest.fixture(autouse=True)
+def reel_rapido(monkeypatch):
+    """Generar un Reel real tarda; en las pruebas basta un archivo de mentira."""
+    from bot import video
+
+    def fake(p, img, out_path, cierre="", fps=30):
+        open(out_path, "wb").write(b"mp4")
+        return out_path
+
+    monkeypatch.setattr(video, "build_reel", fake)
 
 
 def prod(i="MLM1", price=219, orig=499, rank=3, level="5_green", title="Cama para perro"):
@@ -51,12 +65,22 @@ class FakeResp:
 
 
 class FakeHttp:
+    """Simula la Graph API: guarda cada llamada y responde ids genéricos."""
+
     def __init__(self):
-        self.calls = []
+        self.calls, self.datas = [], []
 
     def post(self, url, **kw):
         self.calls.append(url)
-        return FakeResp({"post_id": "p1"})
+        self.datas.append(kw.get("data") if isinstance(kw.get("data"), dict) else {})
+        return FakeResp({"post_id": "p1", "id": "p1", "video_id": "v1", "upload_url": "https://up/v1"})
+
+    def count(self, part, **data):
+        return sum(1 for u, d in zip(self.calls, self.datas)
+                   if part in u and all(d.get(k) == v for k, v in data.items()))
+
+    def reels(self):
+        return self.count("video_reels", upload_phase="finish")
 
 
 class FakeApi:
@@ -171,14 +195,16 @@ def test_full_flow(tmp_path):
     http = FakeHttp()
     cmd_publish(c, client, http)
     s = Store(f"{c.data_dir}/state.json")
-    assert s.items["A"]["status"] == "published" and s.items["A"]["fb_post_id"] == "p1"
-    assert "photos" in http.calls[0]
+    assert s.items["A"]["status"] == "published" and s.items["A"]["fb_post_id"] == "v1"
+    assert http.reels() == 1 and http.count("photo_stories") == 1  # Reel + historia
+    assert http.count("/photos", published=None) == 0  # sin Top 5: hace falta tener 5 ofertas
     html = (tmp_path / "docs" / "index.html").read_text(encoding="utf-8")
     assert "https://meli.la/abc" in html and 'rel="sponsored' in html
     assert list((tmp_path / "out" / "whatsapp").glob("*.txt")) and (tmp_path / "out" / "tiktok" / "A.md").exists()
     # segunda corrida no duplica
+    n = len(http.calls)
     cmd_publish(c, client, http)
-    assert len(http.calls) == 1
+    assert len(http.calls) == n
 
 
 def test_price_changed_is_skipped(tmp_path):
@@ -291,29 +317,56 @@ def test_discard_from_app(tmp_path):
     assert "B" not in ids and "A" in ids
 
 
-def test_facebook_queue_batches(tmp_path):
-    """La web publica todo junto; Facebook va de 5 en 5 y respeta la pausa entre tandas."""
-    c = cfg(tmp_path, fb_per_run=5)
-    ids = [f"M{i}" for i in range(8)]
-    client = FakeClient([prod(i) for i in ids], item_price=219)
+def _ready(c, ids, **per_id):
     s = Store(f"{c.data_dir}/state.json")
-    s.add_candidates([prod(i) for i in ids])
+    s.add_candidates([prod(i, **per_id.get(i, {})) for i in ids])
     for i in ids:
         s.set_link(i, f"https://meli.la/{i}")
+    return s
+
+
+def test_facebook_reels_batches(tmp_path):
+    """La web publica todo junto; los Reels van por tandas y respetan la pausa entre tandas."""
+    c = cfg(tmp_path, fb_per_run=3, fb_stories=0, fb_top5=False)
+    ids = [f"M{i}" for i in range(5)]
+    client = FakeClient([prod(i) for i in ids], item_price=219)
+    s = _ready(c, ids)
     s.items["OLD"] = {**s.items["M0"], "id": "OLD", "status": "published", "published_at": "2020-01-01T00:00:00+00:00"}
     s.save()
     http = FakeHttp()
     cmd_publish(c, client, http)
     s = Store(f"{c.data_dir}/state.json")
-    assert len(s.with_status("published")) == 9 and len(http.calls) == 5  # web: todas; FB: 5
+    assert len(s.with_status("published")) == 6 and http.reels() == 3  # web: todas; Reels: 3
+    assert http.count("/comments") == 3  # el link también va comentado
     assert "fb_status" not in s.items["OLD"]  # lo ya publicado antes no entra a la cola
     cmd_publish(c, client, http)  # inmediata: todavía en pausa
-    assert len(http.calls) == 5
+    assert http.reels() == 3
     s.meta["fb_last_batch"] = "2020-01-01T00:00:00+00:00"
     s.save()
-    cmd_publish(c, client, http)  # ya pasó la pausa: manda las 3 restantes
+    cmd_publish(c, client, http)  # ya pasó la pausa: manda las 2 restantes
     s = Store(f"{c.data_dir}/state.json")
-    assert len(http.calls) == 8 and all(s.items[i]["fb_status"] == "posted" for i in ids)
+    assert http.reels() == 5 and all(s.items[i]["fb_status"] == "posted" for i in ids)
+
+
+def test_facebook_top5_and_stories_once_a_day(tmp_path):
+    """Muro: un Top 5 al día. Historias: solo las que más se pueden vender, una vez al día."""
+    c = cfg(tmp_path, fb_per_run=0, fb_stories=2, short_url="https://tinyurl.com/x")
+    ids = [f"M{i}" for i in range(6)]
+    # M5: más vendido (rank 1) y barato -> primero en historias; M4: caro y rank bajo -> fuera
+    per = {"M5": {"rank": 1, "price": 100, "orig": 500}, "M4": {"rank": 20, "price": 2000, "orig": 4000}}
+    client = FakeClient([], item_price=None)
+    _ready(c, ids, **per).save()
+    c.verify_price = False
+    http = FakeHttp()
+    cmd_publish(c, client, http)
+    s = Store(f"{c.data_dir}/state.json")
+    top5_caption = [d for u, d in zip(http.calls, http.datas) if u.endswith("/photos") and "caption" in d]
+    assert len(top5_caption) == 1 and "https://tinyurl.com/x" in top5_caption[0]["caption"]
+    assert "github" not in top5_caption[0]["caption"]
+    assert http.count("photo_stories") == 2 and "fb_story_id" in s.items["M5"]
+    assert "fb_story_id" not in s.items["M4"]
+    cmd_publish(c, client, http)  # mismo día: no repite
+    assert len([u for u in http.calls if u.endswith("/photos")]) == 3  # 1 Top 5 + 2 fotos de historias
 
 
 def test_facebook_queue_expires_old(tmp_path):

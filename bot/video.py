@@ -40,6 +40,141 @@ def _zoom(img: Image.Image, t: float, amount: float) -> Image.Image:
     return big.crop((x, y, x + W, y + H))
 
 
+def _ease(t: float) -> float:
+    """Movimiento que frena suave al llegar (ease-out cúbico)."""
+    t = min(1.0, max(0.0, t))
+    return 1 - (1 - t) ** 3
+
+
+def _alpha(layer: Image.Image, a: float) -> Image.Image:
+    out = layer.copy()
+    out.putalpha(layer.getchannel("A").point(lambda v: int(v * a)))
+    return out
+
+
+def _reel_layers(p, img, cierre: str) -> dict:
+    from PIL import ImageFilter, ImageOps
+
+    from .cards import INK, MUTED, money, wrap
+
+    # foto en tarjeta blanca con sombra
+    s, pad = 900, 60
+    foto = Image.new("RGBA", (s + 80, s + 80), (0, 0, 0, 0))
+    sombra = Image.new("RGBA", foto.size, (0, 0, 0, 0))
+    ImageDraw.Draw(sombra).rounded_rectangle((40, 52, 40 + s, 52 + s), radius=70, fill=(30, 60, 30, 70))
+    foto = Image.alpha_composite(foto, sombra.filter(ImageFilter.GaussianBlur(22)))
+    ImageDraw.Draw(foto).rounded_rectangle((40, 40, 40 + s, 40 + s), radius=70, fill=WHITE)
+    if img is not None:
+        f = ImageOps.contain(img, (s - 2 * pad, s - 2 * pad), Image.LANCZOS).convert("RGBA")
+        foto.alpha_composite(f, (40 + (s - f.width) // 2, 40 + (s - f.height) // 2))
+    # nombre (hasta 3 líneas, centrado)
+    nombre = Image.new("RGBA", (W, 260), (0, 0, 0, 0))
+    d = ImageDraw.Draw(nombre)
+    fn = font("Bold", 66)
+    lines = wrap(d, p.title, fn, W - 140, 3)
+    y = (260 - len(lines) * 84) // 2
+    for line in lines:
+        d.text((W // 2, y + 42), line, font=fn, fill=INK, anchor="mm")
+        y += 84
+    # precio: anterior tachado + actual grande
+    precio = Image.new("RGBA", (W, 280), (0, 0, 0, 0))
+    d = ImageDraw.Draw(precio)
+    if p.original_price and p.original_price > p.price:
+        fo = font("Medium", 58)
+        old = money(p.original_price)
+        d.text((W // 2, 40), old, font=fo, fill=MUTED, anchor="mm")
+        w = d.textlength(old, font=fo)
+        d.line((W // 2 - w / 2 - 6, 44, W // 2 + w / 2 + 6, 44), fill=MUTED, width=5)
+    d.text((W // 2, 170), money(p.price), font=font("ExtraBold", 170), fill=INK, anchor="mm")
+    # cierre: logo + píldora con el texto del link
+    logo = Image.new("RGBA", (W, 200), (0, 0, 0, 0))
+    brand(ImageDraw.Draw(logo), (W // 2, 100), 112)
+    link = Image.new("RGBA", (W, 170), (0, 0, 0, 0))
+    d = ImageDraw.Draw(link)
+    fl = font("Bold", 52)
+    while d.textlength(cierre, font=fl) > W - 200 and fl.size > 30:
+        fl = font("Bold", fl.size - 2)
+    w = d.textlength(cierre, font=fl) + 110
+    d.rounded_rectangle((W / 2 - w / 2, 25, W / 2 + w / 2, 145), radius=60, fill=FOREST)
+    d.text((W // 2, 85), cierre, font=fl, fill=WHITE, anchor="mm")
+    return {"foto": foto, "nombre": nombre, "precio": precio, "logo": logo, "link": link}
+
+
+# línea de tiempo del Reel, en segundos (diseño del usuario, 2026-11-09)
+REEL_T = {"foto": (0.0, 1.0), "nombre": (1.0, 1.7), "precio": (1.7, 2.4), "fade": (5.0, 5.8),
+          "logo": (5.8, 6.4), "link": (6.3, 6.9)}
+REEL_TOTAL = 8.4
+
+
+def build_reel(p, img, out_path: str, cierre: str = "Link en la descripción del video", fps: int = 30) -> str:
+    """Reel 1080x1920 (~8 s): la foto sube desde abajo, el nombre entra por la izquierda,
+    el precio por la derecha, todo se desvanece y cierra con el logo y el texto del link."""
+    import imageio_ffmpeg
+
+    from .cards import _gradient
+
+    fondo = _gradient(W, H, (236, 243, 226), (214, 230, 194)).convert("RGBA")
+    L = _reel_layers(p, img, cierre)
+
+    def prog(t, key):
+        a, b = REEL_T[key]
+        return _ease((t - a) / (b - a))
+
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    writer = imageio_ffmpeg.write_frames(
+        out_path, (W, H), fps=fps, codec="libx264", pix_fmt_out="yuv420p", macro_block_size=8,
+        output_params=["-movflags", "+faststart", "-crf", "23", "-preset", "veryfast"],
+    )
+    writer.send(None)
+    fx = (W - L["foto"].width) // 2
+    for k in range(int(REEL_TOTAL * fps)):
+        t = k / fps
+        fr = fondo.copy()
+        if (a := prog(t, "foto")) > 0:
+            fr.alpha_composite(L["foto"], (fx, int(230 + (H - 230) * (1 - a))))
+        if (a := prog(t, "nombre")) > 0:
+            fr.alpha_composite(L["nombre"], (int(-W * (1 - a)), 1210))
+        if (a := prog(t, "precio")) > 0:
+            fr.alpha_composite(L["precio"], (int(W * (1 - a)), 1490))
+        a0, a1 = REEL_T["fade"]
+        if t > a0:
+            fr = Image.blend(fr, fondo, min(1.0, (t - a0) / (a1 - a0)))
+        if (a := prog(t, "logo")) > 0:
+            fr.alpha_composite(_alpha(L["logo"], a), (0, int(760 + 60 * (1 - a))))
+        if (a := prog(t, "link")) > 0:
+            fr.alpha_composite(_alpha(L["link"], a), (0, int(990 + 60 * (1 - a))))
+        writer.send(fr.convert("RGB").tobytes())
+    writer.close()
+    return out_path
+
+
+AUDIO_DIR = Path(__file__).parent / "assets" / "audio"
+
+
+def pick_audio(seed: int = 0) -> Path | None:
+    """Pista de fondo para los Reels (bot/assets/audio/*.mp3|m4a|wav). Con varias, se rotan."""
+    pistas = sorted(p for p in AUDIO_DIR.glob("*") if p.suffix.lower() in (".mp3", ".m4a", ".aac", ".wav"))
+    return pistas[seed % len(pistas)] if pistas else None
+
+
+def add_audio(video_path: str, audio_path: str, fade: float = 1.0) -> str:
+    """Mezcla la pista en el video: se recorta (o repite) al largo del video y baja al final."""
+    import subprocess
+
+    import imageio_ffmpeg
+
+    tmp = str(Path(video_path).with_suffix(".tmp.mp4"))
+    start_fade = max(0.0, REEL_TOTAL - fade)
+    subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error",
+                    "-i", video_path, "-stream_loop", "-1", "-i", audio_path,
+                    "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "128k",
+                    "-af", f"afade=t=out:st={start_fade}:d={fade}", "-shortest",
+                    "-movflags", "+faststart", tmp],
+                   check=True, stdin=subprocess.DEVNULL, timeout=120)
+    Path(tmp).replace(video_path)
+    return video_path
+
+
 def build_product(card_path: str, out_path: str, discount: float = 0.0, fps: int = 24, code: int = 0) -> str:
     """MP4 de ~6 s: intro con el descuento y la tarjeta con zoom."""
     import imageio_ffmpeg

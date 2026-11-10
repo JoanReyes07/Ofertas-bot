@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
-from . import copywriter, links, select
+from . import copywriter, fbplan, links, select
 from .channels import facebook, files, media, web
 from .config import Config, load_env
 from .meli import MeliClient
@@ -86,61 +86,12 @@ def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> Non
     if "web" in cfg.channels:
         web.build(store.items, cfg)
     media.build(store, cfg, http)
-    fb = _facebook_queue(store, cfg, client, kw) if "facebook" in cfg.channels else 0
+    fb = {}
+    if "facebook" in cfg.channels:
+        fb = fbplan.run(store, cfg, lambda it: _still_valid(client, it), **kw)
     store.save()
-    print(f"Publicadas: {done} | Facebook: {fb}")
-
-
-def _hours_since(iso: str) -> float:
-    try:
-        then = datetime.fromisoformat(iso)
-    except (TypeError, ValueError):
-        return 1e9
-    return (datetime.now(timezone.utc) - then).total_seconds() / 3600
-
-
-def _facebook_queue(store: Store, cfg: Config, client: MeliClient, kw: dict) -> int:
-    """Manda a la Página una tanda pequeña de la cola (las más viejas primero)."""
-    queue = sorted((it for it in store.items.values() if it.get("fb_status") == "queued"),
-                   key=lambda it: it.get("published_at", ""))
-    if not queue:
-        return 0
-    if not (cfg.fb_page_id and cfg.fb_token):
-        print("[aviso] Facebook en cola pero falta FB_PAGE_ID o FB_PAGE_TOKEN", file=sys.stderr)
-        return 0
-    last = store.meta.get("fb_last_batch", "")
-    if last and _hours_since(last) < cfg.fb_min_gap_h:
-        print(f"[facebook] tanda anterior hace menos de {cfg.fb_min_gap_h} h; {len(queue)} en cola")
-        return 0
-    sent = 0
-    for it in queue:
-        if sent >= cfg.fb_per_run:
-            break
-        if it["status"] != "published" or _hours_since(it.get("published_at", "")) > cfg.fb_max_age_h:
-            it["fb_status"] = "expired"
-            continue
-        if cfg.verify_price:
-            try:
-                if not _still_valid(client, it):
-                    it["fb_status"] = "skipped"
-                    print(f"[facebook] {it['id']} omitido: cambió el precio o ya no está activo")
-                    continue
-            except Exception as e:
-                print(f"[aviso] no pude verificar {it['id']}: {e}", file=sys.stderr)
-                continue
-        card = it.get("cards") or {}
-        sq = media.media_dir(cfg) / "cards" / card["square"] if card.get("square") else None
-        text = (it.get("copy") or {}).get("facebook", "")
-        try:
-            it["fb_post_id"] = facebook.post(Store.product(it), text, it["affiliate_link"], cfg, image_path=sq, **kw)
-        except Exception as e:  # probablemente el token: no seguir insistiendo en esta tanda
-            print(f"[aviso] Facebook falló para {it['id']}: {e}", file=sys.stderr)
-            break
-        it["fb_status"] = "posted"
-        sent += 1
-    if sent:
-        store.meta["fb_last_batch"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    return sent
+    print(f"Publicadas: {done} | Facebook: {fb.get('reels', 0)} Reels, "
+          f"{fb.get('top5', 0)} Top 5, {fb.get('stories', 0)} historias")
 
 
 def cmd_fbcheck(cfg: Config, http=None) -> None:

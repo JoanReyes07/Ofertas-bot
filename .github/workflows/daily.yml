@@ -36,6 +36,13 @@ jobs:
       AUTO_LINKS: ${{ vars.AUTO_LINKS }}
       MELI_MATT_WORD: ${{ vars.MELI_MATT_WORD }}
       MELI_MATT_TOOL: ${{ vars.MELI_MATT_TOOL }}
+      # link de la web que ve el público (sin .github.io)
+      SHORT_URL: ${{ vars.SHORT_URL || 'https://tinyurl.com/cazaofertasmx' }}
+      # Facebook: Reels por tanda (4 tandas al día), historias al día, Top 5 en el muro
+      FB_PER_RUN: ${{ vars.FB_PER_RUN }}
+      FB_STORIES: ${{ vars.FB_STORIES }}
+      FB_TOP5: ${{ vars.FB_TOP5 }}
+      FB_REEL_COMMENT: ${{ vars.FB_REEL_COMMENT }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

@@ -1,0 +1,14 @@
+{
+  "_ayuda": "Textos de Facebook. Cada clave puede ser un texto o una lista de textos (el bot los va rotando). Marcadores: {titulo} {titulo_corto} {precio} {antes} {pct} {codigo} {link} {web} {lista} {n}",
+  "top5": [
+    "🏆 TOP 5 OFERTAS DE HOY en Mercado Libre 🛒\n\n{lista}\n\nLos precios cambian rápido, ¡aprovecha! 🔥\nTodas las ofertas 👉 {web}"
+  ],
+  "top5_linea": "{n}️⃣ {titulo_corto} — {precio} ({pct}% menos)\n👉 {link}",
+  "reel": [
+    "😱 {pct}% de descuento en {titulo_corto}\nHoy en {precio} (antes {antes}).\n👉 {link}\n\nMás ofertas: {web}\n#ofertas #mercadolibre #mexico",
+    "🔥 {titulo_corto} a solo {precio}\nAntes {antes}, hoy {pct}% menos.\n👉 {link}\n\nMás ofertas: {web}\n#ofertas #mercadolibre #mexico"
+  ],
+  "reel_comentario": "Aquí está la oferta 👉 {link}",
+  "reel_cierre": "Link en la descripción del video",
+  "historia_boton": "Busca el {codigo} en nuestra web"
+}

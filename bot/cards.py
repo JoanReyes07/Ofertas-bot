@@ -226,6 +226,54 @@ def make_cards(p: Product, out_dir: str, site_name: str, http=requests, code: in
     return {"square": sq_path.name, "vertical": vt_path.name}
 
 
+def render_top5(items: list[tuple[Product, int]], imgs: dict, web_text: str = "") -> Image.Image:
+    """Imagen 1080x1350 (4:5) para el muro: las 5 mejores ofertas del día.
+
+    items: lista de (producto, código); imgs: {id: imagen del producto o None}.
+    """
+    W, H = 1080, 1350
+    c = _gradient(W, H, (236, 243, 226), (214, 230, 194))
+    d = ImageDraw.Draw(c)
+    brand(d, (W // 2, 62), 46)
+    d.rounded_rectangle((40, 108, W - 40, 228), radius=60, fill=FOREST)
+    d.text((W // 2, 168), "TOP 5 OFERTAS DE HOY", font=font("ExtraBold", 62), fill=WHITE, anchor="mm")
+    y, row = 252, 208
+    for i, (p, code) in enumerate(items[:5], 1):
+        d.rounded_rectangle((40, y, W - 40, y + row - 16), radius=36, fill=WHITE)
+        d.ellipse((60, y + 66, 120, y + 126), fill=FOREST)  # número
+        d.text((90, y + 96), str(i), font=font("ExtraBold", 36), fill=WHITE, anchor="mm")
+        box = (136, y + 14, 300, y + row - 30)  # foto
+        img = imgs.get(p.id)
+        if img is not None:
+            f = ImageOps.contain(img, (box[2] - box[0], box[3] - box[1]), Image.LANCZOS)
+            c.paste(f, (box[0] + (box[2] - box[0] - f.width) // 2, box[1] + (box[3] - box[1] - f.height) // 2))
+        x, ty = 324, y + 14
+        ft = font("SemiBold", 28)
+        for line in wrap(d, p.title, ft, W - 40 - x - 190, 2):
+            d.text((x, ty), line, font=ft, fill=INK)
+            ty += 37
+        py, x2 = y + 120, x
+        if p.original_price and p.original_price > p.price:
+            fo = font("Medium", 26)
+            old = money(p.original_price)
+            d.text((x, py), old, font=fo, fill=MUTED, anchor="lm")
+            w = d.textlength(old, font=fo)
+            d.line((x - 2, py + 2, x + w + 2, py + 2), fill=MUTED, width=3)
+            x2 = x + w + 16
+        d.text((x2, py), money(p.price), font=font("ExtraBold", 44), fill=INK, anchor="lm")
+        if code:
+            _pill(d, f"Código {code}", x, y + 150, 20, MINT_DEEP, INK)
+        if p.discount_pct:
+            cx, cy, r = W - 120, y + 96, 72
+            d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=ACCENT)
+            d.text((cx, cy - 8), f"-{p.discount_pct:.0f}%", font=font("ExtraBold", 42), fill=INK, anchor="mm")
+            d.text((cx, cy + 30), "OFF", font=font("Bold", 20), fill=INK, anchor="mm")
+        y += row
+    if web_text:
+        d.text((W // 2, H - 30), f"Todas las ofertas en {web_text}", font=font("SemiBold", 30), fill=FOREST, anchor="mm")
+    return c
+
+
 def make_icon(size: int, maskable: bool = False) -> Image.Image:
     """Ícono de marca: etiqueta naranja con % sobre verde bosque."""
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
