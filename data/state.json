@@ -1,7 +1,7 @@
 {
  "meta": {
-  "next_code": 71,
-  "fb_last_batch": "2026-11-11T10:01:25+00:00",
+  "next_code": 79,
+  "fb_last_batch": "2026-11-11T22:32:17+00:00",
   "link_cache": {
    "MLM54014512": "https://meli.la/2NEV3oo",
    "MLM53457233": "https://meli.la/2YDt3NV",
@@ -90,7 +90,18 @@
    "MLM37181549": "https://www.mercadolibre.com.mx/p/MLM37181549?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "MLM23526584": "https://www.mercadolibre.com.mx/p/MLM23526584?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true"
   },
-  "fb_stories_day": "2026-11-11"
+  "fb_stories_day": "2026-11-11",
+  "fb_top5_day": "2026-11-11",
+  "fb_top5": {
+   "post_id": "1445389978654839_122106525033538348",
+   "ids": [
+    "MLM61271206",
+    "MLM80452580",
+    "MLM52672235",
+    "MLM62234964",
+    "MLM18990698"
+   ]
+  }
  },
  "items": {
   "MLM23138483": {
@@ -1295,7 +1306,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1873271117001872",
-   "fb_story_id": "2175368293357538"
+   "fb_story_id": "2175368293357538",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM26194700": {
    "id": "MLM26194700",
@@ -1402,7 +1414,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1704928301424455",
-   "fb_story_id": "1364068102325512"
+   "fb_story_id": "1364068102325512",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM53225198": {
    "id": "MLM53225198",
@@ -1437,7 +1450,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "4741349586129056",
-   "fb_story_id": "1108835902139742"
+   "fb_story_id": "1108835902139742",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM21096841": {
    "id": "MLM21096841",
@@ -1504,7 +1518,8 @@
     "text": "MLM26094795.txt"
    },
    "fb_status": "posted",
-   "fb_reel_id": "1703449574717861"
+   "fb_reel_id": "1703449574717861",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM41702514": {
    "id": "MLM41702514",
@@ -1572,7 +1587,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1779462183166003",
-   "fb_story_id": "1155333280285601"
+   "fb_story_id": "1155333280285601",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM47527014": {
    "id": "MLM47527014",
@@ -1606,7 +1622,8 @@
     "text": "MLM47527014.txt"
    },
    "fb_status": "posted",
-   "fb_reel_id": "1964789144894393"
+   "fb_reel_id": "1964789144894393",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM18486368": {
    "id": "MLM18486368",
@@ -1639,7 +1656,7 @@
     "video": "MLM18486368.mp4",
     "text": "MLM18486368.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "expired"
   },
   "MLM59117483": {
    "id": "MLM59117483",
@@ -1672,7 +1689,7 @@
     "video": "MLM59117483.mp4",
     "text": "MLM59117483.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "expired"
   },
   "MLM34506868": {
    "id": "MLM34506868",
@@ -1705,7 +1722,7 @@
     "video": "MLM34506868.mp4",
     "text": "MLM34506868.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "expired"
   },
   "MLM45772940": {
    "id": "MLM45772940",
@@ -1738,7 +1755,7 @@
     "video": "MLM45772940.mp4",
     "text": "MLM45772940.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "expired"
   },
   "MLM52768030": {
    "id": "MLM52768030",
@@ -1771,7 +1788,7 @@
     "video": "MLM52768030.mp4",
     "text": "MLM52768030.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "expired"
   },
   "MLM61695196": {
    "id": "MLM61695196",
@@ -1804,7 +1821,7 @@
     "video": "MLM61695196.mp4",
     "text": "MLM61695196.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "expired"
   },
   "MLM18439163": {
    "id": "MLM18439163",
@@ -1837,7 +1854,7 @@
     "video": "MLM18439163.mp4",
     "text": "MLM18439163.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "expired"
   },
   "MLM29464889": {
    "id": "MLM29464889",
@@ -1870,7 +1887,7 @@
     "video": "MLM29464889.mp4",
     "text": "MLM29464889.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "expired"
   },
   "MLM50230006": {
    "id": "MLM50230006",
@@ -1989,7 +2006,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1923207161997116",
-   "fb_story_id": "1213175241390670"
+   "fb_story_id": "1213175241390670",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM28618279": {
    "id": "MLM28618279",
@@ -2024,7 +2042,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1144646848185235",
-   "fb_story_id": "992904637204512"
+   "fb_story_id": "992904637204512",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM19380755": {
    "id": "MLM19380755",
@@ -2517,12 +2536,29 @@
    "seller_level": "5_green",
    "item_id": "MLM6286634620",
    "category": "MLM1132",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM61271206?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-11T21:13:09+00:00",
-   "published_at": "",
-   "fb_post_id": "",
-   "link_auto": true
+   "published_at": "2026-11-11T22:30:33+00:00",
+   "fb_post_id": "1158820636934344",
+   "link_auto": true,
+   "code": 71,
+   "copy": {
+    "facebook": "🔥 LEGO Speed Champions Máquina del Tiempo de Volver al Futuro 77256; Auto de juguete; Incluye 2 minifiguras: Marty McFly y Doc Brown; Regalo de Navidad para niños y niñas; 9+\nHoy en $479 (antes $1,199). 60% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM61271206?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *LEGO Speed Champions Máquina del Tiempo de Volver al Futuro 77256; Auto de juguete; Incluye 2 minifiguras: Marty McFly y Doc Brown; Regalo de Navidad para niños y niñas; 9+*\n$479 (antes $1,199)\n60% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM61271206?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 60% menos?\nCUERPO (3-15s): LEGO Speed Champions Máquina del Tiempo de Volver al Futuro 77256; Auto de juguete; Incluye 2 minifiguras: Marty McFly y Doc Brown; Regalo de Navidad para niños y niñas; 9+. Hoy cuesta $479 (antes $1,199).\nCIERRE (15-20s): Busca el código 71 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "LEGO Speed Champions Máquina del Tiempo de Volver al Futuro 77256; Aut a $479 🔥 Código 71 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "LEGO Speed Champions Máquina del Tiempo de Volver al Futuro 77256; Auto de juguete; Incluye 2 minifiguras: Marty McFly y Doc Brown; Regalo de Navidad para niños y niñas; 9+. Precio actual $479 (antes $1,199)."
+   },
+   "cards": {
+    "square": "MLM61271206-sq.jpg",
+    "vertical": "MLM61271206-v.jpg",
+    "video": "MLM61271206.mp4",
+    "text": "MLM61271206.txt"
+   },
+   "fb_status": "posted",
+   "fb_reel_id": "1158820636934344",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM18990698": {
    "id": "MLM18990698",
@@ -2535,12 +2571,29 @@
    "seller_level": "5_green",
    "item_id": "MLM4618870494",
    "category": "MLM1575",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM18990698?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-11T21:13:09+00:00",
-   "published_at": "",
-   "fb_post_id": "",
-   "link_auto": true
+   "published_at": "2026-11-11T22:30:42+00:00",
+   "fb_post_id": "1851611499213584",
+   "link_auto": true,
+   "code": 72,
+   "copy": {
+    "facebook": "🔥 Boiler De Paso Mirage Ahorra Hasta Un 70% De Gas Color Blanco Tipo de gas GLP\nHoy en $1,259 (antes $2,499). 50% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM18990698?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Boiler De Paso Mirage Ahorra Hasta Un 70% De Gas Color Blanco Tipo de gas GLP*\n$1,259 (antes $2,499)\n50% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM18990698?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 50% menos?\nCUERPO (3-15s): Boiler De Paso Mirage Ahorra Hasta Un 70% De Gas Color Blanco Tipo de gas GLP. Hoy cuesta $1,259 (antes $2,499).\nCIERRE (15-20s): Busca el código 72 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Boiler De Paso Mirage Ahorra Hasta Un 70% De Gas Color Blanco Tipo de  a $1,259 🔥 Código 72 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Boiler De Paso Mirage Ahorra Hasta Un 70% De Gas Color Blanco Tipo de gas GLP. Precio actual $1,259 (antes $2,499)."
+   },
+   "cards": {
+    "square": "MLM18990698-sq.jpg",
+    "vertical": "MLM18990698-v.jpg",
+    "video": "MLM18990698.mp4",
+    "text": "MLM18990698.txt"
+   },
+   "fb_status": "posted",
+   "fb_reel_id": "1851611499213584",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM80452580": {
    "id": "MLM80452580",
@@ -2553,12 +2606,27 @@
    "seller_level": "5_green",
    "item_id": "MLM6451014514",
    "category": "MLM1574",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM80452580?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-11T21:13:09+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T22:30:51+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 73,
+   "copy": {
+    "facebook": "🔥 Luces de Navidad VKFGTY, 50 m cadena de luz con 500 LED, 8 Modos, Impermeable (IP44), conectable, con enchufe, luz blanca fría VF-ZXD500-CTK\nHoy en $223 (antes $514). 57% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM80452580?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Luces de Navidad VKFGTY, 50 m cadena de luz con 500 LED, 8 Modos, Impermeable (IP44), conectable, con enchufe, luz blanca fría VF-ZXD500-CTK*\n$223 (antes $514)\n57% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM80452580?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 57% menos?\nCUERPO (3-15s): Luces de Navidad VKFGTY, 50 m cadena de luz con 500 LED, 8 Modos, Impermeable (IP44), conectable, con enchufe, luz blanca fría VF-ZXD500-CTK. Hoy cuesta $223 (antes $514).\nCIERRE (15-20s): Busca el código 73 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Luces de Navidad VKFGTY, 50 m cadena de luz con 500 LED, 8 Modos, Impe a $223 🔥 Código 73 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Luces de Navidad VKFGTY, 50 m cadena de luz con 500 LED, 8 Modos, Impermeable (IP44), conectable, con enchufe, luz blanca fría VF-ZXD500-CTK. Precio actual $223 (antes $514)."
+   },
+   "cards": {
+    "square": "MLM80452580-sq.jpg",
+    "vertical": "MLM80452580-v.jpg",
+    "video": "MLM80452580.mp4",
+    "text": "MLM80452580.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM62234964": {
    "id": "MLM62234964",
@@ -2571,12 +2639,27 @@
    "seller_level": "5_green",
    "item_id": "MLM4686055490",
    "category": "MLM1000",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM62234964?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-11T21:13:09+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T22:31:00+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 74,
+   "copy": {
+    "facebook": "🔥 Amazon Fire Tv Stick 4k Select 8gb Control Con Alexa Negro De Voz Sistema VEGA OS - No Android.\nHoy en $498 (antes $1,106). 55% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM62234964?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Amazon Fire Tv Stick 4k Select 8gb Control Con Alexa Negro De Voz Sistema VEGA OS - No Android.*\n$498 (antes $1,106)\n55% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM62234964?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 55% menos?\nCUERPO (3-15s): Amazon Fire Tv Stick 4k Select 8gb Control Con Alexa Negro De Voz Sistema VEGA OS - No Android.. Hoy cuesta $498 (antes $1,106).\nCIERRE (15-20s): Busca el código 74 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Amazon Fire Tv Stick 4k Select 8gb Control Con Alexa Negro De Voz Sist a $498 🔥 Código 74 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Amazon Fire Tv Stick 4k Select 8gb Control Con Alexa Negro De Voz Sistema VEGA OS - No Android.. Precio actual $498 (antes $1,106)."
+   },
+   "cards": {
+    "square": "MLM62234964-sq.jpg",
+    "vertical": "MLM62234964-v.jpg",
+    "video": "MLM62234964.mp4",
+    "text": "MLM62234964.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM52672235": {
    "id": "MLM52672235",
@@ -2589,12 +2672,27 @@
    "seller_level": "5_green",
    "item_id": "MLM3006108469",
    "category": "MLM1132",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM52672235?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-11T21:13:09+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T22:31:09+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 75,
+   "copy": {
+    "facebook": "🔥 Juguetes Educativos Didácticos Tarjetas Lectura 510 Palabras Color Rosa\nHoy en $151 (antes $347). 56% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM52672235?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Juguetes Educativos Didácticos Tarjetas Lectura 510 Palabras Color Rosa*\n$151 (antes $347)\n56% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM52672235?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 56% menos?\nCUERPO (3-15s): Juguetes Educativos Didácticos Tarjetas Lectura 510 Palabras Color Rosa. Hoy cuesta $151 (antes $347).\nCIERRE (15-20s): Busca el código 75 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Juguetes Educativos Didácticos Tarjetas Lectura 510 Palabras Color Ros a $151 🔥 Código 75 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Juguetes Educativos Didácticos Tarjetas Lectura 510 Palabras Color Rosa. Precio actual $151 (antes $347)."
+   },
+   "cards": {
+    "square": "MLM52672235-sq.jpg",
+    "vertical": "MLM52672235-v.jpg",
+    "video": "MLM52672235.mp4",
+    "text": "MLM52672235.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM27384905": {
    "id": "MLM27384905",
@@ -2607,12 +2705,27 @@
    "seller_level": "5_green",
    "item_id": "MLM1984363719",
    "category": "MLM1574",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM27384905?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-11T21:13:09+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T22:31:18+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 76,
+   "copy": {
+    "facebook": "🔥 Dahan 2pcs Serie Navideña Luces 10m 100Led 8 Modos de Iluminación Color de las luces Blanco frío Enchufe de Extremo a Extremo para Interior Navidad Fiesta Patio\nHoy en $158 (antes $297). 47% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM27384905?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Dahan 2pcs Serie Navideña Luces 10m 100Led 8 Modos de Iluminación Color de las luces Blanco frío Enchufe de Extremo a Extremo para Interior Navidad Fiesta Patio*\n$158 (antes $297)\n47% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM27384905?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 47% menos?\nCUERPO (3-15s): Dahan 2pcs Serie Navideña Luces 10m 100Led 8 Modos de Iluminación Color de las luces Blanco frío Enchufe de Extremo a Extremo para Interior Navidad Fiesta Patio. Hoy cuesta $158 (antes $297).\nCIERRE (15-20s): Busca el código 76 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Dahan 2pcs Serie Navideña Luces 10m 100Led 8 Modos de Iluminación Colo a $158 🔥 Código 76 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Dahan 2pcs Serie Navideña Luces 10m 100Led 8 Modos de Iluminación Color de las luces Blanco frío Enchufe de Extremo a Extremo para Interior Navidad Fiesta Patio. Precio actual $158 (antes $297)."
+   },
+   "cards": {
+    "square": "MLM27384905-sq.jpg",
+    "vertical": "MLM27384905-v.jpg",
+    "video": "MLM27384905.mp4",
+    "text": "MLM27384905.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM37181549": {
    "id": "MLM37181549",
@@ -2625,12 +2738,27 @@
    "seller_level": "5_green",
    "item_id": "MLM3489236836",
    "category": "MLM1276",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM37181549?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-11T21:13:09+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T22:31:27+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 77,
+   "copy": {
+    "facebook": "🔥 Juego de mancuernas Lawuto barra recta ejercicio kit ajustables 15 kg color negro\nHoy en $619 (antes $996). 38% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM37181549?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Juego de mancuernas Lawuto barra recta ejercicio kit ajustables 15 kg color negro*\n$619 (antes $996)\n38% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM37181549?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 38% menos?\nCUERPO (3-15s): Juego de mancuernas Lawuto barra recta ejercicio kit ajustables 15 kg color negro. Hoy cuesta $619 (antes $996).\nCIERRE (15-20s): Busca el código 77 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Juego de mancuernas Lawuto barra recta ejercicio kit ajustables 15 kg  a $619 🔥 Código 77 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Juego de mancuernas Lawuto barra recta ejercicio kit ajustables 15 kg color negro. Precio actual $619 (antes $996)."
+   },
+   "cards": {
+    "square": "MLM37181549-sq.jpg",
+    "vertical": "MLM37181549-v.jpg",
+    "video": "MLM37181549.mp4",
+    "text": "MLM37181549.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM23526584": {
    "id": "MLM23526584",
@@ -2643,12 +2771,27 @@
    "seller_level": "5_green",
    "item_id": "MLM4832926718",
    "category": "MLM1246",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM23526584?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-11T21:13:09+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T22:31:36+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 78,
+   "copy": {
+    "facebook": "🔥 Corrector Maybelline Instant Age Rewind Eraser Concealer\nHoy en $559 (antes $798). 30% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM23526584?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Corrector Maybelline Instant Age Rewind Eraser Concealer*\n$559 (antes $798)\n30% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM23526584?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 30% menos?\nCUERPO (3-15s): Corrector Maybelline Instant Age Rewind Eraser Concealer. Hoy cuesta $559 (antes $798).\nCIERRE (15-20s): Busca el código 78 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Corrector Maybelline Instant Age Rewind Eraser Concealer a $559 🔥 Código 78 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Corrector Maybelline Instant Age Rewind Eraser Concealer. Precio actual $559 (antes $798)."
+   },
+   "cards": {
+    "square": "MLM23526584-sq.jpg",
+    "vertical": "MLM23526584-v.jpg",
+    "video": "MLM23526584.mp4",
+    "text": "MLM23526584.txt"
+   },
+   "fb_status": "queued"
   }
  }
 }
