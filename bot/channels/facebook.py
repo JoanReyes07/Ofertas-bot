@@ -45,11 +45,27 @@ def _need(cfg: Config) -> None:
         raise RuntimeError("Falta FB_PAGE_ID o FB_PAGE_TOKEN")
 
 
+class FacebookError(RuntimeError):
+    """Error de la Graph API con su código (10 o 200-299 = falta un permiso)."""
+
+    def __init__(self, message: str, code: int = 0):
+        super().__init__(message)
+        self.code = code
+
+    @property
+    def permiso(self) -> bool:
+        return self.code == 10 or 200 <= self.code < 300 or "permission" in str(self).lower()
+
+
 def _ok(r) -> dict:
+    try:
+        j = r.json()
+    except ValueError:
+        j = None
+    if isinstance(j, dict) and j.get("error"):  # leer el motivo antes que el código HTTP
+        e = j["error"]
+        raise FacebookError(e.get("message", "error de Facebook"), int(e.get("code") or 0))
     r.raise_for_status()
-    j = r.json()
-    if isinstance(j, dict) and j.get("error"):
-        raise RuntimeError(j["error"].get("message", "error de Facebook"))
     return j
 
 

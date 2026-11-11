@@ -112,6 +112,8 @@ def cmd_fbcheck(cfg: Config, http=None) -> None:
         print("Caduca: " + ("nunca" if not exp else datetime.fromtimestamp(exp, timezone.utc).isoformat()))
         scopes = set(d.get("scopes", []))
         need = {"pages_manage_posts", "pages_read_engagement", "pages_show_list"}
+        if cfg.fb_reel_comment:  # para comentar el link en los Reels
+            need.add("pages_manage_engagement")
         print("Permisos faltantes: " + (", ".join(sorted(need - scopes)) or "ninguno"))
     if not ok:
         sys.exit(1)

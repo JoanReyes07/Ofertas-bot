@@ -27,6 +27,7 @@ from .store import Store
 
 TZ = ZoneInfo("America/Mexico_City")
 MAX_COMMENT_TRIES = 3
+COMMENT_MAX_AGE_H = 7 * 24  # Reels más viejos ya no se comentan
 
 
 def sales_score(p: Product) -> float:
@@ -60,6 +61,7 @@ class _Plan:
         self._checked: dict[str, bool] = {}
         self._imgs: dict = {}
         self.tmp = Path(tempfile.mkdtemp(prefix="fb_"))
+        self.sin_permiso = False  # si falta el permiso de comentar, no insistir en esta corrida
 
     # --- utilidades ---
     def ok(self, it: dict) -> bool:
@@ -200,7 +202,6 @@ class _Plan:
                 break
             it.update(fb_status="posted", fb_post_id=vid, fb_reel_id=vid)
             if self.cfg.fb_reel_comment:
-                it["fb_comment_tries"] = 0
                 self.comment(it)
             sent += 1
         if sent:
@@ -208,22 +209,45 @@ class _Plan:
         return sent
 
     def comment(self, it: dict) -> None:
-        """Comenta el link en el Reel. Si falla (el Reel aún se procesa), se reintenta en otra corrida."""
+        """Comenta el link en el Reel.
+
+        - Si falta el permiso (pages_manage_engagement), queda "pendiente" sin gastar intentos:
+          en cuanto el token lo tenga, se comenta solo en la siguiente corrida.
+        - Otro error (el Reel aún se procesa, etc.) gasta un intento; tras 3 se deja.
+        """
+        if self.sin_permiso:
+            it["fb_comment"] = "pendiente: falta el permiso pages_manage_engagement"
+            return
         msg = plantillas.texto("reel_comentario", **self.datos(it))
         try:
             facebook.comment(it["fb_reel_id"], msg, self.cfg, http=self.http)
             it.pop("fb_comment_tries", None)
             it["fb_comment"] = "ok"
+        except facebook.FacebookError as e:
+            if e.permiso:
+                self.sin_permiso = True
+                it["fb_comment"] = "pendiente: falta el permiso pages_manage_engagement"
+                _warn(f"Facebook no deja comentar ({e}). Genera el token de la Página con "
+                      "pages_manage_engagement y actualiza el secret FB_PAGE_TOKEN.")
+            else:
+                self._fallo(it, e)
         except Exception as e:
-            it["fb_comment_tries"] = it.get("fb_comment_tries", 0) + 1
-            if it["fb_comment_tries"] >= MAX_COMMENT_TRIES:
-                it.pop("fb_comment_tries", None)
-                it["fb_comment"] = f"falló: {str(e)[:200]}"  # queda registrado en state.json
-            _warn(f"no pude comentar el link en el Reel de {it['id']}: {e}")
+            self._fallo(it, e)
+
+    def _fallo(self, it: dict, e: Exception) -> None:
+        it["fb_comment_tries"] = it.get("fb_comment_tries", 0) + 1
+        it["fb_comment"] = f"falló: {str(e)[:200]}"
+        if it["fb_comment_tries"] >= MAX_COMMENT_TRIES:
+            it["fb_comment"] = f"abandonado: {str(e)[:200]}"
+        _warn(f"no pude comentar el link en el Reel de {it['id']}: {e}")
 
     def pending_comments(self) -> None:
+        """Reintenta los Reels de la última semana sin comentario (incluye los de antes
+        de que se guardara el resultado)."""
         for it in self.store.items.values():
-            if it.get("fb_reel_id") and "fb_comment_tries" in it and it["fb_comment_tries"] > 0:
+            estado = it.get("fb_comment", "")
+            if (it.get("fb_reel_id") and estado != "ok" and not estado.startswith("abandonado")
+                    and hours_since(it.get("published_at", "")) <= COMMENT_MAX_AGE_H):
                 self.comment(it)
 
 

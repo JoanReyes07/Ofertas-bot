@@ -402,6 +402,7 @@ def test_etiqueta_por_canal():
 
     tags = _tags("facebook=cazafb, web=cazaweb,  roto")
     assert tags == {"facebook": "cazafb", "web": "cazaweb"}
+    assert _tags("cazafb cazaweb facebook=cazafb web=cazaweb") == tags  # con espacios también
     link = affiliate_url("https://www.mercadolibre.com.mx/p/MLM1", "rejo", "723")
     fb = for_channel(link, tags["facebook"])
     assert "matt_word=cazafb" in fb and "matt_tool=723" in fb and "rejo" not in fb
@@ -414,3 +415,29 @@ def test_sales_score_prefiere_precio_bajo():
 
     barato, medio = prod("A", price=299, orig=598), prod("B", price=799, orig=1598)  # ambos -50%
     assert sales_score(barato) - sales_score(medio) == 10
+
+
+def test_comentario_espera_el_permiso(tmp_path):
+    """Sin pages_manage_engagement el link queda pendiente; con el permiso se comenta solo."""
+    c = cfg(tmp_path, fb_per_run=2, fb_stories=0, fb_top5=False)
+    ids = ["M1", "M2"]
+    client = FakeClient([prod(i) for i in ids], item_price=219)
+    _ready(c, ids).save()
+
+    class SinPermiso(FakeHttp):
+        def post(self, url, **kw):
+            if url.endswith("/comments"):
+                self.calls.append(url)
+                self.datas.append(kw.get("data") or {})
+                return FakeResp({"error": {"message": "(#200) Permissions error", "code": 200}}, 403)
+            return super().post(url, **kw)
+
+    http = SinPermiso()
+    cmd_publish(c, client, http)
+    s = Store(f"{c.data_dir}/state.json")
+    assert http.reels() == 2 and http.count("/comments") == 1  # al primer rechazo deja de insistir
+    assert all(s.items[i]["fb_comment"].startswith("pendiente") for i in ids)
+    ok = FakeHttp()
+    cmd_publish(c, client, ok)  # ya con permiso: comenta los dos pendientes
+    s = Store(f"{c.data_dir}/state.json")
+    assert ok.count("/comments") == 2 and all(s.items[i]["fb_comment"] == "ok" for i in ids)

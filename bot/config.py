@@ -28,9 +28,12 @@ def _bool(name: str, default: bool) -> bool:
 
 
 def _tags(raw: str) -> dict:
-    """"facebook=cazafb, web=cazaweb" -> {"facebook": "cazafb", "web": "cazaweb"}"""
+    """"facebook=cazafb, web=cazaweb" -> {"facebook": "cazafb", "web": "cazaweb"}
+    (las palabras sin "=" se ignoran)."""
+    import re
+
     out = {}
-    for part in raw.split(","):
+    for part in re.split(r"[,;\s]+", raw):  # acepta comas, espacios o saltos de línea
         if "=" in part:
             k, v = part.split("=", 1)
             if k.strip() and v.strip():
