@@ -9,6 +9,7 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
+from .links import for_channel
 from .meli import Product
 
 ARCHIVO = Path(__file__).parent / "plantillas.json"
@@ -27,13 +28,13 @@ def corto(title: str, n: int = 45) -> str:
     return title if len(title) <= n else title[: n - 1].rsplit(" ", 1)[0] + "…"
 
 
-def datos(it: dict, web: str = "", n: int = 0) -> dict:
+def datos(it: dict, web: str = "", n: int = 0, tag: str = "") -> dict:
     """Marcadores disponibles para un producto guardado en state.json."""
     p = Product.from_dict(it)
     return {
         "n": n, "titulo": p.title, "titulo_corto": corto(p.title), "precio": money(p.price),
         "antes": money(p.original_price or p.price), "pct": f"{p.discount_pct:.0f}",
-        "codigo": it.get("code", ""), "link": it.get("affiliate_link", ""), "web": web,
+        "codigo": it.get("code", ""), "link": for_channel(it.get("affiliate_link", ""), tag), "web": web,
     }
 
 

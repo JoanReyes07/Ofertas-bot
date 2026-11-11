@@ -11,6 +11,7 @@ from pathlib import Path
 
 from ..cards import CATEGORY_NAMES
 from ..config import Config
+from ..links import for_channel
 from ..copywriter import money
 from ..meli import Product
 
@@ -92,7 +93,7 @@ addEventListener('hashchange',fromHash);fromHash();
 """
 
 
-def _card(it: dict) -> str:
+def _card(it: dict, tag: str = "") -> str:
     p = Product.from_dict(it)
     code = it.get("code") or ""
     cat = CATEGORY_NAMES.get(p.category, "")
@@ -110,7 +111,7 @@ def _card(it: dict) -> str:
         f'<div class="p">{money(p.price)}</div>'
         f'<div class="meta">{escape(top)}</div>'
         f'<a class="btn" rel="sponsored nofollow noopener" target="_blank" '
-        f'href="{escape(it.get("affiliate_link", ""), True)}">Ver oferta<i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#102015" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a></div></article>'
+        f'href="{escape(for_channel(it.get("affiliate_link", ""), tag), True)}">Ver oferta<i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#102015" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a></div></article>'
     )
 
 
@@ -145,7 +146,7 @@ def render(items: list[dict], cfg: Config) -> str:
         '<div class="tools"><div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" inputmode="search" enterkeyhint="search" '
         'placeholder="Escribe el código del video (ej. 12)" autocomplete="off" aria-label="Buscar"></div>'
         f'<div class="chips">{chips}</div></div>'
-        f"<main>{''.join(_card(i) for i in items)}"
+        f"<main>{''.join(_card(i, cfg.tag('web')) for i in items)}"
         '<p class="empty" id="none" hidden>No encontramos ese código. Revisa el número del video.</p>'
         + ('' if items else '<p class="empty">Pronto habrá ofertas.</p>')
         + "</main>"

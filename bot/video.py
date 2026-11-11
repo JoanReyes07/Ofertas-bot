@@ -52,7 +52,7 @@ def _alpha(layer: Image.Image, a: float) -> Image.Image:
     return out
 
 
-def _reel_layers(p, img, cierre: str) -> dict:
+def _reel_layers(p, img, cierre: str, extra: str = "") -> dict:
     from PIL import ImageFilter, ImageOps
 
     from .cards import INK, MUTED, money, wrap
@@ -97,24 +97,45 @@ def _reel_layers(p, img, cierre: str) -> dict:
     w = d.textlength(cierre, font=fl) + 110
     d.rounded_rectangle((W / 2 - w / 2, 25, W / 2 + w / 2, 145), radius=60, fill=FOREST)
     d.text((W // 2, 85), cierre, font=fl, fill=WHITE, anchor="mm")
-    return {"foto": foto, "nombre": nombre, "precio": precio, "logo": logo, "link": link}
+    # gancho: sello "-58%" en la esquina de la foto, visible desde el primer cuadro
+    badge = Image.new("RGBA", (360, 360), (0, 0, 0, 0))
+    if p.discount_pct:
+        d = ImageDraw.Draw(badge)
+        d.ellipse((10, 18, 350, 358), fill=(30, 60, 30, 60))  # sombra
+        d.ellipse((10, 10, 350, 350), fill=ACCENT, outline=WHITE, width=10)
+        d.text((180, 165), f"-{p.discount_pct:.0f}%", font=font("ExtraBold", 118), fill=FOREST, anchor="mm")
+        d.text((180, 255), "HOY", font=font("Bold", 52), fill=FOREST, anchor="mm")
+    # segunda línea del cierre: "o busca el 12 en cazaofertasmx.github.io"
+    web = Image.new("RGBA", (W, 120), (0, 0, 0, 0))
+    if extra:
+        d = ImageDraw.Draw(web)
+        fe = font("SemiBold", 46)
+        while d.textlength(extra, font=fe) > W - 120 and fe.size > 28:
+            fe = font("SemiBold", fe.size - 2)
+        d.text((W // 2, 60), extra, font=fe, fill=INK, anchor="mm")
+    return {"foto": foto, "nombre": nombre, "precio": precio, "logo": logo, "link": link,
+            "badge": badge, "web": web}
 
 
-# línea de tiempo del Reel, en segundos (diseño del usuario, 2026-11-09)
-REEL_T = {"foto": (0.0, 1.0), "nombre": (1.0, 1.7), "precio": (1.7, 2.4), "fade": (5.0, 5.8),
-          "logo": (5.8, 6.4), "link": (6.3, 6.9)}
+# línea de tiempo del Reel, en segundos (diseño del usuario, 2026-11-09).
+# Ajuste del 2026-11-11: solo el 15% veía 3 s, así que el descuento, la foto y el precio
+# ya se ven en el primer cuadro (entran con un empujón corto) y el nombre llega después.
+REEL_T = {"foto": (0.0, 0.35), "badge": (0.0, 0.45), "precio": (0.0, 0.35), "nombre": (0.35, 0.9),
+          "fade": (5.0, 5.8), "logo": (5.8, 6.4), "link": (6.3, 6.9), "web": (6.7, 7.3)}
 REEL_TOTAL = 8.4
 
 
-def build_reel(p, img, out_path: str, cierre: str = "Link en la descripción del video", fps: int = 30) -> str:
-    """Reel 1080x1920 (~8 s): la foto sube desde abajo, el nombre entra por la izquierda,
-    el precio por la derecha, todo se desvanece y cierra con el logo y el texto del link."""
+def build_reel(p, img, out_path: str, cierre: str = "Link en la descripción del video",
+               fps: int = 30, extra: str = "") -> str:
+    """Reel 1080x1920 (~8 s). Desde el primer cuadro: foto, sello con el descuento y precio
+    (entran con un empujón corto); luego el nombre por la izquierda; todo se desvanece y
+    cierra con el logo, el texto del link y, si hay, "o busca el N en la web"."""
     import imageio_ffmpeg
 
     from .cards import _gradient
 
     fondo = _gradient(W, H, (236, 243, 226), (214, 230, 194)).convert("RGBA")
-    L = _reel_layers(p, img, cierre)
+    L = _reel_layers(p, img, cierre, extra)
 
     def prog(t, key):
         a, b = REEL_T[key]
@@ -130,12 +151,15 @@ def build_reel(p, img, out_path: str, cierre: str = "Link en la descripción del
     for k in range(int(REEL_TOTAL * fps)):
         t = k / fps
         fr = fondo.copy()
-        if (a := prog(t, "foto")) > 0:
-            fr.alpha_composite(L["foto"], (fx, int(230 + (H - 230) * (1 - a))))
+        # foto y precio visibles desde t=0: solo se acomodan 120 px
+        fr.alpha_composite(L["foto"], (fx, int(230 + 120 * (1 - prog(t, "foto")))))
+        fr.alpha_composite(L["precio"], (int(160 * (1 - prog(t, "precio"))), 1490))
         if (a := prog(t, "nombre")) > 0:
             fr.alpha_composite(L["nombre"], (int(-W * (1 - a)), 1210))
-        if (a := prog(t, "precio")) > 0:
-            fr.alpha_composite(L["precio"], (int(W * (1 - a)), 1490))
+        # sello: aparece grande y se asienta (efecto "pop")
+        k = 1.25 - 0.25 * prog(t, "badge")
+        b = L["badge"].resize((int(360 * k), int(360 * k)), Image.BILINEAR)
+        fr.alpha_composite(b, (int(850 - b.width / 2), int(285 - b.height / 2)))
         a0, a1 = REEL_T["fade"]
         if t > a0:
             fr = Image.blend(fr, fondo, min(1.0, (t - a0) / (a1 - a0)))
@@ -143,6 +167,8 @@ def build_reel(p, img, out_path: str, cierre: str = "Link en la descripción del
             fr.alpha_composite(_alpha(L["logo"], a), (0, int(760 + 60 * (1 - a))))
         if (a := prog(t, "link")) > 0:
             fr.alpha_composite(_alpha(L["link"], a), (0, int(990 + 60 * (1 - a))))
+        if (a := prog(t, "web")) > 0:
+            fr.alpha_composite(_alpha(L["web"], a), (0, int(1170 + 40 * (1 - a))))
         writer.send(fr.convert("RGB").tobytes())
     writer.close()
     return out_path

@@ -74,6 +74,19 @@ def affiliate_url(permalink: str, matt_word: str, matt_tool: str) -> str:
     return urlunsplit((u.scheme, u.netloc, u.path, q, ""))
 
 
+def for_channel(link: str, tag: str) -> str:
+    """Cambia la etiqueta (matt_word) de un link armado por la del canal, para que el
+    panel de afiliados separe los clics por red. Los meli.la no se pueden cambiar y
+    se dejan igual (siguen contando en la etiqueta con que se crearon)."""
+    from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
+    if not tag or not link or "matt_word=" not in link:
+        return link
+    u = urlsplit(link)
+    q = [(k, tag if k == "matt_word" else v) for k, v in parse_qsl(u.query, keep_blank_values=True)]
+    return urlunsplit(u._replace(query=urlencode(q)))
+
+
 def auto_fill(store: Store, matt_word: str, matt_tool: str) -> int:
     """Pone link de afiliado automático a los candidatos que no tengan uno."""
     n = 0

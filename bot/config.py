@@ -27,6 +27,17 @@ def _bool(name: str, default: bool) -> bool:
     return os.environ.get(name, str(default)).strip().lower() in ("1", "true", "si", "sí", "yes")
 
 
+def _tags(raw: str) -> dict:
+    """"facebook=cazafb, web=cazaweb" -> {"facebook": "cazafb", "web": "cazaweb"}"""
+    out = {}
+    for part in raw.split(","):
+        if "=" in part:
+            k, v = part.split("=", 1)
+            if k.strip() and v.strip():
+                out[k.strip().lower()] = v.strip()
+    return out
+
+
 @dataclass
 class Config:
     meli_client_id: str = ""
@@ -65,7 +76,13 @@ class Config:
     auto_links: bool = False
     matt_word: str = ""
     matt_tool: str = ""
+    # Etiqueta por canal (MELI_TAGS="facebook=cazafb,web=cazaweb,whatsapp=cazawa").
+    # Cada etiqueta debe existir antes en el panel de afiliados (Etiquetas de seguimiento).
+    channel_tags: dict = field(default_factory=dict)
     inbox_dir: str = "data/inbox"
+
+    def tag(self, channel: str) -> str:
+        return self.channel_tags.get(channel, "")
 
     @property
     def public_url(self) -> str:
@@ -106,4 +123,5 @@ class Config:
             auto_links=_bool("AUTO_LINKS", False),
             matt_word=e("MELI_MATT_WORD", "").strip(),
             matt_tool=e("MELI_MATT_TOOL", "").strip(),
+            channel_tags=_tags(e("MELI_TAGS", "")),
         )

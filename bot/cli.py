@@ -67,7 +67,7 @@ def cmd_publish(cfg: Config, client: MeliClient | None = None, http=None) -> Non
             except Exception as e:
                 print(f"[aviso] no pude verificar {p.id}: {e}", file=sys.stderr)
                 continue
-        link = it["affiliate_link"]
+        link = links.for_channel(it["affiliate_link"], cfg.tag("whatsapp"))
         code = store.assign_code(p.id)
         copy = copywriter.generate(p, link, cfg, code=code, **kw)
         store.items[p.id]["copy"] = copy

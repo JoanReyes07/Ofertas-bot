@@ -31,12 +31,14 @@ MAX_COMMENT_TRIES = 3
 
 def sales_score(p: Product) -> float:
     """Qué tan probable es que se venda: más vendido en su categoría, descuento
-    y precio de compra impulsiva (hasta $1,000)."""
+    y precio de compra impulsiva (hasta $1,000, y más aún hasta $500)."""
     s = p.discount_pct
     if p.rank:
         s += max(0, 21 - p.rank) * 2
     if p.price <= 1000:
         s += 15
+    if p.price <= 500:
+        s += 10
     return s
 
 
@@ -87,6 +89,14 @@ class _Plan:
     def web(self) -> str:
         return self.cfg.public_url.rstrip("/")
 
+    def datos(self, it: dict, n: int = 0) -> dict:
+        """Marcadores de la plantilla, con el link etiquetado para Facebook."""
+        return plantillas.datos(it, self.web(), n, self.cfg.tag("facebook"))
+
+    def web_host(self) -> str:
+        """Dominio de la web real (no el link corto: ese pierde el #código)."""
+        return self.cfg.web_url.replace("https://", "").replace("http://", "").rstrip("/")
+
     # --- muro: Top 5 del día ---
     def top5(self, day: str) -> int:
         ranked = sorted(self.recent(), key=lambda it: -Store.product(it).discount_pct)
@@ -105,7 +115,7 @@ class _Plan:
                                 {it["id"]: self.img(Store.product(it)) for it in picks}, web_text)
         path = self.tmp / "top5.jpg"
         img.save(path, "JPEG", quality=90)
-        lista = "\n\n".join(plantillas.texto("top5_linea", **plantillas.datos(it, web, n))
+        lista = "\n\n".join(plantillas.texto("top5_linea", **self.datos(it, n))
                             for n, it in enumerate(picks, 1))
         caption = plantillas.texto("top5", int(day.replace("-", "")), lista=lista, web=web)
         try:
@@ -127,7 +137,7 @@ class _Plan:
             if not self.ok(it):
                 continue
             p, code = Store.product(it), int(it.get("code") or 0)
-            boton = plantillas.texto("historia_boton", code, **plantillas.datos(it, self.web()))
+            boton = plantillas.texto("historia_boton", code, **self.datos(it))
             path = self.tmp / f"story-{p.id}.jpg"
             cards.render(p, self.img(p), self.cfg.site_name, boton, vertical=True, code=code).save(
                 path, "JPEG", quality=88)
@@ -167,10 +177,12 @@ class _Plan:
                 print(f"[facebook] {it['id']} omitido: cambió el precio o ya no está activo")
                 continue
             p, code = Store.product(it), int(it.get("code") or 0)
-            d = plantillas.datos(it, self.web())
+            d = self.datos(it)
+            extra = (plantillas.texto("reel_cierre_web", codigo=code, web=self.web_host())
+                     if code and self.web_host() else "")
             mp4 = self.tmp / f"reel-{p.id}.mp4"
             try:
-                video.build_reel(p, self.img(p), str(mp4), cierre=cierre)
+                video.build_reel(p, self.img(p), str(mp4), cierre=cierre, extra=extra)
             except Exception as e:
                 _warn(f"no pude generar el Reel de {p.id}: {e}")
                 it["fb_status"] = "skipped"
@@ -197,14 +209,16 @@ class _Plan:
 
     def comment(self, it: dict) -> None:
         """Comenta el link en el Reel. Si falla (el Reel aún se procesa), se reintenta en otra corrida."""
-        msg = plantillas.texto("reel_comentario", **plantillas.datos(it, self.web()))
+        msg = plantillas.texto("reel_comentario", **self.datos(it))
         try:
             facebook.comment(it["fb_reel_id"], msg, self.cfg, http=self.http)
             it.pop("fb_comment_tries", None)
+            it["fb_comment"] = "ok"
         except Exception as e:
             it["fb_comment_tries"] = it.get("fb_comment_tries", 0) + 1
             if it["fb_comment_tries"] >= MAX_COMMENT_TRIES:
                 it.pop("fb_comment_tries", None)
+                it["fb_comment"] = f"falló: {str(e)[:200]}"  # queda registrado en state.json
             _warn(f"no pude comentar el link en el Reel de {it['id']}: {e}")
 
     def pending_comments(self) -> None:

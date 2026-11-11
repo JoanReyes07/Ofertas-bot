@@ -16,7 +16,7 @@ def reel_rapido(monkeypatch):
     """Generar un Reel real tarda; en las pruebas basta un archivo de mentira."""
     from bot import video
 
-    def fake(p, img, out_path, cierre="", fps=30):
+    def fake(p, img, out_path, cierre="", fps=30, extra=""):
         open(out_path, "wb").write(b"mp4")
         return out_path
 
@@ -393,3 +393,24 @@ def test_link_cache_reuses_after_reset(tmp_path):
     s = Store(f"{c.data_dir}/state.json")
     assert s.items["A"]["status"] == "ready" and s.items["A"]["affiliate_link"] == "https://meli.la/abc"
     assert s.items["B"]["status"] == "candidate"
+
+
+def test_etiqueta_por_canal():
+    """Con MELI_TAGS cada red usa su etiqueta; los meli.la no se tocan."""
+    from bot.config import _tags
+    from bot.links import affiliate_url, for_channel
+
+    tags = _tags("facebook=cazafb, web=cazaweb,  roto")
+    assert tags == {"facebook": "cazafb", "web": "cazaweb"}
+    link = affiliate_url("https://www.mercadolibre.com.mx/p/MLM1", "rejo", "723")
+    fb = for_channel(link, tags["facebook"])
+    assert "matt_word=cazafb" in fb and "matt_tool=723" in fb and "rejo" not in fb
+    assert for_channel(link, "") == link
+    assert for_channel("https://meli.la/abc", "cazafb") == "https://meli.la/abc"
+
+
+def test_sales_score_prefiere_precio_bajo():
+    from bot.fbplan import sales_score
+
+    barato, medio = prod("A", price=299, orig=598), prod("B", price=799, orig=1598)  # ambos -50%
+    assert sales_score(barato) - sales_score(medio) == 10
