@@ -1,7 +1,7 @@
 {
  "meta": {
-  "next_code": 53,
-  "fb_last_batch": "2026-11-10T21:41:58+00:00",
+  "next_code": 71,
+  "fb_last_batch": "2026-11-11T00:34:57+00:00",
   "link_cache": {
    "MLM54014512": "https://meli.la/2NEV3oo",
    "MLM53457233": "https://meli.la/2YDt3NV",
@@ -1269,7 +1269,7 @@
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM18625838?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-08T18:45:30+00:00",
    "published_at": "2026-11-10T21:40:19+00:00",
-   "fb_post_id": "",
+   "fb_post_id": "1873271117001872",
    "link_auto": true,
    "code": 38,
    "copy": {
@@ -1285,7 +1285,8 @@
     "video": "MLM18625838.mp4",
     "text": "MLM18625838.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "posted",
+   "fb_reel_id": "1873271117001872"
   },
   "MLM26194700": {
    "id": "MLM26194700",
@@ -1885,12 +1886,27 @@
    "seller_level": "5_green",
    "item_id": "MLM2862037783",
    "category": "MLM1574",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM34112942?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-09T23:21:37+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:32:24+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 53,
+   "copy": {
+    "facebook": "🔥 Cobertor Ligero Matrimonial Hotelero - Color AZUL MARINO - Extra Suave, Calientito y Compacto. Ideal Para Todo el Año, Fácil Lavado en Casa\nHoy en $179 (antes $260). 31% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM34112942?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Cobertor Ligero Matrimonial Hotelero - Color AZUL MARINO - Extra Suave, Calientito y Compacto. Ideal Para Todo el Año, Fácil Lavado en Casa*\n$179 (antes $260)\n31% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM34112942?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 31% menos?\nCUERPO (3-15s): Cobertor Ligero Matrimonial Hotelero - Color AZUL MARINO - Extra Suave, Calientito y Compacto. Ideal Para Todo el Año, Fácil Lavado en Casa. Hoy cuesta $179 (antes $260).\nCIERRE (15-20s): Busca el código 53 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Cobertor Ligero Matrimonial Hotelero - Color AZUL MARINO - Extra Suave a $179 🔥 Código 53 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Cobertor Ligero Matrimonial Hotelero - Color AZUL MARINO - Extra Suave, Calientito y Compacto. Ideal Para Todo el Año, Fácil Lavado en Casa. Precio actual $179 (antes $260)."
+   },
+   "cards": {
+    "square": "MLM34112942-sq.jpg",
+    "vertical": "MLM34112942-v.jpg",
+    "video": "MLM34112942.mp4",
+    "text": "MLM34112942.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM43007398": {
    "id": "MLM43007398",
@@ -1903,12 +1919,27 @@
    "seller_level": "5_green",
    "item_id": "MLM4335367092",
    "category": "MLM1132",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM43007398?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-09T23:21:37+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:32:32+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 54,
+   "copy": {
+    "facebook": "🔥 Coche Electrico Montable Carrito Con Control Remoto Buggy Color Rojo\nHoy en $2,999 (antes $5,000). 40% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM43007398?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Coche Electrico Montable Carrito Con Control Remoto Buggy Color Rojo*\n$2,999 (antes $5,000)\n40% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM43007398?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 40% menos?\nCUERPO (3-15s): Coche Electrico Montable Carrito Con Control Remoto Buggy Color Rojo. Hoy cuesta $2,999 (antes $5,000).\nCIERRE (15-20s): Busca el código 54 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Coche Electrico Montable Carrito Con Control Remoto Buggy Color Rojo a $2,999 🔥 Código 54 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Coche Electrico Montable Carrito Con Control Remoto Buggy Color Rojo. Precio actual $2,999 (antes $5,000)."
+   },
+   "cards": {
+    "square": "MLM43007398-sq.jpg",
+    "vertical": "MLM43007398-v.jpg",
+    "video": "MLM43007398.mp4",
+    "text": "MLM43007398.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM28101934": {
    "id": "MLM28101934",
@@ -1921,12 +1952,28 @@
    "seller_level": "5_green",
    "item_id": "MLM3055466770",
    "category": "MLM1574",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM28101934?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
-   "fb_post_id": "",
-   "link_auto": true
+   "published_at": "2026-11-11T00:32:39+00:00",
+   "fb_post_id": "1923207161997116",
+   "link_auto": true,
+   "code": 55,
+   "copy": {
+    "facebook": "🔥 2 Piezas Cortinas Serie Luces 300 Led Decorativas Usb 3x3m color Ununmx\nHoy en $143 (antes $242). 41% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM28101934?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *2 Piezas Cortinas Serie Luces 300 Led Decorativas Usb 3x3m color Ununmx*\n$143 (antes $242)\n41% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM28101934?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 41% menos?\nCUERPO (3-15s): 2 Piezas Cortinas Serie Luces 300 Led Decorativas Usb 3x3m color Ununmx. Hoy cuesta $143 (antes $242).\nCIERRE (15-20s): Busca el código 55 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "2 Piezas Cortinas Serie Luces 300 Led Decorativas Usb 3x3m color Ununm a $143 🔥 Código 55 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "2 Piezas Cortinas Serie Luces 300 Led Decorativas Usb 3x3m color Ununmx. Precio actual $143 (antes $242)."
+   },
+   "cards": {
+    "square": "MLM28101934-sq.jpg",
+    "vertical": "MLM28101934-v.jpg",
+    "video": "MLM28101934.mp4",
+    "text": "MLM28101934.txt"
+   },
+   "fb_status": "posted",
+   "fb_reel_id": "1923207161997116"
   },
   "MLM28618279": {
    "id": "MLM28618279",
@@ -1939,12 +1986,27 @@
    "seller_level": "5_green",
    "item_id": "MLM2045113037",
    "category": "MLM1276",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM28618279?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:32:47+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 56,
+   "copy": {
+    "facebook": "🔥 Vitatú | Myo Inositol & D-Chiro Inositol mezcla ideal 40:1 con Folato + Vitamina D3 + Zinc, Suplemento Alimenticio en polvo para Mujeres (225 g c/u), 45 días de duración\nHoy en $675 (antes $1,099). 39% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM28618279?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Vitatú | Myo Inositol & D-Chiro Inositol mezcla ideal 40:1 con Folato + Vitamina D3 + Zinc, Suplemento Alimenticio en polvo para Mujeres (225 g c/u), 45 días de duración*\n$675 (antes $1,099)\n39% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM28618279?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 39% menos?\nCUERPO (3-15s): Vitatú | Myo Inositol & D-Chiro Inositol mezcla ideal 40:1 con Folato + Vitamina D3 + Zinc, Suplemento Alimenticio en polvo para Mujeres (225 g c/u), 45 días de duración. Hoy cuesta $675 (antes $1,099).\nCIERRE (15-20s): Busca el código 56 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Vitatú | Myo Inositol & D-Chiro Inositol mezcla ideal 40:1 con Folato  a $675 🔥 Código 56 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Vitatú | Myo Inositol & D-Chiro Inositol mezcla ideal 40:1 con Folato + Vitamina D3 + Zinc, Suplemento Alimenticio en polvo para Mujeres (225 g c/u), 45 días de duración. Precio actual $675 (antes $1,099)."
+   },
+   "cards": {
+    "square": "MLM28618279-sq.jpg",
+    "vertical": "MLM28618279-v.jpg",
+    "video": "MLM28618279.mp4",
+    "text": "MLM28618279.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM19380755": {
    "id": "MLM19380755",
@@ -1957,12 +2019,27 @@
    "seller_level": "5_green",
    "item_id": "MLM1924290631",
    "category": "MLM1246",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM19380755?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:32:54+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 57,
+   "copy": {
+    "facebook": "🔥 Fragancia Eau De Toilette Voyage - Nautica - Spray 200ml\nHoy en $375 (antes $589). 36% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM19380755?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Fragancia Eau De Toilette Voyage - Nautica - Spray 200ml*\n$375 (antes $589)\n36% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM19380755?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 36% menos?\nCUERPO (3-15s): Fragancia Eau De Toilette Voyage - Nautica - Spray 200ml. Hoy cuesta $375 (antes $589).\nCIERRE (15-20s): Busca el código 57 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Fragancia Eau De Toilette Voyage - Nautica - Spray 200ml a $375 🔥 Código 57 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Fragancia Eau De Toilette Voyage - Nautica - Spray 200ml. Precio actual $375 (antes $589)."
+   },
+   "cards": {
+    "square": "MLM19380755-sq.jpg",
+    "vertical": "MLM19380755-v.jpg",
+    "video": "MLM19380755.mp4",
+    "text": "MLM19380755.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM61772233": {
    "id": "MLM61772233",
@@ -1975,7 +2052,7 @@
    "seller_level": "5_green",
    "item_id": "MLM2547177845",
    "category": "MLM1132",
-   "status": "ready",
+   "status": "stale",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM61772233?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
    "published_at": "",
@@ -1993,12 +2070,27 @@
    "seller_level": "5_green",
    "item_id": "MLM5280685112",
    "category": "MLM1246",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM67817931?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:33:02+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 58,
+   "copy": {
+    "facebook": "🔥 Maybelline Superlock Gel Para Cejas\nHoy en $120 (antes $229). 48% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM67817931?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Maybelline Superlock Gel Para Cejas*\n$120 (antes $229)\n48% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM67817931?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 48% menos?\nCUERPO (3-15s): Maybelline Superlock Gel Para Cejas. Hoy cuesta $120 (antes $229).\nCIERRE (15-20s): Busca el código 58 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Maybelline Superlock Gel Para Cejas a $120 🔥 Código 58 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Maybelline Superlock Gel Para Cejas. Precio actual $120 (antes $229)."
+   },
+   "cards": {
+    "square": "MLM67817931-sq.jpg",
+    "vertical": "MLM67817931-v.jpg",
+    "video": "MLM67817931.mp4",
+    "text": "MLM67817931.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM26809139": {
    "id": "MLM26809139",
@@ -2011,12 +2103,27 @@
    "seller_level": "5_green",
    "item_id": "MLM1950619679",
    "category": "MLM1276",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM26809139?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:33:09+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 59,
+   "copy": {
+    "facebook": "🔥 TES70 Vitaminas Hombres | Maca Negra Peruana, Fenogreco, Creatina, Arginina, Cúrcuma (curcumina), Zinc Y Más - 180 Cápsulas\nHoy en $368 (antes $559). 34% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM26809139?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *TES70 Vitaminas Hombres | Maca Negra Peruana, Fenogreco, Creatina, Arginina, Cúrcuma (curcumina), Zinc Y Más - 180 Cápsulas*\n$368 (antes $559)\n34% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM26809139?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 34% menos?\nCUERPO (3-15s): TES70 Vitaminas Hombres | Maca Negra Peruana, Fenogreco, Creatina, Arginina, Cúrcuma (curcumina), Zinc Y Más - 180 Cápsulas. Hoy cuesta $368 (antes $559).\nCIERRE (15-20s): Busca el código 59 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "TES70 Vitaminas Hombres | Maca Negra Peruana, Fenogreco, Creatina, Arg a $368 🔥 Código 59 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "TES70 Vitaminas Hombres | Maca Negra Peruana, Fenogreco, Creatina, Arginina, Cúrcuma (curcumina), Zinc Y Más - 180 Cápsulas. Precio actual $368 (antes $559)."
+   },
+   "cards": {
+    "square": "MLM26809139-sq.jpg",
+    "vertical": "MLM26809139-v.jpg",
+    "video": "MLM26809139.mp4",
+    "text": "MLM26809139.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM28726239": {
    "id": "MLM28726239",
@@ -2029,12 +2136,27 @@
    "seller_level": "5_green",
    "item_id": "MLM1991732425",
    "category": "MLM1574",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM28726239?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:33:17+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 60,
+   "copy": {
+    "facebook": "🔥 Papel Higiénico Regio Aires de Lavanda 32 Rollos Hojas Dobles\nHoy en $124 (antes $178). 30% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM28726239?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Papel Higiénico Regio Aires de Lavanda 32 Rollos Hojas Dobles*\n$124 (antes $178)\n30% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM28726239?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 30% menos?\nCUERPO (3-15s): Papel Higiénico Regio Aires de Lavanda 32 Rollos Hojas Dobles. Hoy cuesta $124 (antes $178).\nCIERRE (15-20s): Busca el código 60 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Papel Higiénico Regio Aires de Lavanda 32 Rollos Hojas Dobles a $124 🔥 Código 60 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Papel Higiénico Regio Aires de Lavanda 32 Rollos Hojas Dobles. Precio actual $124 (antes $178)."
+   },
+   "cards": {
+    "square": "MLM28726239-sq.jpg",
+    "vertical": "MLM28726239-v.jpg",
+    "video": "MLM28726239.mp4",
+    "text": "MLM28726239.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM20595110": {
    "id": "MLM20595110",
@@ -2047,12 +2169,27 @@
    "seller_level": "5_green",
    "item_id": "MLM2182581201",
    "category": "MLM1246",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM20595110?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:33:24+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 61,
+   "copy": {
+    "facebook": "🔥 Mascara De Pestañas 10 Aceites Naturales Yuya\nHoy en $149 (antes $219). 32% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM20595110?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Mascara De Pestañas 10 Aceites Naturales Yuya*\n$149 (antes $219)\n32% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM20595110?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 32% menos?\nCUERPO (3-15s): Mascara De Pestañas 10 Aceites Naturales Yuya. Hoy cuesta $149 (antes $219).\nCIERRE (15-20s): Busca el código 61 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Mascara De Pestañas 10 Aceites Naturales Yuya a $149 🔥 Código 61 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Mascara De Pestañas 10 Aceites Naturales Yuya. Precio actual $149 (antes $219)."
+   },
+   "cards": {
+    "square": "MLM20595110-sq.jpg",
+    "vertical": "MLM20595110-v.jpg",
+    "video": "MLM20595110.mp4",
+    "text": "MLM20595110.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM67414196": {
    "id": "MLM67414196",
@@ -2065,12 +2202,27 @@
    "seller_level": "5_green",
    "item_id": "MLM5099760130",
    "category": "MLM1276",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM67414196?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:33:31+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 62,
+   "copy": {
+    "facebook": "🔥 Termo Botella Agua Termica Acero Inoxidable Buffer Flask 1lt Tapa 2 En 1 Viral - Sage Green\nHoy en $299 (antes $499). 40% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM67414196?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Termo Botella Agua Termica Acero Inoxidable Buffer Flask 1lt Tapa 2 En 1 Viral - Sage Green*\n$299 (antes $499)\n40% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM67414196?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 40% menos?\nCUERPO (3-15s): Termo Botella Agua Termica Acero Inoxidable Buffer Flask 1lt Tapa 2 En 1 Viral - Sage Green. Hoy cuesta $299 (antes $499).\nCIERRE (15-20s): Busca el código 62 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Termo Botella Agua Termica Acero Inoxidable Buffer Flask 1lt Tapa 2 En a $299 🔥 Código 62 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Termo Botella Agua Termica Acero Inoxidable Buffer Flask 1lt Tapa 2 En 1 Viral - Sage Green. Precio actual $299 (antes $499)."
+   },
+   "cards": {
+    "square": "MLM67414196-sq.jpg",
+    "vertical": "MLM67414196-v.jpg",
+    "video": "MLM67414196.mp4",
+    "text": "MLM67414196.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM28233322": {
    "id": "MLM28233322",
@@ -2083,12 +2235,27 @@
    "seller_level": "5_green",
    "item_id": "MLM3570003137",
    "category": "MLM1000",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM28233322?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:33:38+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 63,
+   "copy": {
+    "facebook": "🔥 Audífonos Skullcandy Smokin' Buds XT Bluetooth Inalámbricos | Resistentes al agua IPX4 | 20h batería\nHoy en $279 (antes $441). 37% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM28233322?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Audífonos Skullcandy Smokin' Buds XT Bluetooth Inalámbricos | Resistentes al agua IPX4 | 20h batería*\n$279 (antes $441)\n37% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM28233322?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 37% menos?\nCUERPO (3-15s): Audífonos Skullcandy Smokin' Buds XT Bluetooth Inalámbricos | Resistentes al agua IPX4 | 20h batería. Hoy cuesta $279 (antes $441).\nCIERRE (15-20s): Busca el código 63 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Audífonos Skullcandy Smokin' Buds XT Bluetooth Inalámbricos | Resisten a $279 🔥 Código 63 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Audífonos Skullcandy Smokin' Buds XT Bluetooth Inalámbricos | Resistentes al agua IPX4 | 20h batería. Precio actual $279 (antes $441)."
+   },
+   "cards": {
+    "square": "MLM28233322-sq.jpg",
+    "vertical": "MLM28233322-v.jpg",
+    "video": "MLM28233322.mp4",
+    "text": "MLM28233322.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM24539752": {
    "id": "MLM24539752",
@@ -2101,12 +2268,27 @@
    "seller_level": "5_green",
    "item_id": "MLM2409478065",
    "category": "MLM1071",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM24539752?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:33:46+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 64,
+   "copy": {
+    "facebook": "🔥 Alimento Premium Superfoods Para Perro Adulto Razas Medianas Y Grandes 20kg Ganador\nHoy en $993 (antes $1,419). 30% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM24539752?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Alimento Premium Superfoods Para Perro Adulto Razas Medianas Y Grandes 20kg Ganador*\n$993 (antes $1,419)\n30% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM24539752?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 30% menos?\nCUERPO (3-15s): Alimento Premium Superfoods Para Perro Adulto Razas Medianas Y Grandes 20kg Ganador. Hoy cuesta $993 (antes $1,419).\nCIERRE (15-20s): Busca el código 64 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Alimento Premium Superfoods Para Perro Adulto Razas Medianas Y Grandes a $993 🔥 Código 64 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Alimento Premium Superfoods Para Perro Adulto Razas Medianas Y Grandes 20kg Ganador. Precio actual $993 (antes $1,419)."
+   },
+   "cards": {
+    "square": "MLM24539752-sq.jpg",
+    "vertical": "MLM24539752-v.jpg",
+    "video": "MLM24539752.mp4",
+    "text": "MLM24539752.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM34281482": {
    "id": "MLM34281482",
@@ -2119,12 +2301,27 @@
    "seller_level": "5_green",
    "item_id": "MLM3590979326",
    "category": "MLM1246",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM34281482?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:33:53+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 65,
+   "copy": {
+    "facebook": "🔥 Dove Sérum Corporal con Niacinamida 400 ml\nHoy en $100 (antes $145). 31% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM34281482?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Dove Sérum Corporal con Niacinamida 400 ml*\n$100 (antes $145)\n31% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM34281482?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 31% menos?\nCUERPO (3-15s): Dove Sérum Corporal con Niacinamida 400 ml. Hoy cuesta $100 (antes $145).\nCIERRE (15-20s): Busca el código 65 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Dove Sérum Corporal con Niacinamida 400 ml a $100 🔥 Código 65 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Dove Sérum Corporal con Niacinamida 400 ml. Precio actual $100 (antes $145)."
+   },
+   "cards": {
+    "square": "MLM34281482-sq.jpg",
+    "vertical": "MLM34281482-v.jpg",
+    "video": "MLM34281482.mp4",
+    "text": "MLM34281482.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM75366890": {
    "id": "MLM75366890",
@@ -2137,12 +2334,27 @@
    "seller_level": "5_green",
    "item_id": "MLM5682634268",
    "category": "MLM1575",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM75366890?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:34:00+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 66,
+   "copy": {
+    "facebook": "🔥 Parrilla Empotrable Gas 5 Quemadores Vidrio Templado Negro AROKEE\nHoy en $1,692 (antes $2,657). 36% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM75366890?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Parrilla Empotrable Gas 5 Quemadores Vidrio Templado Negro AROKEE*\n$1,692 (antes $2,657)\n36% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM75366890?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 36% menos?\nCUERPO (3-15s): Parrilla Empotrable Gas 5 Quemadores Vidrio Templado Negro AROKEE. Hoy cuesta $1,692 (antes $2,657).\nCIERRE (15-20s): Busca el código 66 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Parrilla Empotrable Gas 5 Quemadores Vidrio Templado Negro AROKEE a $1,692 🔥 Código 66 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Parrilla Empotrable Gas 5 Quemadores Vidrio Templado Negro AROKEE. Precio actual $1,692 (antes $2,657)."
+   },
+   "cards": {
+    "square": "MLM75366890-sq.jpg",
+    "vertical": "MLM75366890-v.jpg",
+    "video": "MLM75366890.mp4",
+    "text": "MLM75366890.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM74020237": {
    "id": "MLM74020237",
@@ -2155,12 +2367,27 @@
    "seller_level": "5_green",
    "item_id": "MLM5538577150",
    "category": "MLM1132",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM74020237?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:34:08+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 67,
+   "copy": {
+    "facebook": "🔥 Coche Montable Niños Buggy Carrito Eléctrico Control Remoto Azul\nHoy en $1,959 (antes $2,999). 35% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM74020237?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Coche Montable Niños Buggy Carrito Eléctrico Control Remoto Azul*\n$1,959 (antes $2,999)\n35% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM74020237?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 35% menos?\nCUERPO (3-15s): Coche Montable Niños Buggy Carrito Eléctrico Control Remoto Azul. Hoy cuesta $1,959 (antes $2,999).\nCIERRE (15-20s): Busca el código 67 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Coche Montable Niños Buggy Carrito Eléctrico Control Remoto Azul a $1,959 🔥 Código 67 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Coche Montable Niños Buggy Carrito Eléctrico Control Remoto Azul. Precio actual $1,959 (antes $2,999)."
+   },
+   "cards": {
+    "square": "MLM74020237-sq.jpg",
+    "vertical": "MLM74020237-v.jpg",
+    "video": "MLM74020237.mp4",
+    "text": "MLM74020237.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM41514595": {
    "id": "MLM41514595",
@@ -2173,12 +2400,27 @@
    "seller_level": "5_green",
    "item_id": "MLM3421917534",
    "category": "MLM1575",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM41514595?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:34:15+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 68,
+   "copy": {
+    "facebook": "🔥 Oster Freidora de Aire Digital con Recubrimiento Oster DiamondForce, Ventana y Luz Interna, 4L de Capacidad, con 10 Programas Automáticos, CKSTAF40WDDF\nHoy en $999 (antes $1,436). 30% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM41514595?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Oster Freidora de Aire Digital con Recubrimiento Oster DiamondForce, Ventana y Luz Interna, 4L de Capacidad, con 10 Programas Automáticos, CKSTAF40WDDF*\n$999 (antes $1,436)\n30% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM41514595?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 30% menos?\nCUERPO (3-15s): Oster Freidora de Aire Digital con Recubrimiento Oster DiamondForce, Ventana y Luz Interna, 4L de Capacidad, con 10 Programas Automáticos, CKSTAF40WDDF. Hoy cuesta $999 (antes $1,436).\nCIERRE (15-20s): Busca el código 68 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Oster Freidora de Aire Digital con Recubrimiento Oster DiamondForce, V a $999 🔥 Código 68 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Oster Freidora de Aire Digital con Recubrimiento Oster DiamondForce, Ventana y Luz Interna, 4L de Capacidad, con 10 Programas Automáticos, CKSTAF40WDDF. Precio actual $999 (antes $1,436)."
+   },
+   "cards": {
+    "square": "MLM41514595-sq.jpg",
+    "vertical": "MLM41514595-v.jpg",
+    "video": "MLM41514595.mp4",
+    "text": "MLM41514595.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM35957436": {
    "id": "MLM35957436",
@@ -2191,12 +2433,27 @@
    "seller_level": "5_green",
    "item_id": "MLM4097813812",
    "category": "MLM1132",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM35957436?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:34:23+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 69,
+   "copy": {
+    "facebook": "🔥 Bicicleta De Equilibrio Sin Pedales Entrenadora Para Niños Color Rosa\nHoy en $459 (antes $692). 34% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM35957436?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Bicicleta De Equilibrio Sin Pedales Entrenadora Para Niños Color Rosa*\n$459 (antes $692)\n34% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM35957436?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 34% menos?\nCUERPO (3-15s): Bicicleta De Equilibrio Sin Pedales Entrenadora Para Niños Color Rosa. Hoy cuesta $459 (antes $692).\nCIERRE (15-20s): Busca el código 69 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Bicicleta De Equilibrio Sin Pedales Entrenadora Para Niños Color Rosa a $459 🔥 Código 69 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Bicicleta De Equilibrio Sin Pedales Entrenadora Para Niños Color Rosa. Precio actual $459 (antes $692)."
+   },
+   "cards": {
+    "square": "MLM35957436-sq.jpg",
+    "vertical": "MLM35957436-v.jpg",
+    "video": "MLM35957436.mp4",
+    "text": "MLM35957436.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM63950508": {
    "id": "MLM63950508",
@@ -2209,12 +2466,27 @@
    "seller_level": "5_green",
    "item_id": "MLM4636735350",
    "category": "MLM1000",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM63950508?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-10T20:46:06+00:00",
-   "published_at": "",
+   "published_at": "2026-11-11T00:34:30+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 70,
+   "copy": {
+    "facebook": "🔥 Control Remoto Para Smart Tv Curvo Samsung 4k (con Voz) JOWVDY BN59\nHoy en $153 (antes $228). 33% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM63950508?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Control Remoto Para Smart Tv Curvo Samsung 4k (con Voz) JOWVDY BN59*\n$153 (antes $228)\n33% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM63950508?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 33% menos?\nCUERPO (3-15s): Control Remoto Para Smart Tv Curvo Samsung 4k (con Voz) JOWVDY BN59. Hoy cuesta $153 (antes $228).\nCIERRE (15-20s): Busca el código 70 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Control Remoto Para Smart Tv Curvo Samsung 4k (con Voz) JOWVDY BN59 a $153 🔥 Código 70 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Control Remoto Para Smart Tv Curvo Samsung 4k (con Voz) JOWVDY BN59. Precio actual $153 (antes $228)."
+   },
+   "cards": {
+    "square": "MLM63950508-sq.jpg",
+    "vertical": "MLM63950508-v.jpg",
+    "video": "MLM63950508.mp4",
+    "text": "MLM63950508.txt"
+   },
+   "fb_status": "queued"
   }
  }
 }
