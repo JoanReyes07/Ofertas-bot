@@ -24,7 +24,12 @@ def _list(name: str, default: str) -> list[str]:
 
 
 def _bool(name: str, default: bool) -> bool:
-    return os.environ.get(name, str(default)).strip().lower() in ("1", "true", "si", "sí", "yes")
+    # Variable vacía = valor por defecto: en GitHub Actions `${{ vars.X }}` llega como ""
+    # cuando la variable no existe (eso apagaba el Top 5 y el comentario del Reel).
+    raw = os.environ.get(name, "").strip().lower()
+    if not raw:
+        return default
+    return raw in ("1", "true", "si", "sí", "yes")
 
 
 def _tags(raw: str) -> dict:

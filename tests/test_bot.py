@@ -441,3 +441,15 @@ def test_comentario_espera_el_permiso(tmp_path):
     cmd_publish(c, client, ok)  # ya con permiso: comenta los dos pendientes
     s = Store(f"{c.data_dir}/state.json")
     assert ok.count("/comments") == 2 and all(s.items[i]["fb_comment"] == "ok" for i in ids)
+
+
+def test_variable_vacia_usa_el_valor_por_defecto(monkeypatch):
+    """En Actions una variable inexistente llega como "": no debe apagar nada."""
+    from bot.config import Config
+
+    for k in ("FB_TOP5", "FB_REEL_COMMENT", "VERIFY_PRICE", "AUTO_LINKS"):
+        monkeypatch.setenv(k, "")
+    c = Config.from_env()
+    assert c.fb_top5 and c.fb_reel_comment and c.verify_price and not c.auto_links
+    monkeypatch.setenv("FB_TOP5", "false")
+    assert not Config.from_env().fb_top5
