@@ -1,7 +1,7 @@
 {
  "meta": {
   "next_code": 71,
-  "fb_last_batch": "2026-11-11T03:39:15+00:00",
+  "fb_last_batch": "2026-11-11T10:01:25+00:00",
   "link_cache": {
    "MLM54014512": "https://meli.la/2NEV3oo",
    "MLM53457233": "https://meli.la/2YDt3NV",
@@ -82,7 +82,7 @@
    "MLM35957436": "https://www.mercadolibre.com.mx/p/MLM35957436?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "MLM63950508": "https://www.mercadolibre.com.mx/p/MLM63950508?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true"
   },
-  "fb_stories_day": "2026-11-10"
+  "fb_stories_day": "2026-11-11"
  },
  "items": {
   "MLM23138483": {
@@ -1286,7 +1286,8 @@
     "text": "MLM18625838.txt"
    },
    "fb_status": "posted",
-   "fb_reel_id": "1873271117001872"
+   "fb_reel_id": "1873271117001872",
+   "fb_story_id": "2175368293357538"
   },
   "MLM26194700": {
    "id": "MLM26194700",
@@ -1392,7 +1393,8 @@
     "text": "MLM37314247.txt"
    },
    "fb_status": "posted",
-   "fb_reel_id": "1704928301424455"
+   "fb_reel_id": "1704928301424455",
+   "fb_story_id": "1364068102325512"
   },
   "MLM53225198": {
    "id": "MLM53225198",
@@ -1426,7 +1428,8 @@
     "text": "MLM53225198.txt"
    },
    "fb_status": "posted",
-   "fb_reel_id": "4741349586129056"
+   "fb_reel_id": "4741349586129056",
+   "fb_story_id": "1108835902139742"
   },
   "MLM21096841": {
    "id": "MLM21096841",
@@ -1476,7 +1479,7 @@
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM26094795?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-09T23:21:37+00:00",
    "published_at": "2026-11-10T21:40:36+00:00",
-   "fb_post_id": "",
+   "fb_post_id": "1703449574717861",
    "link_auto": true,
    "code": 41,
    "copy": {
@@ -1492,7 +1495,8 @@
     "video": "MLM26094795.mp4",
     "text": "MLM26094795.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "posted",
+   "fb_reel_id": "1703449574717861"
   },
   "MLM41702514": {
    "id": "MLM41702514",
@@ -1525,7 +1529,7 @@
     "video": "MLM41702514.mp4",
     "text": "MLM41702514.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "skipped"
   },
   "MLM37178455": {
    "id": "MLM37178455",
@@ -1559,7 +1563,8 @@
     "text": "MLM37178455.txt"
    },
    "fb_status": "posted",
-   "fb_reel_id": "1779462183166003"
+   "fb_reel_id": "1779462183166003",
+   "fb_story_id": "1155333280285601"
   },
   "MLM47527014": {
    "id": "MLM47527014",
@@ -1576,7 +1581,7 @@
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM47527014?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-09T23:21:37+00:00",
    "published_at": "2026-11-10T21:40:52+00:00",
-   "fb_post_id": "",
+   "fb_post_id": "1964789144894393",
    "link_auto": true,
    "code": 44,
    "copy": {
@@ -1592,7 +1597,8 @@
     "video": "MLM47527014.mp4",
     "text": "MLM47527014.txt"
    },
-   "fb_status": "queued"
+   "fb_status": "posted",
+   "fb_reel_id": "1964789144894393"
   },
   "MLM18486368": {
    "id": "MLM18486368",
@@ -1974,7 +1980,8 @@
     "text": "MLM28101934.txt"
    },
    "fb_status": "posted",
-   "fb_reel_id": "1923207161997116"
+   "fb_reel_id": "1923207161997116",
+   "fb_story_id": "1213175241390670"
   },
   "MLM28618279": {
    "id": "MLM28618279",
@@ -2008,7 +2015,8 @@
     "text": "MLM28618279.txt"
    },
    "fb_status": "posted",
-   "fb_reel_id": "1144646848185235"
+   "fb_reel_id": "1144646848185235",
+   "fb_story_id": "992904637204512"
   },
   "MLM19380755": {
    "id": "MLM19380755",
