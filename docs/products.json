@@ -212,7 +212,7 @@
   "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM18990698?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
   "added_at": "2026-11-11T21:13:09+00:00",
   "published_at": "2026-11-11T22:30:42+00:00",
-  "fb_post_id": "",
+  "fb_post_id": "1851611499213584",
   "link_auto": true,
   "code": 72,
   "copy": {
@@ -228,7 +228,9 @@
    "video": "MLM18990698.mp4",
    "text": "MLM18990698.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "posted",
+  "fb_reel_id": "1851611499213584",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM61271206",
@@ -245,7 +247,7 @@
   "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM61271206?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
   "added_at": "2026-11-11T21:13:09+00:00",
   "published_at": "2026-11-11T22:30:33+00:00",
-  "fb_post_id": "",
+  "fb_post_id": "1158820636934344",
   "link_auto": true,
   "code": 71,
   "copy": {
@@ -261,7 +263,9 @@
    "video": "MLM61271206.mp4",
    "text": "MLM61271206.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "posted",
+  "fb_reel_id": "1158820636934344",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM63950508",
@@ -758,7 +762,8 @@
   },
   "fb_status": "posted",
   "fb_reel_id": "1144646848185235",
-  "fb_story_id": "992904637204512"
+  "fb_story_id": "992904637204512",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM28101934",
@@ -793,7 +798,8 @@
   },
   "fb_status": "posted",
   "fb_reel_id": "1923207161997116",
-  "fb_story_id": "1213175241390670"
+  "fb_story_id": "1213175241390670",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM43007398",
@@ -892,7 +898,7 @@
    "video": "MLM29464889.mp4",
    "text": "MLM29464889.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "expired"
  },
  {
   "id": "MLM18439163",
@@ -925,7 +931,7 @@
    "video": "MLM18439163.mp4",
    "text": "MLM18439163.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "expired"
  },
  {
   "id": "MLM61695196",
@@ -958,7 +964,7 @@
    "video": "MLM61695196.mp4",
    "text": "MLM61695196.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "expired"
  },
  {
   "id": "MLM52768030",
@@ -991,7 +997,7 @@
    "video": "MLM52768030.mp4",
    "text": "MLM52768030.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "expired"
  },
  {
   "id": "MLM45772940",
@@ -1024,7 +1030,7 @@
    "video": "MLM45772940.mp4",
    "text": "MLM45772940.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "expired"
  },
  {
   "id": "MLM34506868",
@@ -1057,7 +1063,7 @@
    "video": "MLM34506868.mp4",
    "text": "MLM34506868.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "expired"
  },
  {
   "id": "MLM59117483",
@@ -1090,7 +1096,7 @@
    "video": "MLM59117483.mp4",
    "text": "MLM59117483.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "expired"
  },
  {
   "id": "MLM18486368",
@@ -1123,7 +1129,7 @@
    "video": "MLM18486368.mp4",
    "text": "MLM18486368.txt"
   },
-  "fb_status": "queued"
+  "fb_status": "expired"
  },
  {
   "id": "MLM47527014",
@@ -1157,7 +1163,8 @@
    "text": "MLM47527014.txt"
   },
   "fb_status": "posted",
-  "fb_reel_id": "1964789144894393"
+  "fb_reel_id": "1964789144894393",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM37178455",
@@ -1192,7 +1199,8 @@
   },
   "fb_status": "posted",
   "fb_reel_id": "1779462183166003",
-  "fb_story_id": "1155333280285601"
+  "fb_story_id": "1155333280285601",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM41702514",
@@ -1259,7 +1267,8 @@
    "text": "MLM26094795.txt"
   },
   "fb_status": "posted",
-  "fb_reel_id": "1703449574717861"
+  "fb_reel_id": "1703449574717861",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM53225198",
@@ -1294,7 +1303,8 @@
   },
   "fb_status": "posted",
   "fb_reel_id": "4741349586129056",
-  "fb_story_id": "1108835902139742"
+  "fb_story_id": "1108835902139742",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM37314247",
@@ -1329,7 +1339,8 @@
   },
   "fb_status": "posted",
   "fb_reel_id": "1704928301424455",
-  "fb_story_id": "1364068102325512"
+  "fb_story_id": "1364068102325512",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM18625838",
@@ -1364,7 +1375,8 @@
   },
   "fb_status": "posted",
   "fb_reel_id": "1873271117001872",
-  "fb_story_id": "2175368293357538"
+  "fb_story_id": "2175368293357538",
+  "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
  },
  {
   "id": "MLM21096841",
