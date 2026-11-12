@@ -1,7 +1,7 @@
 {
  "meta": {
-  "next_code": 79,
-  "fb_last_batch": "2026-11-12T10:29:13+00:00",
+  "next_code": 83,
+  "fb_last_batch": "2026-11-12T22:05:20+00:00",
   "link_cache": {
    "MLM54014512": "https://meli.la/2NEV3oo",
    "MLM53457233": "https://meli.la/2YDt3NV",
@@ -2826,12 +2826,29 @@
    "seller_level": "5_green",
    "item_id": "MLM6265186752",
    "category": "MLM1132",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM81246938?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-12T21:25:10+00:00",
-   "published_at": "",
-   "fb_post_id": "",
-   "link_auto": true
+   "published_at": "2026-11-12T22:04:25+00:00",
+   "fb_post_id": "1659931205506991",
+   "link_auto": true,
+   "code": 79,
+   "copy": {
+    "facebook": "🔥 Set de Juego Barbie Casa con Resbaladilla\nHoy en $1,500 (antes $3,499). 57% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM81246938?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Set de Juego Barbie Casa con Resbaladilla*\n$1,500 (antes $3,499)\n57% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM81246938?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 57% menos?\nCUERPO (3-15s): Set de Juego Barbie Casa con Resbaladilla. Hoy cuesta $1,500 (antes $3,499).\nCIERRE (15-20s): Busca el código 79 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Set de Juego Barbie Casa con Resbaladilla a $1,500 🔥 Código 79 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Set de Juego Barbie Casa con Resbaladilla. Precio actual $1,500 (antes $3,499)."
+   },
+   "cards": {
+    "square": "MLM81246938-sq.jpg",
+    "vertical": "MLM81246938-v.jpg",
+    "video": "MLM81246938.mp4",
+    "text": "MLM81246938.txt"
+   },
+   "fb_status": "posted",
+   "fb_reel_id": "1659931205506991",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM54907346": {
    "id": "MLM54907346",
@@ -2844,12 +2861,29 @@
    "seller_level": "5_green",
    "item_id": "MLM4244927490",
    "category": "MLM1071",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM54907346?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-12T21:25:10+00:00",
-   "published_at": "",
-   "fb_post_id": "",
-   "link_auto": true
+   "published_at": "2026-11-12T22:04:33+00:00",
+   "fb_post_id": "1178850398414572",
+   "link_auto": true,
+   "code": 80,
+   "copy": {
+    "facebook": "🔥 Arnés Pechera YUANNA para Perro Grande L, Reflectante y Ajustable con Correa\nHoy en $193 (antes $284). 32% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM54907346?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Arnés Pechera YUANNA para Perro Grande L, Reflectante y Ajustable con Correa*\n$193 (antes $284)\n32% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM54907346?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 32% menos?\nCUERPO (3-15s): Arnés Pechera YUANNA para Perro Grande L, Reflectante y Ajustable con Correa. Hoy cuesta $193 (antes $284).\nCIERRE (15-20s): Busca el código 80 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Arnés Pechera YUANNA para Perro Grande L, Reflectante y Ajustable con  a $193 🔥 Código 80 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Arnés Pechera YUANNA para Perro Grande L, Reflectante y Ajustable con Correa. Precio actual $193 (antes $284)."
+   },
+   "cards": {
+    "square": "MLM54907346-sq.jpg",
+    "vertical": "MLM54907346-v.jpg",
+    "video": "MLM54907346.mp4",
+    "text": "MLM54907346.txt"
+   },
+   "fb_status": "posted",
+   "fb_reel_id": "1178850398414572",
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
   },
   "MLM22299658": {
    "id": "MLM22299658",
@@ -2862,12 +2896,27 @@
    "seller_level": "5_green",
    "item_id": "MLM6353469474",
    "category": "MLM1246",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM22299658?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-12T21:25:10+00:00",
-   "published_at": "",
+   "published_at": "2026-11-12T22:04:42+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 81,
+   "copy": {
+    "facebook": "🔥 Perfume Armaf Odyssey Mandarin Sky Limited Edition Edp 100 ml\nHoy en $498 (antes $742). 33% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM22299658?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Perfume Armaf Odyssey Mandarin Sky Limited Edition Edp 100 ml*\n$498 (antes $742)\n33% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM22299658?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 33% menos?\nCUERPO (3-15s): Perfume Armaf Odyssey Mandarin Sky Limited Edition Edp 100 ml. Hoy cuesta $498 (antes $742).\nCIERRE (15-20s): Busca el código 81 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Perfume Armaf Odyssey Mandarin Sky Limited Edition Edp 100 ml a $498 🔥 Código 81 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Perfume Armaf Odyssey Mandarin Sky Limited Edition Edp 100 ml. Precio actual $498 (antes $742)."
+   },
+   "cards": {
+    "square": "MLM22299658-sq.jpg",
+    "vertical": "MLM22299658-v.jpg",
+    "video": "MLM22299658.mp4",
+    "text": "MLM22299658.txt"
+   },
+   "fb_status": "queued"
   },
   "MLM48937856": {
    "id": "MLM48937856",
@@ -2880,12 +2929,27 @@
    "seller_level": "5_green",
    "item_id": "MLM3666742438",
    "category": "MLM1071",
-   "status": "ready",
+   "status": "published",
    "affiliate_link": "https://www.mercadolibre.com.mx/p/MLM48937856?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "added_at": "2026-11-12T21:25:10+00:00",
-   "published_at": "",
+   "published_at": "2026-11-12T22:04:50+00:00",
    "fb_post_id": "",
-   "link_auto": true
+   "link_auto": true,
+   "code": 82,
+   "copy": {
+    "facebook": "🔥 Alimento Seco Perro Ganador Premium Salmon 20k\nHoy en $993 (antes $1,419). 30% de descuento.\nVer oferta 👉 https://www.mercadolibre.com.mx/p/MLM48937856?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "whatsapp": "🔥 *Alimento Seco Perro Ganador Premium Salmon 20k*\n$993 (antes $1,419)\n30% de descuento.\n👉 https://www.mercadolibre.com.mx/p/MLM48937856?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
+    "tiktok_script": "GANCHO (0-3s): ¿Sabías que este producto está al 30% menos?\nCUERPO (3-15s): Alimento Seco Perro Ganador Premium Salmon 20k. Hoy cuesta $993 (antes $1,419).\nCIERRE (15-20s): Busca el código 82 en el link de mi perfil. Los precios cambian, corre.",
+    "tiktok_caption": "Alimento Seco Perro Ganador Premium Salmon 20k a $993 🔥 Código 82 en el link de mi perfil #ofertas #mercadolibre #mexico",
+    "web_blurb": "Alimento Seco Perro Ganador Premium Salmon 20k. Precio actual $993 (antes $1,419)."
+   },
+   "cards": {
+    "square": "MLM48937856-sq.jpg",
+    "vertical": "MLM48937856-v.jpg",
+    "video": "MLM48937856.mp4",
+    "text": "MLM48937856.txt"
+   },
+   "fb_status": "queued"
   }
  }
 }
