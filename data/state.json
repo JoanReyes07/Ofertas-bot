@@ -99,7 +99,7 @@
    "MLM32663884": "https://www.mercadolibre.com.mx/p/MLM32663884?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true",
    "MLM26853472": "https://www.mercadolibre.com.mx/p/MLM26853472?matt_word=rejo8599631&matt_tool=72338831&forceInApp=true"
   },
-  "fb_stories_day": "2026-11-13",
+  "fb_stories_day": "2026-11-14",
   "fb_top5_day": "2026-11-13",
   "fb_top5": {
    "post_id": "1445389978654839_122108490093538348",
@@ -2995,7 +2995,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1132543466365763",
-   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement",
+   "fb_story_id": "1868292274163564"
   },
   "MLM16165950": {
    "id": "MLM16165950",
@@ -3030,7 +3031,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1485156143536517",
-   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement",
+   "fb_story_id": "980115128507271"
   },
   "MLM55945910": {
    "id": "MLM55945910",
@@ -3065,7 +3067,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1665297551888206",
-   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement",
+   "fb_story_id": "1001790045686635"
   },
   "MLM32663884": {
    "id": "MLM32663884",
@@ -3118,7 +3121,8 @@
    },
    "fb_status": "posted",
    "fb_reel_id": "1144025214944524",
-   "fb_comment": "pendiente: falta el permiso pages_manage_engagement"
+   "fb_comment": "pendiente: falta el permiso pages_manage_engagement",
+   "fb_story_id": "29481977508063125"
   }
  }
 }
